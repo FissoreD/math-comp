@@ -275,8 +275,10 @@ move=> x y /=; rewrite -[y^-1 * _]mul1g -(mulVg (x * y)) -2!mulgA (mulgA y).
 by rewrite mulgV mul1g mulgV -(mulgV (x * y)) mulgA mulVg mul1g.
 Qed.
 
+#[local]
 HB.instance Definition _ :=
   isStarMonoid.Build G mulgA mul1g invgK invMg.
+#[local]
 HB.instance Definition _ := StarMonoid_isGroup.Build G mulVg.
 
 HB.end.
