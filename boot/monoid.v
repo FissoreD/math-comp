@@ -198,15 +198,15 @@ End MagmaTheory.
 
 Prenex Implicits commute.
 
-HB.mixin Record Magma_isSemigroup G & Magma G := {
-  mulgA : associative (@mul G)
+HB.mixin Record Magma_isSemigroup G' & Magma G' := {
+  mulgA : associative (@mul G')
 }.
 
 #[short(type="semigroupType")]
 HB.structure Definition Semigroup := {G of Magma_isSemigroup G & ChoiceMagma G}.
 
-HB.factory Record isSemigroup G & Choice G := {
-  mul : G -> G -> G;
+HB.factory Record isSemigroup G' & Choice G' := {
+  mul : G' -> G' -> G';
   mulgA : associative mul
 }.
 
@@ -282,15 +282,15 @@ End ClosedPredicates.
 
 End baseUMagmaTheory.
 
-HB.mixin Record BaseUMagma_isUMagma G & BaseUMagma G := {
-  mul1g : left_id one (@mul G);
-  mulg1 : right_id one (@mul G)
+HB.mixin Record BaseUMagma_isUMagma G0 & BaseUMagma G0 := {
+  mul1g : left_id one (@mul G0);
+  mulg1 : right_id one (@mul G0)
 }.
 
-HB.factory Record Magma_isUMagma G & Magma G := {
-  one : G;
-  mul1g : left_id one (@mul G);
-  mulg1 : right_id one (@mul G)
+HB.factory Record Magma_isUMagma G1 & Magma G1 := {
+  one : G1;
+  mul1g : left_id one (@mul G1);
+  mulg1 : right_id one (@mul G1)
 }.
 
 HB.builders Context G & Magma_isUMagma G.
@@ -325,8 +325,8 @@ End UMagmaTheory.
 #[short(type="monoidType")]
 HB.structure Definition Monoid := {G of Magma_isUMagma G & Semigroup G}.
 
-HB.factory Record Semigroup_isMonoid G & Semigroup G := {
-  one : G;
+HB.factory Record Semigroup_isMonoid G2 & Semigroup G2 := {
+  one : G2;
   mul1g : left_id one mul;
   mulg1 : right_id one mul
 }.
@@ -337,8 +337,8 @@ HB.instance Definition _ := Magma_isUMagma.Build G mul1g mulg1.
 
 HB.end.
 
-HB.factory Record UMagma_isMonoid G & UMagma G := {
-  mulgA : associative (@mul G)
+HB.factory Record UMagma_isMonoid G4 & UMagma G4 := {
+  mulgA : associative (@mul G4)
 }.
 
 HB.builders Context G & UMagma_isMonoid G.
@@ -347,9 +347,9 @@ HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
 
 HB.end.
 
-HB.factory Record isMonoid G & Choice G := {
-  mul : G -> G -> G;
-  one : G;
+HB.factory Record isMonoid G5 & Choice G5 := {
+  mul : G5 -> G5 -> G5;
+  one : G5;
   mulgA : associative mul;
   mul1g : left_id one mul;
   mulg1 : right_id one mul
