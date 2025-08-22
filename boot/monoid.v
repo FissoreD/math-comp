@@ -161,11 +161,12 @@ HB.mixin Record hasMul G := {
   mul : G -> G -> G
 }.
 
-#[short(type="magmaType")]
+#[primitive, short(type="magmaType")]
 HB.structure Definition Magma := {G of hasMul G}.
 
 Bind Scope group_scope with Magma.sort.
 
+#[primitive]
 HB.structure Definition ChoiceMagma := {G of Magma G & Choice G}.
 
 Bind Scope group_scope with ChoiceMagma.sort.
@@ -202,7 +203,7 @@ HB.mixin Record Magma_isSemigroup G' & Magma G' := {
   mulgA : associative (@mul G')
 }.
 
-#[short(type="semigroupType")]
+#[primitive, short(type="semigroupType")]
 HB.structure Definition Semigroup := {G of Magma_isSemigroup G & ChoiceMagma G}.
 
 HB.factory Record isSemigroup G' & Choice G' := {
@@ -212,8 +213,8 @@ HB.factory Record isSemigroup G' & Choice G' := {
 
 HB.builders Context G & isSemigroup G.
 
-HB.instance Definition _ := hasMul.Build G mul.
-HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
+#[local] HB.instance Definition _ := hasMul.Build G mul.
+#[local] HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
 
 HB.end.
 
@@ -235,11 +236,12 @@ HB.mixin Record hasOne G := {
   one : G
 }.
 
-#[short(type="baseUMagmaType")]
+#[primitive, short(type="baseUMagmaType")]
 HB.structure Definition BaseUMagma := {G of hasOne G & Magma G}.
 
 Bind Scope group_scope with BaseUMagma.sort.
 
+#[primitive]
 HB.structure Definition ChoiceBaseUMagma := {G of BaseUMagma G & Choice G}.
 
 Bind Scope group_scope with ChoiceBaseUMagma.sort.
@@ -294,12 +296,12 @@ HB.factory Record Magma_isUMagma G1 & Magma G1 := {
 }.
 
 HB.builders Context G & Magma_isUMagma G.
-HB.instance Definition _ := hasOne.Build G one.
+#[local] HB.instance Definition _ := hasOne.Build G one.
 #[warning="-HB.no-new-instance"]
-HB.instance Definition _ := BaseUMagma_isUMagma.Build G mul1g mulg1.
+#[local] HB.instance Definition _ := BaseUMagma_isUMagma.Build G mul1g mulg1.
 HB.end.
 
-#[short(type="umagmaType")]
+#[primitive, short(type="umagmaType")]
 HB.structure Definition UMagma := {G of Magma_isUMagma G & ChoiceMagma G}.
 
 Bind Scope group_scope with UMagma.sort.
@@ -322,7 +324,7 @@ End UMagmaTheory.
 
 #[global] Hint Resolve commute1 : core.
 
-#[short(type="monoidType")]
+#[primitive, short(type="monoidType")]
 HB.structure Definition Monoid := {G of Magma_isUMagma G & Semigroup G}.
 
 HB.factory Record Semigroup_isMonoid G2 & Semigroup G2 := {
@@ -333,7 +335,7 @@ HB.factory Record Semigroup_isMonoid G2 & Semigroup G2 := {
 
 HB.builders Context G & Semigroup_isMonoid G.
 
-HB.instance Definition _ := Magma_isUMagma.Build G mul1g mulg1.
+#[local] HB.instance Definition _ := Magma_isUMagma.Build G mul1g mulg1.
 
 HB.end.
 
@@ -343,7 +345,7 @@ HB.factory Record UMagma_isMonoid G4 & UMagma G4 := {
 
 HB.builders Context G & UMagma_isMonoid G.
 
-HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
+#[local] HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
 
 HB.end.
 
@@ -357,9 +359,9 @@ HB.factory Record isMonoid G5 & Choice G5 := {
 
 HB.builders Context G & isMonoid G.
 
-HB.instance Definition _ := hasMul.Build G mul.
-HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
-HB.instance Definition _ := Magma_isUMagma.Build G mul1g mulg1.
+#[local] HB.instance Definition _ := hasMul.Build G mul.
+#[local] HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
+#[local] HB.instance Definition _ := Magma_isUMagma.Build G mul1g mulg1.
 
 HB.end.
 
@@ -448,7 +450,7 @@ HB.mixin Record hasInv G := {
   inv : G -> G
 }.
 
-#[short(type="baseGroupType")]
+#[primitive, short(type="baseGroupType")]
 HB.structure Definition BaseGroup := {G of hasInv G & BaseUMagma G}.
 
 Bind Scope group_scope with BaseGroup.sort.
@@ -560,7 +562,7 @@ HB.mixin Record StarMonoid_isGroup G & BaseGroup G := {
   mulVg : left_inverse one inv (@mul G);
 }.
 
-#[short(type="groupType")]
+#[primitive, short(type="groupType")]
 HB.structure Definition Group :=
   {G of StarMonoid_isGroup G & BaseGroup G & StarMonoid G}.
 
@@ -601,11 +603,11 @@ HB.factory Record isGroup G & Choice G := {
 
 HB.builders Context G & isGroup G.
 
-HB.instance Definition _ := hasMul.Build G mul.
-HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
-HB.instance Definition _ := Magma_isUMagma.Build G mul1g mulg1.
-HB.instance Definition _ := hasInv.Build G inv.
-HB.instance Definition _ := Monoid_isGroup.Build G mulVg mulgV.
+#[local] HB.instance Definition _ := hasMul.Build G mul.
+#[local] HB.instance Definition _ := Magma_isSemigroup.Build G mulgA.
+#[local] HB.instance Definition _ := Magma_isUMagma.Build G mul1g mulg1.
+#[local] HB.instance Definition _ := hasInv.Build G inv.
+#[local] HB.instance Definition _ := Monoid_isGroup.Build G mulVg mulgV.
 
 HB.end.
 
@@ -806,6 +808,7 @@ HB.mixin Record isMultiplicative (G H : magmaType) (apply : G -> H) := {
   gmulfM : {morph apply : x y / x * y}
 }.
 
+#[primitive]
 HB.structure Definition Multiplicative (G H : magmaType) :=
   {f of isMultiplicative G H f}.
 
@@ -815,6 +818,7 @@ HB.mixin Record Multiplicative_isUMagmaMorphism (G H : baseUMagmaType)
   gmulf1 : f 1 = 1
 }.
 
+#[primitive]
 HB.structure Definition UMagmaMorphism (G H : baseUMagmaType) :=
   {f of Multiplicative_isUMagmaMorphism G H f & isMultiplicative G H f}.
 
@@ -826,9 +830,9 @@ HB.factory Record isUMagmaMorphism (G H : baseUMagmaType) (f : G -> H) := {
 }.
 
 HB.builders Context G H apply & isUMagmaMorphism G H apply.
-HB.instance Definition _ :=
+#[local] HB.instance Definition _ :=
   isMultiplicative.Build G H apply monoid_morphism_subproof.2.
-HB.instance Definition _ :=
+#[local] HB.instance Definition _ :=
   Multiplicative_isUMagmaMorphism.Build G H apply monoid_morphism_subproof.1.
 HB.end.
 
@@ -847,8 +851,8 @@ move=> x y; rewrite -[y in LHS] invgK -[y^-1]mul1g.
 by rewrite !gmulfF gmulf1 div1g invgK.
 Qed.
 
-HB.instance Definition _ := isMultiplicative.Build G H apply gmulfM.
-HB.instance Definition _ :=
+#[local] HB.instance Definition _ := isMultiplicative.Build G H apply gmulfM.
+#[local] HB.instance Definition _ :=
   Multiplicative_isUMagmaMorphism.Build G H apply gmulf1.
 
 HB.end.
@@ -999,17 +1003,17 @@ HB.mixin Record isInvClosed (G : groupType) (S : {pred G}) := {
 
 (* Structures for stability properties *)
 
-#[short(type="mulgClosed")]
+#[primitive, short(type="mulgClosed")]
 HB.structure Definition MulClosed G := {S of isMulClosed G S}.
 
-#[short(type="umagmaClosed")]
+#[primitive, short(type="umagmaClosed")]
 HB.structure Definition UMagmaClosed G :=
   {S of isMul1Closed G S & isMulClosed G S}.
 
-#[short(type="invgClosed")]
+#[primitive, short(type="invgClosed")]
 HB.structure Definition InvClosed G := {S of isInvClosed G S}.
 
-#[short(type="groupClosed")]
+#[primitive, short(type="groupClosed")]
 HB.structure Definition GroupClosed G :=
   {S of isInvClosed G S & isMul1Closed G S & isMulClosed G S}.
 
@@ -1035,7 +1039,7 @@ Section GroupPred.
 Variables (G : groupType).
 
 Lemma gpredV (S : invgClosed G) : {mono (@inv G): u / u \in S}.
-Proof. by move=> u; apply/idP/idP=> /gpredVr; rewrite ?invgK; apply. Qed.
+Proof. by move=> u; apply/idP/idP=> /(@gpredVr _ _ _); rewrite ?invgK; apply. Qed.
 
 Section Group.
 Variables S : groupClosed G.
@@ -1051,7 +1055,7 @@ Proof. by move=> x xS; apply/gpredVr/gpredXn. Qed.
 
 Lemma gpredMr x y : x \in S -> (y * x \in S) = (y \in S).
 Proof.
-move=> Sx; apply/idP/idP => [Sxy|/gpredM-> //].
+move=> Sx; apply/idP/idP => [Sxy|/(@gpredM _ _ _ _)-> //].
 by rewrite -(mulgK x y) gpredF.
 Qed.
 
@@ -1081,14 +1085,14 @@ HB.mixin Record isSubMagma (G : magmaType) (S : pred G) H
   valM_subproof : {morph (val : H -> G) : x y / x * y}
 }.
 
-#[short(type="subMagmaType")]
+#[primitive, short(type="subMagmaType")]
 HB.structure Definition SubMagma (G : magmaType) S :=
   { H of SubChoice G S H & Magma H & isSubMagma G S H }.
 
 Section subMagma.
 Context (G : magmaType) (S : pred G) (H : subMagmaType S).
 Notation val := (val : H -> G).
-HB.instance Definition _ := isMultiplicative.Build H G val valM_subproof.
+HB.instance Definition _ := isMultiplicative.Build H G \val valM_subproof.
 Lemma valM : {morph val : x y / x * y}. Proof. exact: gmulfM. Qed.
 End subMagma.
 
@@ -1097,23 +1101,23 @@ HB.factory Record SubChoice_isSubMagma (G : magmaType) S H
   mulg_closed_subproof : mulg_closed S
 }.
 
-HB.builders Context G S H & SubChoice_isSubMagma G S H.
+HB.builders Context G S H0 & SubChoice_isSubMagma G S H0.
 
-HB.instance Definition _ := isMulClosed.Build G S mulg_closed_subproof.
+#[local] HB.instance Definition _ := isMulClosed.Build G S mulg_closed_subproof.
 
-Let inH v Sv : H := Sub v Sv.
-Let mulH (u1 u2 : H) := inH (gpredM _ _ (valP u1) (valP u2)).
+Let inH v Sv : H0 := Sub v Sv.
+Let mulH (u1 u2 : H0) := inH (gpredM _ _ (valP u1) (valP u2)).
 
-HB.instance Definition _ := hasMul.Build H mulH.
+#[local] HB.instance Definition _ := hasMul.Build H0 mulH.
 
-Lemma valM : {morph (val : H -> G) : x y / x * y}.
+Lemma valM : {morph (val : H0 -> G) : x y / x * y}.
 Proof. by move=> x y; rewrite SubK. Qed.
 
-HB.instance Definition _ := isSubMagma.Build G S H valM.
+#[local] HB.instance Definition _ := isSubMagma.Build G S H0 valM.
 
 HB.end.
 
-#[short(type="subSemigroupType")]
+#[primitive, short(type="subSemigroupType")]
 HB.structure Definition SubSemigroup (G : semigroupType) S :=
   { H of SubMagma G S H & Semigroup H}.
 
@@ -1122,28 +1126,28 @@ HB.factory Record SubChoice_isSubSemigroup (G : semigroupType) S H
   mulg_closed_subproof : mulg_closed S
 }.
 
-HB.builders Context G S H & SubChoice_isSubSemigroup G S H.
+HB.builders Context G S H1 & SubChoice_isSubSemigroup G S H1.
 
-HB.instance Definition _ :=
-  SubChoice_isSubMagma.Build G S H mulg_closed_subproof.
+#[local] HB.instance Definition _ :=
+  SubChoice_isSubMagma.Build G S H1 mulg_closed_subproof.
 
-Lemma mulgA : associative (@mul H).
+Lemma mulgA : associative (@mul H1).
 Proof. by move=> x y z; apply/val_inj; rewrite !valM mulgA. Qed.
 
-HB.instance Definition _ := isSemigroup.Build H mulgA.
+#[local] HB.instance Definition _ := isSemigroup.Build H1 mulgA.
 
 HB.end.
 
-HB.mixin Record isSubBaseUMagma (G : baseUMagmaType) (S : pred G) H
-    & SubMagma G S H & BaseUMagma H := {
-  val1_subproof : (val : H -> G) 1 = 1
+HB.mixin Record isSubBaseUMagma (G : baseUMagmaType) (S : pred G) H2
+    & SubMagma G S H2 & BaseUMagma H2 := {
+  val1_subproof : (val : H2 -> G) 1 = 1
 }.
 
-#[short(type="subBaseUMagmaType")]
+#[primitive, short(type="subBaseUMagmaType")]
 HB.structure Definition SubBaseUMagma (G : umagmaType) S :=
   { H of SubMagma G S H & BaseUMagma H & isSubBaseUMagma G S H}.
 
-#[short(type="subUMagmaType")]
+#[primitive, short(type="subUMagmaType")]
 HB.structure Definition SubUMagma (G : umagmaType) S :=
   { H of SubMagma G S H & UMagma H & isSubBaseUMagma G S H}.
 
@@ -1151,7 +1155,7 @@ Section subUMagma.
 Context (G : umagmaType) (S : pred G) (H : subUMagmaType S).
 Notation val := (val : H -> G).
 HB.instance Definition _ :=
-  Multiplicative_isUMagmaMorphism.Build H G val val1_subproof.
+  Multiplicative_isUMagmaMorphism.Build H G \val val1_subproof.
 Lemma val1 : val 1 = 1. Proof. exact: gmulf1. Qed.
 End subUMagma.
 
@@ -1160,31 +1164,31 @@ HB.factory Record SubChoice_isSubUMagma (G : umagmaType) S H
   umagma_closed_subproof : umagma_closed S
 }.
 
-HB.builders Context G S H & SubChoice_isSubUMagma G S H.
+HB.builders Context G S H3 & SubChoice_isSubUMagma G S H3.
 
-HB.instance Definition _ :=
-  SubChoice_isSubMagma.Build G S H (snd umagma_closed_subproof).
+#[local] HB.instance Definition _ :=
+  SubChoice_isSubMagma.Build G S H3 (snd umagma_closed_subproof).
 
-Let inH v Sv : H := Sub v Sv.
+Let inH v Sv : H3 := Sub v Sv.
 Let oneH := inH (fst umagma_closed_subproof).
 
-HB.instance Definition _ := hasOne.Build H oneH.
+#[local] HB.instance Definition _ := hasOne.Build H3 oneH.
 
-Lemma val1 : (val : H -> G) 1 = 1. 
+Lemma val1 : (val : H3 -> G) 1 = 1. 
 Proof. exact/SubK. Qed.
 
-HB.instance Definition _ := isSubBaseUMagma.Build G S H val1.
+#[local] HB.instance Definition _ := isSubBaseUMagma.Build G S H3 val1.
 
-Lemma mul1g : left_id 1 (@mul H).
+Lemma mul1g : left_id 1 (@mul H3).
 Proof. by move=> x; apply/val_inj; rewrite valM val1 mul1g. Qed.
-Lemma mulg1 : right_id 1 (@mul H).
+Lemma mulg1 : right_id 1 (@mul H3).
 Proof. by move=> x; apply/val_inj; rewrite valM val1 mulg1. Qed.
 
-HB.instance Definition _ := BaseUMagma_isUMagma.Build H mul1g mulg1.
+#[local] HB.instance Definition _ := BaseUMagma_isUMagma.Build H3 mul1g mulg1.
 
 HB.end.
 
-#[short(type="subMonoidType")]
+#[primitive, short(type="subMonoidType")]
 HB.structure Definition SubMonoid (G : monoidType) S :=
   { H of SubUMagma G S H & Monoid H}.
 
@@ -1193,16 +1197,16 @@ HB.factory Record SubChoice_isSubMonoid (G : monoidType) S H
   monoid_closed_subproof : monoid_closed S
 }.
 
-HB.builders Context G S H & SubChoice_isSubMonoid G S H.
+HB.builders Context G S H4 & SubChoice_isSubMonoid G S H4.
 
-HB.instance Definition _ :=
-  SubChoice_isSubUMagma.Build G S H monoid_closed_subproof.
-HB.instance Definition _ :=
-  SubChoice_isSubSemigroup.Build G S H (snd monoid_closed_subproof).
+#[local] HB.instance Definition _ :=
+  SubChoice_isSubUMagma.Build G S H4 monoid_closed_subproof.
+#[local] HB.instance Definition _ :=
+  SubChoice_isSubSemigroup.Build G S H4 (snd monoid_closed_subproof).
 
 HB.end.
 
-#[short(type="subGroupType")]
+#[primitive, short(type="subGroupType")]
 HB.structure Definition SubGroup (G : groupType) S :=
   { H of SubUMagma G S H & Group H}.
 
@@ -1211,28 +1215,28 @@ HB.factory Record SubChoice_isSubGroup (G : groupType) S H
   group_closed_subproof : group_closed S
 }.
 
-HB.builders Context G S H & SubChoice_isSubGroup G S H.
+HB.builders Context G S H5 & SubChoice_isSubGroup G S H5.
 
 Lemma umagma_closed : umagma_closed S.
 Proof.
 split; first exact/(fst group_closed_subproof).
 exact/group_closedM/group_closed_subproof.
 Qed.
-HB.instance Definition _ := SubChoice_isSubMonoid.Build G S H umagma_closed.
-HB.instance Definition _ :=
+#[local] HB.instance Definition _ := SubChoice_isSubMonoid.Build G S H5 umagma_closed.
+#[local] HB.instance Definition _ :=
   isInvClosed.Build G S (group_closedV group_closed_subproof).
 
-Let inH v Sv : H := Sub v Sv.
-Let invH (u : H) := inH (gpredVr _ (valP u)).
+Let inH v Sv : H5 := Sub v Sv.
+Let invH (u : H5) := inH (gpredVr _ (valP u)).
 
-HB.instance Definition _ := hasInv.Build H invH.
+#[local] HB.instance Definition _ := hasInv.Build H5 invH.
 
 Lemma mulVg : left_inverse 1%g invH *%g.
 Proof. by move=> x; apply/val_inj; rewrite valM SubK mulVg val1. Qed.
 Lemma mulgV : right_inverse 1%g invH *%g.
 Proof. by move=> x; apply/val_inj; rewrite valM SubK mulgV val1. Qed.
 
-HB.instance Definition _ := Monoid_isGroup.Build H mulVg mulgV.
+#[local] HB.instance Definition _ := Monoid_isGroup.Build H5 mulVg mulgV.
 
 HB.end.
 

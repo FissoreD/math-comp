@@ -781,11 +781,9 @@ Variables (T : eqType) (P : pred T) (sT : subType P).
 
 Local Notation ev_ax := (fun T v => @Equality.axiom T (fun x y => v x == v y)).
 Lemma val_eqP : ev_ax sT val. Proof. exact: inj_eqAxiom val_inj. Qed.
-Elpi Print TC.Solver "mathcomp.boot/tc".
-Elpi Trace.
+
 #[hnf] HB.instance Definition _ := Equality.copy (sub_type sT) (pcan_type valK).
 
-STOP.
 End SubEqType.
 
 Lemma val_eqE (T : eqType) (P : pred T) (sT : subEqType P)

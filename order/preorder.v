@@ -690,7 +690,7 @@ HB.mixin Record isDuallyPreorder (d : disp_t) T & Equality T := {
   ge_trans : transitive    (fun x y => le y x);
 }.
 
-#[short(type="preorderType")]
+#[primitive, short(type="preorderType")]
 HB.structure Definition Preorder (d : disp_t) :=
   { T of Choice T & isDuallyPreorder d T }.
 
@@ -700,17 +700,17 @@ HB.mixin Record hasBottom d T & Preorder d T := {
   le0x : forall x, le bottom x;
 }.
 
-#[key="T", primitive]
-HB.mixin Record hasTop d T & Preorder d T := {
-  top : T;
+#[key="T0", primitive]
+HB.mixin Record hasTop d T0 & Preorder d T0 := {
+  top : T0;
   lex1 : forall x, le x top;
 }.
 
-#[short(type="bPreorderType")]
+#[primitive, short(type="bPreorderType")]
 HB.structure Definition BPreorder d := { T of hasBottom d T & Preorder d T }.
-#[short(type="tPreorderType")]
+#[primitive, short(type="tPreorderType")]
 HB.structure Definition TPreorder d := { T of hasTop d T & Preorder d T }.
-#[short(type="tbPreorderType")]
+#[primitive, short(type="tbPreorderType")]
 HB.structure Definition TBPreorder d := { T of hasTop d T & BPreorder d T }.
 
 Section PreorderDef.
@@ -952,16 +952,16 @@ HB.export PreOCoercions.
 (* FINITE *)
 (**********)
 
-#[short(type="finPreorderType")]
+#[primitive, short(type="finPreorderType")]
 HB.structure Definition FinPreorder d := { T of Finite T & Preorder d T }.
 
-#[short(type="finBPreorderType")]
+#[primitive, short(type="finBPreorderType")]
 HB.structure Definition FinBPreorder d := { T of FinPreorder d T & hasBottom d T }.
 
-#[short(type="finTPreorderType")]
+#[primitive, short(type="finTPreorderType")]
 HB.structure Definition FinTPreorder d := { T of FinPreorder d T & hasTop d T }.
 
-#[short(type="finTBPreorderType")]
+#[primitive, short(type="finTBPreorderType")]
 HB.structure Definition FinTBPreorder d := { T of FinBPreorder d T & hasTop d T }.
 
 (********)
@@ -1794,34 +1794,34 @@ Context {disp1 disp2 : disp_t} {T1 : preorderType disp1} {T2 : preorderType disp
 Implicit Types (x y : T1) (z t : T2) (b : bool) (m n : nat) (P : Prop).
 
 Lemma comparable_contraTle b x y : x >=< y -> (y < x -> ~~ b) -> (b -> x <= y).
-Proof. by move=> /comparable_leNgt ->; case: (y < x); case: b. Qed.
+Proof. by move=> /(@comparable_leNgt _ _ _ _) ->; case: (y < x); case: b. Qed.
 
 Lemma comparable_contraTlt b x y : x >=< y -> (y <= x -> ~~ b) -> (b -> x < y).
-Proof. by move=> /comparable_ltNge ->; case: (y <= x); case: b. Qed.
+Proof. by move=> /(@comparable_ltNge _ _ _ _) ->; case: (y <= x); case: b. Qed.
 
 Lemma comparable_contraPle P x y : x >=< y -> (y < x -> ~ P) -> (P -> x <= y).
-Proof. by move=> /comparable_leNgt -> np p; apply/negP => /np. Qed.
+Proof. by move=> /(@comparable_leNgt _ _ _ _) -> np p; apply/negP => /np. Qed.
 
 Lemma comparable_contraPlt P x y : x >=< y -> (y <= x -> ~ P) -> (P -> x < y).
-Proof. by move=> /comparable_ltNge -> np p; apply/negP => /np. Qed.
+Proof. by move=> /(@comparable_ltNge _ _ _ _) -> np p; apply/negP => /np. Qed.
 
 Lemma comparable_contraNle b x y : x >=< y -> (y < x -> b) -> (~~ b -> x <= y).
-Proof. by move=> /comparable_leNgt ->; case: (y < x); case: b. Qed.
+Proof. by move=> /(@comparable_leNgt _ _ _ _) ->; case: (y < x); case: b. Qed.
 
 Lemma comparable_contraNlt b x y : x >=< y -> (y <= x -> b) -> (~~ b -> x < y).
-Proof. by move=> /comparable_ltNge ->; case: (y <= x); case: b. Qed.
+Proof. by move=> /(@comparable_ltNge _ _ _ _) ->; case: (y <= x); case: b. Qed.
 
 Lemma comparable_contra_not_le P x y : x >=< y -> (y < x -> P) -> (~ P -> x <= y).
-Proof. by move=> /comparable_leNgt -> np p; apply/negP => /np. Qed.
+Proof. by move=> /(@comparable_leNgt _ _ _ _) -> np p; apply/negP => /np. Qed.
 
 Lemma comparable_contra_not_lt P x y : x >=< y -> (y <= x -> P) -> (~ P -> x < y).
-Proof. by move=> /comparable_ltNge -> np p; apply/negP => /np. Qed.
+Proof. by move=> /(@comparable_ltNge _ _ _ _) -> np p; apply/negP => /np. Qed.
 
 Lemma comparable_contraFle b x y : x >=< y -> (y < x -> b) -> (b = false -> x <= y).
-Proof. by move=> /comparable_leNgt -> np /negP p; apply/negP => /np. Qed.
+Proof. by move=> /(@comparable_leNgt _ _ _ _) -> np /negP p; apply/negP => /np. Qed.
 
 Lemma comparable_contraFlt b x y : x >=< y -> (y <= x -> b) -> (b = false -> x < y).
-Proof. by move=> /comparable_ltNge -> np /negP p; apply/negP => /np. Qed.
+Proof. by move=> /(@comparable_ltNge _ _ _ _) -> np /negP p; apply/negP => /np. Qed.
 
 Lemma comparable_contra_leq_le m n x y : x >=< y ->
   (y < x -> (n < m)%N) -> ((m <= n)%N -> x <= y).
@@ -1941,14 +1941,14 @@ HB.factory Record isPreorder (d : disp_t) T & Equality T := {
   le_trans : transitive    le;
 }.
 
-HB.builders Context (d : disp_t) T & isPreorder d T.
+HB.builders Context (d : disp_t) T1 & isPreorder d T1.
 (* TODO: print nice error message when keyed type is not provided *)
 
 Let ge_trans : transitive (fun x y => le y x).
 Proof. by move=> x y z /[swap]; apply: le_trans. Qed.
 
 #[warning="-HB.no-new-instance"]
-HB.instance Definition _ := @isDuallyPreorder.Build d T
+HB.instance Definition _ := @isDuallyPreorder.Build d T1
   le _ lt_def (fun x y => lt_def y x) le_refl le_refl le_trans ge_trans.
 HB.end.
 
@@ -1958,22 +1958,22 @@ HB.factory Record Le_isPreorder (d : disp_t) T & Equality T := {
   le_trans : transitive    le;
 }.
 
-HB.builders Context (d : disp_t) T & Le_isPreorder d T.
+HB.builders Context (d : disp_t) T1 & Le_isPreorder d T1.
 (* TODO: print nice error message when keyed type is not provided *)
 
 #[warning="-HB.no-new-instance"]
-HB.instance Definition _ := @isPreorder.Build d T
+HB.instance Definition _ := @isPreorder.Build d T1
   le _ (fun _ _ => erefl) le_refl le_trans.
 HB.end.
 
-HB.factory Record LtLe_isPreorder (d : disp_t) T & Equality T := {
-  le : rel T;
-  lt : rel T;
+HB.factory Record LtLe_isPreorder (d : disp_t) T1 & Equality T1 := {
+  le : rel T1;
+  lt : rel T1;
   le_def   : forall x y, le x y = (x == y) || lt x y;
   lt_irr   : irreflexive lt;
   lt_trans : transitive lt;
 }.
-HB.builders Context (d : disp_t) T & LtLe_isPreorder d T.
+HB.builders Context (d : disp_t) T2 & LtLe_isPreorder d T2.
 
 Let le_refl : reflexive le. Proof. by move=> x; rewrite le_def eqxx. Qed.
 
@@ -1991,7 +1991,7 @@ by rewrite lt_irr.
 Qed.
 
 #[warning="-HB.no-new-instance"]
-HB.instance Definition _ := @isPreorder.Build d T
+HB.instance Definition _ := @isPreorder.Build d T2
   le lt lt_le_def le_refl le_trans .
 
 HB.end.
@@ -2002,9 +2002,9 @@ HB.factory Record Lt_isPreorder (d : disp_t) T & Equality T := {
   lt_trans : transitive  lt;
 }.
 
-HB.builders Context (d : disp_t) (T : Type) & Lt_isPreorder d T.
+HB.builders Context (d : disp_t) (T2 : Type) & Lt_isPreorder d T2.
 #[warning="-HB.no-new-instance"]
-HB.instance Definition _ := @LtLe_isPreorder.Build d T
+HB.instance Definition _ := @LtLe_isPreorder.Build d T2
   _ lt (fun _ _ => erefl) lt_irr lt_trans.
 HB.end.
 
@@ -2057,6 +2057,7 @@ HB.mixin Record isOrderMorphism d (T : preorderType d) d' (T' : preorderType d')
   omorph_le_subproof : {homo apply : x y / x <= y} ;
 }.
 
+#[primitive]
 HB.structure Definition OrderMorphism d (T : preorderType d)
   d' (T' : preorderType d') := {f of isOrderMorphism d T d' T' f}.
 
@@ -2086,7 +2087,7 @@ HB.instance Definition _ := isOrderMorphism.Build d T d T idfun
   idfun_is_nondecreasing.
 
 Fact comp_is_nondecreasing : nondecreasing (f \o g).
-Proof. by move=> ? ? ?; do 2 apply: omorph_le. Qed.
+Proof. by move=> ? ? ?; apply/(@omorph_le _ _ _ _ f)/(@omorph_le _ _ _ _ g). Qed.
 
 #[export]
 HB.instance Definition _ := isOrderMorphism.Build d T d'' T'' (f \o g)
@@ -2102,7 +2103,7 @@ HB.mixin Record isSubPreorder d (T : preorderType d) (S : pred T) d' U
   le_val : {mono (val : U -> T) : x y / x <= y};
 }.
 
-#[short(type="subPreorder")]
+#[primitive, short(type="subPreorder")]
 HB.structure Definition SubPreorder d (T : preorderType d) S d' :=
   { U of SubEquality T S U & Preorder d' U & isSubPreorder d T S d' U }.
 
@@ -2129,11 +2130,11 @@ End SubPreorderTheory.
 HB.factory Record SubChoice_isSubPreorder d (T : preorderType d) S (d' : disp_t) U
     & SubChoice T S U := {}.
 
-HB.builders Context d T S d' U & SubChoice_isSubPreorder d T S d' U.
-HB.instance Definition _ : isPreorder d' U :=
-  @PreCancelPartial.PrePcan d' U d T val.
-Fact valD : order_morphism (val : U -> T). Proof. by []. Qed.
-HB.instance Definition _ := isSubPreorder.Build d T S d' U valD.
+HB.builders Context d T2 S d' U0 & SubChoice_isSubPreorder d T2 S d' U0.
+HB.instance Definition _ : isPreorder d' U0 :=
+  @PreCancelPartial.PrePcan d' U0 d T2 val.
+Fact valD : order_morphism (val : U0 -> T2). Proof. by []. Qed.
+HB.instance Definition _ := isSubPreorder.Build d T2 S d' U0 valD.
 HB.end.
 
 Module SubOrderExports.
@@ -2230,14 +2231,15 @@ Lemma nhomo_ltn_lt_in : {in D, forall i, i.+1 \in D -> f i > f i.+1} ->
   {in D &, {homo f : i j /~ i < j}}.
 Proof.
 move=> f_dec; apply: homo_sym_in.
-by apply: homo_ltn_in Dconvex f_dec => ? ? ? ? /lt_trans->.
+by apply: homo_ltn_in Dconvex f_dec => ? ? ? ? /(@lt_trans _ _ _ _ _) ->.
 Qed.
 
 Lemma nonincn_inP : {in D, forall i, i.+1 \in D -> f i >= f i.+1} ->
   {in D &, {homo f : i j /~ i <= j}}.
 Proof.
 move=> /= f_dec; apply: homo_sym_in.
-by apply: homo_leq_in Dconvex f_dec => //= ? ? ? ? /le_trans->.
+apply: homo_leq_in Dconvex f_dec => //=; first exact: lexx.
+by move=> ? ? ? ? /(@le_trans _ _ _ _ _) ->.
 Qed.
 
 Lemma homo_ltn_lt : (forall i, f i < f i.+1) -> {homo f : i j / i < j}.
@@ -2249,13 +2251,14 @@ Proof. by apply: homo_leq => //; apply: le_trans. Qed.
 Lemma nhomo_ltn_lt : (forall i, f i > f i.+1) -> {homo f : i j /~ i < j}.
 Proof.
 move=> f_dec; apply: homo_sym.
-by apply: homo_ltn f_dec => ? ? ? ? /lt_trans->.
+by apply: homo_ltn f_dec => ? ? ? ? /(@lt_trans _ _ _ _ _) ->.
 Qed.
 
 Lemma nonincnP : (forall i, f i >= f i.+1) -> {homo f : i j /~ i <= j}.
 Proof.
 move=> /= f_dec; apply: homo_sym.
-by apply: homo_leq f_dec => //= ? ? ? ? /le_trans->.
+apply: homo_leq f_dec; first exact: lexx.
+by move=> //= ? ? ? ? /(@le_trans _ _ _ _ _) ->.
 Qed.
 
 End NatMonotonyTheory.
@@ -3218,7 +3221,7 @@ Qed.
 Lemma lt_le_def s1 s2 : lt  s1 s2 = le s1 s2 && ~~ le s2 s1.
 Proof.
 elim: s1 s2 => [|x s1 ihs1] [|y s2]//=; rewrite ihs1.
-by case: (x <= y); case (y <= x).
+case: (x <= y); case: (y <= x) => //.
 Qed.
 
 #[export]
@@ -3359,7 +3362,7 @@ Lemma leEtprod n T (t1 t2 : n.-tuple T) :
   (t1 <= t2) = [forall i, tnth t1 i <= tnth t2 i].
 Proof.
 elim: n => [|n IHn] in t1 t2 *.
-  by rewrite tuple0 [t2]tuple0/= lexx; symmetry; apply/forallP => [].
+  by rewrite tuple0 [t2]tuple0/= lexx; symmetry; apply/forallP => -[].
 case: (tupleP t1) (tupleP t2) => [x1 {}t1] [x2 {}t2].
 rewrite [_ <= _]le_cons [t1 <= t2 :> seq _]IHn.
 apply/idP/forallP => [/andP[lex12 /forallP/= let12 i]|lext12].
@@ -3746,7 +3749,7 @@ Prenex Implicits enum_val.
 
 Lemma enum_valP A i : @enum_val A i \in A.
 Proof.
-suff: enum_val i \in enum A by rewrite mem_enum.
+suff: [elaborate enum_val i \in enum A] by rewrite mem_enum.
 by apply: mem_nth; rewrite -cardE.
 Qed.
 

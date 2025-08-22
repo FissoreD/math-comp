@@ -189,7 +189,7 @@ have{} Dg x (aTx : mem_seq (enum aT) x): g x = fun_of_fin_rec f aTx.
 elim: (enum aT) / f [elaborate enum_uniq aT] => //= x1 s y f IHf /andP[s'x1 Us] in Dg *.
 rewrite Dg ?eqxx //=; case: eqP => // /eq_axiomK-> /= _.
 rewrite {}IHf // => x s_x; rewrite Dg ?s_x ?orbT //.
-by case: eqP (memPn s'x1 x s_x) => // _ _ /(bool_irrelevance s_x) <-.
+by case: eqP [elaborate memPn s'x1 x s_x] => // _ _ /(bool_irrelevance s_x) <-.
 Qed.
 
 Lemma ffunK : @cancel (finPi aT rT) fT fun_of_fin finfun.

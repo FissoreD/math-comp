@@ -1808,8 +1808,7 @@ Proof. by apply: val_inj; apply: nth_enum_ord. Qed.
 
 Lemma index_enum_ord (i : 'I_n) : index i (enum 'I_n) = i.
 Proof.
-rewrite -[in LHS](nth_ord_enum i i) index_uniq ?(enum_uniq, size_enum_ord)//.
-exact: enum_uniq.
+by rewrite -[in LHS](nth_ord_enum i i) index_uniq ?(enum_uniq, size_enum_ord).
 Qed.
 
 Lemma mask_enum_ord m :

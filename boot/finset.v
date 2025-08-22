@@ -1465,7 +1465,8 @@ Variable (I : finType).
 Implicit Types (i : I) (A : {set I}).
 
 Lemma pick_set1 i0 : [pick x in [set i0]] = Some i0.
-Proof. by case: pickP => [i /[!inE]/eqP-> | /(_ i0)/[!(inE, eqxx)]]. Qed.
+(* FIXME: I should not need to disable the implicits of eqxx, to be investigated. *)
+Proof. by case: pickP => [i /[!inE]/eqP-> | /(_ i0)/[!(inE, @eqxx)]]. Qed.
 
 Definition unset1 A : option I := if #|A| == 1 then [pick x in A] else None.
 
@@ -1540,7 +1541,9 @@ Lemma big_imset_idem [I J : finType] (h : I -> J) (A : pred I) F :
     idempotent_op op ->
   \big[op/x]_(j in h @: A) F j = \big[op/x]_(i in A) F (h i).
 Proof.
-rewrite -!big_image => op_idem; rewrite -big_undup// -[RHS]big_undup//.
+(* FIXME: The first pattern should not exist. Why does ssrmatching finds that the RHS is a FO match but not the LHS? *)
+rewrite -!big_image => op_idem.
+rewrite -[LHS](@big_undup _ _ _ J)// -[RHS]big_undup//.
 apply/perm_big/perm_undup => j; apply/imageP.
 have [mem_j | /imageP mem_j] := boolP (j \in [seq h j | j in A]).
 - by exists j => //; apply/imsetP; apply: imageP mem_j.

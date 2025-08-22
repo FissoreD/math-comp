@@ -522,9 +522,7 @@ HB.factory Record isCountable (T : Type) : Type := {
 HB.builders Context T & isCountable T.
 #[local]
   HB.instance Definition _ := Equality.copy T (pcan_type pickleK).
-#[local]
   HB.instance Definition _ := PCanHasChoice pickleK.
-#[local]
   HB.instance Definition _ := Choice_isCountable.Build T pickleK.
 HB.end.
 Arguments isCountable.axioms_ T%_type_scope.

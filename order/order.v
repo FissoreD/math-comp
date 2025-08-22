@@ -1157,10 +1157,10 @@ Module Order.
 
 Export Order.
 
-#[key="T", primitive]
-HB.mixin Record Preorder_isDuallyPOrder (d : disp_t) T & Preorder d T := {
-  le_anti  : antisymmetric (@le d T);
-  ge_anti  : antisymmetric (fun x y => @le d T y x);
+#[key="T1", primitive]
+HB.mixin Record Preorder_isDuallyPOrder (d : disp_t) T1 & Preorder d T1 := {
+  le_anti  : antisymmetric (@le d T1);
+  ge_anti  : antisymmetric (fun x y => @le d T1 y x);
 }.
 
 #[short(type="porderType")]
@@ -1181,15 +1181,15 @@ HB.export POrderExports.
 
 (* Bind Scope order_scope with POrder.sort. *)
 
-#[key="T", primitive]
-HB.mixin Record POrder_isMeetSemilattice d (T : Type) & POrder d T := {
-  meet : T -> T -> T;
+#[key="T2", primitive]
+HB.mixin Record POrder_isMeetSemilattice d (T2 : Type) & POrder d T2 := {
+  meet : T2 -> T2 -> T2;
   lexI : forall x y z, (x <= meet y z) = (x <= y) && (x <= z);
 }.
 
-#[key="T", primitive]
-HB.mixin Record POrder_isJoinSemilattice d T & POrder d T := {
-  join : T -> T -> T;
+#[key="T3", primitive]
+HB.mixin Record POrder_isJoinSemilattice d T3 & POrder d T3 := {
+  join : T3 -> T3 -> T3;
   leUx : forall x y z, (join x y <= z) = (x <= z) && (y <= z);
 }.
 
@@ -1366,9 +1366,9 @@ HB.structure Definition TDistrLattice d :=
 HB.structure Definition TBDistrLattice d :=
   { T of BDistrLattice d T  & hasTop d T }.
 
-#[key="T", primitive]
-HB.mixin Record DistrLattice_isTotal d T & DistrLattice d T :=
-  { le_total : total (<=%O : rel T) }.
+#[key="T4", primitive]
+HB.mixin Record DistrLattice_isTotal d T4 & DistrLattice d T4 :=
+  { le_total : total (<=%O : rel T4) }.
 
 #[short(type="orderType")]
 HB.structure Definition Total d :=
@@ -1383,10 +1383,10 @@ HB.structure Definition TTotal d := { T of Total d T & hasTop d T }.
 #[short(type="tbOrderType")]
 HB.structure Definition TBTotal d := { T of BTotal d T & hasTop d T }.
 
-#[key="T", primitive]
-HB.mixin Record DistrLattice_hasRelativeComplement d T & DistrLattice d T := {
+#[key="T5", primitive]
+HB.mixin Record DistrLattice_hasRelativeComplement d T5 & DistrLattice d T5 := {
   (* rcompl x y z is the complement of z in the interval [x, y]. *)
-  rcompl : T -> T -> T -> T;
+  rcompl : T5 -> T5 -> T5 -> T5;
   rcomplPmeet : forall x y z, ((x `&` y) `|` z) `&` rcompl x y z = x `&` y;
   rcomplPjoin : forall x y z, ((y `|` x) `&` z) `|` rcompl x y z = y `|` x;
 }.
@@ -1408,10 +1408,10 @@ HB.structure Definition CBDistrLattice d :=
   { T of CDistrLattice d T & hasBottom d T &
          CDistrLattice_hasSectionalComplement d T }.
 
-#[key="T", primitive]
-HB.mixin Record CDistrLattice_hasDualSectionalComplement d T
-         & CDistrLattice d T & hasTop d T := {
-  codiff : T -> T -> T;
+#[key="T6", primitive]
+HB.mixin Record CDistrLattice_hasDualSectionalComplement d T6
+         & CDistrLattice d T6 & hasTop d T6 := {
+  codiff : T6 -> T6 -> T6;
   codiffErcompl : forall x y, codiff x y = rcompl x \top y;
 }.
 
@@ -1424,13 +1424,13 @@ Module Import CBDistrLatticeSyntax.
 Notation "x `\` y" := (diff x y) : order_scope.
 End CBDistrLatticeSyntax.
 
-#[key="T", primitive]
-HB.mixin Record CDistrLattice_hasComplement d T &
-         CTDistrLattice d T & CBDistrLattice d T := {
-  compl : T -> T;
+#[key="T7", primitive]
+HB.mixin Record CDistrLattice_hasComplement d T7 &
+         CTDistrLattice d T7 & CBDistrLattice d T7 := {
+  compl : T7 -> T7;
   (* FIXME: a bug in HB prevents us writing "\top `\` x" and "codiff \bot x" *)
-  complEdiff : forall x : T, compl x = (\top : T) `\` x;
-  complEcodiff : forall x : T, compl x = codiff (\bot : T) x;
+  complEdiff : forall x : T7, compl x = (\top : T7) `\` x;
+  complEcodiff : forall x : T7, compl x = codiff (\bot : T7) x;
 }.
 
 #[short(type="ctbDistrLatticeType")]
@@ -1448,6 +1448,16 @@ End CTBDistrLatticeSyntax.
 
 #[short(type="finPOrderType")]
 HB.structure Definition FinPOrder d := { T of Finite T & POrder d T }.
+
+HB.instance Definition _ (d : disp_t) (T : porderType d) :=
+  Preorder_isDuallyPOrder.Build (dual_display d) T^d
+    ge_anti le_anti.
+
+HB.saturate dual.
+STOP.
+Elpi Trace.
+HB.saturate dual.
+STOP.
 
 #[short(type="finBPOrderType")]
 HB.structure Definition FinBPOrder d := { T of FinPOrder d T & hasBottom d T }.
@@ -1678,7 +1688,37 @@ Lemma joinEdual d (T : meetSemilatticeType d) (x y : T) :
   ((x : T^d) `|^d` y) = (x `&` y).
 Proof. by []. Qed.
 
-HB.saturate.
+HB.saturate dual.
+HB.saturate dual.
+STOP.
+
+HB.instance Definition _ d (T : bPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : latticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : bMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : bJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finBPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTBPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : bLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finBPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finBMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTBPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTBLatticeType d) := Preorder.on T^d.
+
 
 HB.instance Definition _ d (T : distrLatticeType d) :=
   Lattice_isDistributive.Build (dual_display d) T^d joinIl meetUl.

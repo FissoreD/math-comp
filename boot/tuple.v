@@ -86,7 +86,7 @@ Qed.
 Lemma map_tnth_enum t : map (tnth t) (enum 'I_n) = t.
 Proof.
 set l := ((val : tuple_of -> seq T) t).
-case def_t: {-}l => [|x0 t']; rewrite {}/l in def_t.
+case def_t: {-}l => [|x0 t']. rewrite /l in def_t.
   by rewrite [enum _]size0nil // -cardE card_ord -(size_tuple t) def_t.
 apply: (@eq_from_nth _ x0) => [|i]; rewrite size_map.
   by rewrite -cardE size_tuple card_ord.
