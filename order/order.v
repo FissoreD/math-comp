@@ -1686,7 +1686,6 @@ HB.instance Definition _ d (T : distrLatticeType d) :=
 
 HB.instance Definition _ d (T : orderType d) :=
   DistrLattice_isTotal.Build (dual_display d) T^d (fun x y => le_total y x).
-STOP.
 
 Elpi Trace.
 Set Debug "elpi".
