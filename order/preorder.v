@@ -2238,7 +2238,7 @@ Lemma nonincn_inP : {in D, forall i, i.+1 \in D -> f i >= f i.+1} ->
   {in D &, {homo f : i j /~ i <= j}}.
 Proof.
 move=> /= f_dec; apply: homo_sym_in.
-apply: homo_leq_in Dconvex f_dec => //=; first exact: lexx.
+apply: homo_leq_in Dconvex f_dec => //=.
 by move=> ? ? ? ? /(@le_trans _ _ _ _ _) ->.
 Qed.
 

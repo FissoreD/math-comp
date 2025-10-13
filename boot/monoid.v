@@ -843,7 +843,12 @@ HB.factory Record isGroupMorphism (G H : groupType) (f : G -> H) := {
 HB.builders Context G H apply & isGroupMorphism G H apply.
 
 Local Lemma gmulf1 : apply 1 = 1.
-Proof. by rewrite -[1]divg1 gmulfF divgg. Qed.
+Proof.
+  Set Debug "ssreflect".
+
+rewrite -[1]divg1.
+STOP.
+gmulfF divgg. Qed.
 
 Local Lemma gmulfM : {morph apply : x y / x * y}.
 Proof.

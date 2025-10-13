@@ -431,15 +431,16 @@ elim: E uniqE => /= [_ | x0 E IH_E /andP[E'x0 uniqE]] in F trivF *.
   by rewrite ffunE Ff0 inE /=.
 have [y0 Fxy0 | Fx00] := pickP (F x0); last first.
   by rewrite !eq_card0 // => f; apply: contraFF (Fx00 (f x0))=> /familyP; apply.
-set F1 := fun x => if eqP is ReflectT Dx then xpred1 (ecast x (rT x) Dx y0) else F x.
+(* FIXME: This succeeded with the declaration of coercions from HB/af93a5e. *)
+set F1 := fun x => if @eqP _ x0 x is ReflectT Dx then xpred1 (ecast x (rT x) Dx y0) else F x.
 transitivity (#|[predX F x0 & family F1 : pred fT]|); last first.
   rewrite cardX {}IH_E {uniqE}// => [x E'x|].
     rewrite /F1; case: eqP => [Dx | /nesym/eqP-x0'x]; first exact: card1.
     by rewrite trivF // negb_or x0'x.
   congr (_ * foldr _ _ _); apply/eq_in_map=> x Ex.
   by rewrite /F1; case: eqP => // Dx0; rewrite Dx0 Ex in E'x0.
-pose g yf : fT := let: (y, f) := yf : rT x0 * fT in
-  [ffun x => if eqP is ReflectT Dx then ecast x (rT x) Dx y else f x].
+set g := fun yf => let: (y, f) := yf : rT x0 * fT in
+  [ffun x => if eqP is ReflectT Dx then ecast x (rT x) Dx y else f x] : fT.
 have gK: cancel (fun f : fT => (f x0, g (y0, f))) g.
   by move=> f; apply/ffunP=> x; rewrite !ffunE; case: eqP => //; case: x /.
 rewrite -(card_image (can_inj gK)); apply: eq_card => [] [y f] /=.

@@ -1537,13 +1537,13 @@ Proof.
 by move=> /subsetP AP; apply: sub_le_big => // i; have /[!inE] := AP i.
 Qed.
 
-Lemma big_imset_idem [I J : finType] (h : I -> J) (A : pred I) F :
+Lemma big_imset_idem [I J : finType] (h : I -> J) (A : pred I) (F : J -> R) :
     idempotent_op op ->
   \big[op/x]_(j in h @: A) F j = \big[op/x]_(i in A) F (h i).
 Proof.
 (* FIXME: The first pattern should not exist. Why does ssrmatching finds that the RHS is a FO match but not the LHS? *)
 rewrite -!big_image => op_idem.
-rewrite -[LHS](@big_undup _ _ _ J)// -[RHS]big_undup//.
+rewrite -big_undup// -[RHS](@big_undup _ _ _ J)//.
 apply/perm_big/perm_undup => j; apply/imageP.
 have [mem_j | /imageP mem_j] := boolP (j \in [seq h j | j in A]).
 - by exists j => //; apply/imsetP; apply: imageP mem_j.
@@ -2343,7 +2343,7 @@ case/and3P=> /eqP <-{D} tiP notP0; apply/setP=> B /=; set D := cover P.
 have defP x: x \in D -> [set y in D | y \in pblock P x] = pblock P x.
   by move=> Dx; apply/setIidPr; rewrite (bigcup_max (pblock P x)) ?pblock_mem.
 apply/imsetP/idP=> [[x Px ->{B}] | PB]; first by rewrite defP ?pblock_mem.
-have /set0Pn[x Bx]: B != set0 := memPn notP0 B PB.
+have /set0Pn[x Bx]: B != set0 := [elaborate memPn notP0 B PB].
 have Px: x \in cover P by apply/bigcupP; exists B.
 by exists x; rewrite // defP // (def_pblock tiP PB Bx).
 Qed.

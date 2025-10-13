@@ -601,7 +601,7 @@ Lemma fcard_order_set n (a : {pred T}) :
   a \subset order_set n -> fclosed f a -> fcard f a * n = #|a|.
 Proof.
 move=> a_n cl_a; rewrite /n_comp_mem; set b := [predI froots f & a].
-suff <-: #|preim (froot f) b| = #|b| * n.
+suff <-: [elaborate #|preim (froot f) b| = #|b| * n].
   apply: eq_card => x; rewrite !inE (roots_root fconnect_sym).
   exact/esym/(closed_connect cl_a)/connect_root.
 have{cl_a a_n} (x): b x -> froot f x = x /\ order x = n.
@@ -680,7 +680,8 @@ Proof. by rewrite -(card_uniqP Up); apply: (eq_card fconnect_cycle). Qed.
 Lemma orbitE : orbit x = rot (index x p) p.
 Proof.
 set i := index _ _; rewrite /orbit order_cycle -(size_rot i) rot_index// -/i.
-set q := _ ++ _; suffices /fpathP[j ->]: fpath f x q by rewrite /= size_traject.
+set q := _ ++ _.
+suffices /fpathP[j ->]: [elaborate fpath f x q] by rewrite /= size_traject.
 by move: f_p; rewrite -(rot_cycle i) rot_index// (cycle_path x); case/andP.
 Qed.
 
