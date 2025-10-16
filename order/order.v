@@ -1679,7 +1679,7 @@ Lemma joinEdual d (T : meetSemilatticeType d) (x y : T) :
   ((x : T^d) `|^d` y) = (x `&` y).
 Proof. by []. Qed.
 
-HB.saturate.
+HB.saturate dual.
 
 HB.instance Definition _ d (T : distrLatticeType d) :=
   Lattice_isDistributive.Build (dual_display d) T^d joinIl meetUl.
@@ -1687,10 +1687,137 @@ HB.instance Definition _ d (T : distrLatticeType d) :=
 HB.instance Definition _ d (T : orderType d) :=
   DistrLattice_isTotal.Build (dual_display d) T^d (fun x y => le_total y x).
 
-Elpi Trace.
-Set Debug "elpi".
-Set Debug "backtrace".
-HB.saturate.
+(*Check let choice_Choice_isCountable_mixin :
+  Choice_isCountable.axioms_
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?[e41] ?[e44]))) :=
+  choice_Countable__to__choice_Choice_isCountable
+    (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)
+  in
+let choice_hasChoice_mixin :
+  hasChoice.axioms_
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))) :=
+  choice_Choice__to__choice_hasChoice
+    (@Choice.Pack_
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a73])
+  in
+let eqtype_hasDecEq_mixin :
+  hasDecEq.axioms_
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))) :=
+  eqtype_Equality__to__eqtype_hasDecEq
+    (@Equality.Pack_
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a74])
+  in
+let fintype_isFinite_mixin :
+  isFinite.axioms_
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    eqtype_hasDecEq_mixin :=
+  fintype_Finite__to__fintype_isFinite
+    (@Finite.Pack_
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a75])
+  in
+let Order_isDuallyPreorder_mixin :
+  isDuallyPreorder.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    eqtype_hasDecEq_mixin :=
+  @HB_unnamed_factory_20 ?[d67]
+    (@Preorder.Pack_ ?d67
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a76])
+  in
+let Order_Preorder_isDuallyPOrder_mixin :
+  Preorder_isDuallyPOrder.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin :=
+  @HB_unnamed_factory_2 ?[d68]
+    (@POrder.Pack_ ?d68
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a77])
+  in
+let Order_POrder_isJoinSemilattice_mixin :
+  POrder_isJoinSemilattice.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
+    Order_Preorder_isDuallyPOrder_mixin :=
+  @HB_unnamed_factory_8 ?[d69]
+    (@MeetSemilattice.Pack_ ?d69
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a78])
+  in
+let Order_POrder_isMeetSemilattice_mixin :
+  POrder_isMeetSemilattice.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
+    Order_Preorder_isDuallyPOrder_mixin :=
+  @HB_unnamed_factory_5 ?[d70]
+    (@JoinSemilattice.Pack_ ?d70
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a79])
+  in
+let Order_Lattice_isDistributive_mixin :
+  Lattice_isDistributive.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
+    Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
+    Order_POrder_isMeetSemilattice_mixin :=
+  @HB_unnamed_factory_11 ?[d71]
+    (@DistrLattice.Pack_ ?d71
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a80])
+  in
+let Order_DistrLattice_isTotal_mixin :
+  DistrLattice_isTotal.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
+    Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
+    Order_POrder_isMeetSemilattice_mixin Order_Lattice_isDistributive_mixin :=
+  @HB_unnamed_factory_14 ?[d72]
+    (@Total.Pack_ ?d72
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a81])
+  in
+let Order_hasBottom_mixin :
+  hasBottom.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin :=
+  @HB_unnamed_factory_23 ?[d73]
+    (@TPreorder.Pack_ ?d73
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a82])
+  in
+let Order_hasTop_mixin :
+  hasTop.axioms_ ?[e31]
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+    choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin :=
+  @HB_unnamed_factory_26 ?[d74]
+    (@BPreorder.Pack_ ?d74
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44))
+       ?[a83])
+  in
+@FinTBTotal.Class ?[e31]
+  (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable ?e41 ?e44)))
+  choice_Choice_isCountable_mixin choice_hasChoice_mixin eqtype_hasDecEq_mixin
+  fintype_isFinite_mixin Order_isDuallyPreorder_mixin
+  Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
+  Order_POrder_isMeetSemilattice_mixin Order_Lattice_isDistributive_mixin
+  Order_DistrLattice_isTotal_mixin Order_hasBottom_mixin Order_hasTop_mixin.
+ *)
+
+HB.instance Definition _ d (T : tDistrLatticeType d) := Choice.on T^d.
+HB.instance Definition _ d (T : bDistrLatticeType d) := Choice.on T^d.
+HB.instance Definition _ d (T : tbDistrLatticeType d) := Choice.on T^d.
+HB.instance Definition _ d (T : tOrderType d) := Choice.on T^d.
+HB.instance Definition _ d (T : bOrderType d) := Choice.on T^d.
+HB.instance Definition _ d (T : tbOrderType d) := Choice.on T^d.
+HB.instance Definition _ d (T : finDistrLatticeType d) := Choice.on T^d.
+HB.instance Definition _ d (T : finTBDistrLatticeType d) := Choice.on T^d.
+HB.instance Definition _ d (T : finOrderType d) := Choice.on T^d.
+Set Debug "pretyping".
+Set Debug "econstr".
+#[verbose]
+HB.saturate dual.
 STOP.
 
 HB.instance Definition _ d (T : cDistrLatticeType d) :=
