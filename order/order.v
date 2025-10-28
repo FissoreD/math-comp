@@ -1799,7 +1799,7 @@ let Order_Lattice_isDistributive_mixin :
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
     Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
     Order_POrder_isMeetSemilattice_mixin :=
-  @HB_unnamed_factory_11 _
+  @HB_unnamed_factory_216 _
     (@DistrLattice.Pack_ _
        (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
        (@DistrLattice.class _
@@ -1812,7 +1812,7 @@ let Order_DistrLattice_isTotal_mixin :
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
     Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
     Order_POrder_isMeetSemilattice_mixin Order_Lattice_isDistributive_mixin :=
-  @HB_unnamed_factory_14 _
+  @HB_unnamed_factory_219 _
     (@Total.Pack_ _
        (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
        (@Total.class _ (@Order_FinTBTotal__to__Order_Total _ _)))
