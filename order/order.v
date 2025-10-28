@@ -1679,7 +1679,32 @@ Lemma joinEdual d (T : meetSemilatticeType d) (x y : T) :
   ((x : T^d) `|^d` y) = (x `&` y).
 Proof. by []. Qed.
 
-HB.saturate dual.
+HB.instance Definition _ d (T : tbPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finBPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTBPreorderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : bPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : bMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : bJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : latticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : bLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : tbLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finBPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTBPOrderType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finMeetSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finJoinSemilatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finLatticeType d) := Preorder.on T^d.
+HB.instance Definition _ d (T : finTBLatticeType d) := Preorder.on T^d.
 
 HB.instance Definition _ d (T : distrLatticeType d) :=
   Lattice_isDistributive.Build (dual_display d) T^d joinIl meetUl.
@@ -1687,7 +1712,7 @@ HB.instance Definition _ d (T : distrLatticeType d) :=
 HB.instance Definition _ d (T : orderType d) :=
   DistrLattice_isTotal.Build (dual_display d) T^d (fun x y => le_total y x).
 
-Check 
+Check
 let choice_Choice_isCountable_mixin :
   Choice_isCountable.axioms_
     (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))) :=
