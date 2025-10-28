@@ -1687,141 +1687,139 @@ HB.instance Definition _ d (T : distrLatticeType d) :=
 HB.instance Definition _ d (T : orderType d) :=
   DistrLattice_isTotal.Build (dual_display d) T^d (fun x y => le_total y x).
 
-Set Debug "backtrace".
- Elpi Query TC.Solver lp:{{
- coq.elaborate-skeleton {{
+Check 
 let choice_Choice_isCountable_mixin :
   Choice_isCountable.axioms_
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))) :=
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))) :=
   choice_Countable__to__choice_Choice_isCountable
-    (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)
+    (@Order_FinTBTotal__to__choice_Countable _ _)
   in
 let choice_hasChoice_mixin :
   hasChoice.axioms_
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))) :=
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))) :=
   DualPreorder.choice_Choice__to__choice_hasChoice
     (@Choice.Pack_
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
        (Choice.class
           (choice_Countable__to__choice_Choice
-             (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))))
+             (@Order_FinTBTotal__to__choice_Countable _ _))))
   in
 let eqtype_hasDecEq_mixin :
   hasDecEq.axioms_
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))) :=
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))) :=
   eqtype_Equality__to__eqtype_hasDecEq
     (@Equality.Pack_
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
        (Equality.class
           (choice_Countable__to__eqtype_Equality
-             (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))))
+             (@Order_FinTBTotal__to__choice_Countable _ _))))
   in
 let fintype_isFinite_mixin :
   isFinite.axioms_
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     eqtype_hasDecEq_mixin :=
   fintype_Finite__to__fintype_isFinite
     (@Finite.Pack_
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (Finite.class (@Order_FinTBTotal__to__fintype_Finite lp:X5 lp:X8)))
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (Finite.class (@Order_FinTBTotal__to__fintype_Finite _ _)))
   in
 let Order_isDuallyPreorder_mixin :
-  isDuallyPreorder.axioms_ lp:X0
+  isDuallyPreorder.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     eqtype_hasDecEq_mixin :=
-  @HB_unnamed_factory_20 lp:X5
-    (@Preorder.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@Preorder.class _ (@Order_FinTBTotal__to__Order_Preorder lp:X5 lp:X8)))
+  @HB_unnamed_factory_20 _
+    (@Preorder.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@Preorder.class _ (@Order_FinTBTotal__to__Order_Preorder _ _)))
   in
 let Order_Preorder_isDuallyPOrder_mixin :
-  Preorder_isDuallyPOrder.axioms_ lp:X0
+  Preorder_isDuallyPOrder.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin :=
-  @HB_unnamed_factory_2 lp:X5
-    (@POrder.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@POrder.class lp:X5 (@Order_FinTBTotal__to__Order_POrder lp:X5 lp:X8)))
+  @HB_unnamed_factory_2 _
+    (@POrder.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@POrder.class _ (@Order_FinTBTotal__to__Order_POrder _ _)))
   in
 let Order_POrder_isJoinSemilattice_mixin :
-  POrder_isJoinSemilattice.axioms_ lp:X0
+  POrder_isJoinSemilattice.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
     Order_Preorder_isDuallyPOrder_mixin :=
-  @HB_unnamed_factory_8 lp:X5
-    (@MeetSemilattice.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@MeetSemilattice.class lp:X5
-          (@Order_FinTBTotal__to__Order_MeetSemilattice lp:X5 lp:X8)))
+  @HB_unnamed_factory_8 _
+    (@MeetSemilattice.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@MeetSemilattice.class _
+          (@Order_FinTBTotal__to__Order_MeetSemilattice _ _)))
   in
 let Order_POrder_isMeetSemilattice_mixin :
-  POrder_isMeetSemilattice.axioms_ lp:X0
+  POrder_isMeetSemilattice.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
     Order_Preorder_isDuallyPOrder_mixin :=
-  @HB_unnamed_factory_5 lp:X5
-    (@JoinSemilattice.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@JoinSemilattice.class lp:X5
-          (@Order_FinTBTotal__to__Order_JoinSemilattice lp:X5 lp:X8)))
+  @HB_unnamed_factory_5 _
+    (@JoinSemilattice.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@JoinSemilattice.class _
+          (@Order_FinTBTotal__to__Order_JoinSemilattice _ _)))
   in
 let Order_Lattice_isDistributive_mixin :
-  Lattice_isDistributive.axioms_ lp:X0
+  Lattice_isDistributive.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
     Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
     Order_POrder_isMeetSemilattice_mixin :=
-  @HB_unnamed_factory_11 lp:X5
-    (@DistrLattice.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@DistrLattice.class lp:X5
-          (@Order_FinTBTotal__to__Order_DistrLattice lp:X5 lp:X8)))
+  @HB_unnamed_factory_11 _
+    (@DistrLattice.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@DistrLattice.class _
+          (@Order_FinTBTotal__to__Order_DistrLattice _ _)))
   in
 let Order_DistrLattice_isTotal_mixin :
-  DistrLattice_isTotal.axioms_ lp:X0
+  DistrLattice_isTotal.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin
     Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
     Order_POrder_isMeetSemilattice_mixin Order_Lattice_isDistributive_mixin :=
-  @HB_unnamed_factory_14 lp:X5
-    (@Total.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@Total.class lp:X5 (@Order_FinTBTotal__to__Order_Total lp:X5 lp:X8)))
+  @HB_unnamed_factory_14 _
+    (@Total.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@Total.class _ (@Order_FinTBTotal__to__Order_Total _ _)))
   in
 let Order_hasBottom_mixin :
-  hasBottom.axioms_ lp:X0
+  hasBottom.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin :=
-  @HB_unnamed_factory_23 lp:X5
-    (@TPreorder.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@TPreorder.class _ (@Order_FinTBTotal__to__Order_TPreorder lp:X5 lp:X8)))
+  @HB_unnamed_factory_23 _
+    (@TPreorder.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@TPreorder.class _ (@Order_FinTBTotal__to__Order_TPreorder _ _)))
   in
 let Order_hasTop_mixin :
-  hasTop.axioms_ lp:X0
+  hasTop.axioms_ _
 
-    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+    (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
     choice_hasChoice_mixin eqtype_hasDecEq_mixin Order_isDuallyPreorder_mixin :=
-  @HB_unnamed_factory_26 lp:X5
-    (@BPreorder.Pack_ lp:X5
-       (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8))
-       (@BPreorder.class _ (@Order_FinTBTotal__to__Order_BPreorder lp:X5 lp:X8)))
+  @HB_unnamed_factory_26 _
+    (@BPreorder.Pack_ _
+       (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _))
+       (@BPreorder.class _ (@Order_FinTBTotal__to__Order_BPreorder _ _)))
   in
-@FinTBTotal.Class lp:X0
+@FinTBTotal.Class _
 
-  (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable lp:X5 lp:X8)))
+  (dual (Countable.sort (@Order_FinTBTotal__to__choice_Countable _ _)))
   choice_Choice_isCountable_mixin choice_hasChoice_mixin eqtype_hasDecEq_mixin
   fintype_isFinite_mixin Order_isDuallyPreorder_mixin
   Order_Preorder_isDuallyPOrder_mixin Order_POrder_isJoinSemilattice_mixin
   Order_POrder_isMeetSemilattice_mixin Order_Lattice_isDistributive_mixin
-  Order_DistrLattice_isTotal_mixin Order_hasBottom_mixin Order_hasTop_mixin
+  Order_DistrLattice_isTotal_mixin Order_hasBottom_mixin Order_hasTop_mixin.
  }} _ _ Diag.
  }}.
 STOP.
