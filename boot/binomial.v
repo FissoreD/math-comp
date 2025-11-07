@@ -115,7 +115,7 @@ pose ltv i := vFp i < i.
 (* FIXME: The tc solver should unfold elpi constants (e.g. `c0`), so that mFpM gets unfolded to mFpCL *)
 rewrite (@bigID _ _ mFpCL _ _ ltv) -/mFpM [mFpM _ _]mFpC.
 rewrite (@bigD1 _ mFpCL _ _ Fp1) -/mFpM; last by rewrite [ltv _]ltn_neqAle vFpId.
-rewrite [mFpM _ _]mFp1 (@bigD1 _ mFpCL _ _ Fpn1) -?mFpA -/mFpM; last first.
+rewrite [mFpCL _ _]mFp1 (@bigD1 _ mFpCL _ _ Fpn1) -?mFpA -/mFpM; last first.
   rewrite -lt0n -ltnS prednK // lt1p.
   by rewrite [ltv _]ltn_neqAle vFpId eqxx orbT eq_sym eqF1n1.
 rewrite (@reindex_onto _ mFpCL _ _ _ vFp vFp) -/mFpM => [|i]; last by do 3!case/andP; auto.
@@ -482,7 +482,8 @@ have val_fA (A : {set 'I_n}) : #|A| = m -> val (f_A A) = enum A.
   by move=> Am; rewrite -[enum _](mkseq_nth i0) -cardE Am.
 have inc_A (A : {set 'I_n}) : sorted ltn (map val (enum A)).
   rewrite -[enum _](eq_filter (mem_enum _))/=.
-  rewrite -(eq_filter (mem_map (@val_inj _ _ [elaborate 'I_n]) _)) -filter_map.
+  rewrite -(eq_filter (mem_map (@val_inj _ _ [elaborate 'I_n]) _)).
+  rewrite -(filter_map _ (mem (map val (enum A)))).
   by rewrite (sorted_filter ltn_trans) // unlock val_ord_enum iota_ltn_sorted.
 rewrite -!sum1dep_card (reindex_onto f_t f_A) /= => [A|].
   by move/eqP=> cardAm; apply/setP=> x; rewrite inE -(mem_enum A) -val_fA.

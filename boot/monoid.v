@@ -661,7 +661,7 @@ Lemma divgKA z x y : (x / z) * (z * y) = x * y.
 Proof. by rewrite mulgA mulgVK. Qed.
 
 Lemma mulg1_eq x y : x * y = 1 -> x^-1 = y.
-Proof. by rewrite -[x^-1]mulg1 => <-; rewrite mulKg. Qed.
+Proof. by rewrite -[x^-1](@mulg1 G) => <-; rewrite mulKg. Qed.
 
 Lemma divg1_eq x y : x / y = 1 -> x = y.
 Proof. by move/mulg1_eq/invg_inj. Qed.
@@ -843,16 +843,11 @@ HB.factory Record isGroupMorphism (G H : groupType) (f : G -> H) := {
 HB.builders Context G H apply & isGroupMorphism G H apply.
 
 Local Lemma gmulf1 : apply 1 = 1.
-Proof.
-  Set Debug "ssreflect".
-
-rewrite -[1]divg1.
-STOP.
-gmulfF divgg. Qed.
+Proof. by rewrite -[1]divg1 gmulfF divgg. Qed.
 
 Local Lemma gmulfM : {morph apply : x y / x * y}.
 Proof.
-move=> x y; rewrite -[y in LHS] invgK -[y^-1]mul1g.
+move=> x y; rewrite -[y in LHS]invgK -[y^-1](@mul1g G).
 by rewrite !gmulfF gmulf1 div1g invgK.
 Qed.
 

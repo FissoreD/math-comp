@@ -231,7 +231,7 @@ Notation invg := inv (only parsing).
 #[deprecated(since="mathcomp 2.5.0", use=natexp)]
 Notation expgn := natexp (only parsing).
 
-#[short(type="finGroupType")]
+#[primitive, short(type="finGroupType")]
 HB.structure Definition FinGroup :=
   { G of Group G & Finite G }.
 
@@ -272,6 +272,9 @@ Lemma invMg : {morph inv : x y / x * y >-> y * x}.
 Proof.
 have mulgV x: x * x^-1 = 1 by rewrite -{1}[x]invgK mulVg.
 move=> x y /=; rewrite -[y^-1 * _]mul1g -(mulVg (x * y)) -2!mulgA (mulgA y).
+(*have mulgV x: x * x^-1 = 1 by rewrite -{1}[x]mk_invgK mulVg.
+move=> x y /=.
+   rewrite -[y^-1 * _]mul1g -(mulVg (x * y)) -2!mulgA (mulgA y).*)
 by rewrite mulgV mul1g mulgV -(mulgV (x * y)) mulgA mulVg mul1g.
 Qed.
 
@@ -588,7 +591,7 @@ Lemma prodsgP (I : finType) (P : pred I) (A : I -> {set gT}) x :
 Proof.
 have [r big_r [Ur mem_r] _] := big_enumP P.
 pose inA c := all (fun i => c i \in A i); rewrite -big_r; set piAx := x \in _.
-suffices{big_r} IHr: reflect (exists2 c, inA c r & x = \prod_(i <- r) c i) piAx.
+suffices{big_r} IHr: [elaborate reflect (exists2 c, inA c r & x = \prod_(i <- r) c i) piAx].
   apply: (iffP IHr) => -[c inAc ->]; do [exists c; last by rewrite big_r].
     by move=> i Pi; rewrite (allP inAc) ?mem_r.
   by apply/allP=> i; rewrite mem_r => /inAc.
@@ -888,7 +891,7 @@ Lemma classVg x A : x^-1 ^: A = (x ^: A)^-1.
 Proof.
 apply/setP=> xy; rewrite inE; apply/imsetP/imsetP=> [] [y Ay def_xy].
   by rewrite def_xy conjVg invgK; exists y.
-by rewrite -[xy]invgK def_xy -conjVg; exists y.
+by rewrite -[xy](@invgK gT) def_xy -conjVg; exists y.
 Qed.
 
 Lemma mem_classes x A : x \in A -> x ^: A \in classes A.
@@ -1065,18 +1068,20 @@ Section OneGroup.
 
 Variable G : {group gT}.
 
-Lemma valG : val G = G. Proof. by []. Qed.
+(* TODO: unifying val succeeds without instantiating the typeclass, so the return type is not set and the equality gets type `{group gT}`. Then the typeclass solver tries to find an instance and fails. *)
+Lemma valG : [elaborate val G] = G. Proof. by []. Qed.
 
 (* Non-triviality. *)
 
-Lemma group1 : 1 \in G. Proof. by case/group_setP: (valP G). Qed.
+Lemma group1 : 1 \in G. Proof. by case/group_setP: [elaborate valP G]. Qed.
 #[local] Hint Resolve group1 : core.
 
 Lemma group1_contra x : x \notin G -> x != 1.
 Proof. by apply: contraNneq => ->. Qed.
 
+(* TODO: With `[1]` (i.e. without the `gT` annotation), Rocq fails to infer that `1` is the one of `gT`. The trace shows a `reverse_coercion gT ?t`, which is extremely weird. *)
 Lemma sub1G : [1 gT] \subset G. Proof. by rewrite sub1set. Qed.
-Lemma subG1 : (G \subset [1]) = (G :==: 1).
+Lemma subG1 : (G \subset [1 gT]) = (G :==: 1).
 Proof. by rewrite eqEsubset sub1G andbT. Qed.
 
 Lemma setI1g : 1 :&: G = 1. Proof. exact: (setIidPl sub1G). Qed.
@@ -1093,16 +1098,16 @@ Proof. by rewrite lt0n; apply/existsP; exists (1 : gT). Qed.
 Lemma indexg_gt0 A : 0 < #|G : A|.
 Proof.
 rewrite lt0n; apply/existsP; exists A.
-by rewrite -{2}[A]mulg1 -rcosetE; apply: imset_f.
+by rewrite -{2}[A](@mulg1 {set gT}) -rcosetE; apply: imset_f.
 Qed.
 
-Lemma trivgP : reflect (G :=: 1) (G \subset [1]).
+Lemma trivgP : reflect (G :=: 1) (G \subset [1 gT]).
 Proof. by rewrite subG1; apply: eqP. Qed.
 
-Lemma trivGP : reflect (G = 1%G) (G \subset [1]).
+Lemma trivGP : reflect (G = 1%G) (G \subset [1 gT]).
 Proof. by rewrite subG1; apply: eqP. Qed.
 
-Lemma proper1G : ([1] \proper G) = (G :!=: 1).
+Lemma proper1G : ([1 gT] \proper G) = (G :!=: 1).
 Proof. by rewrite properEneq sub1G andbT eq_sym. Qed.
 
 Lemma in_one_group x : (x \in 1%G) = (x == 1).
@@ -1141,10 +1146,10 @@ Proof. exact: mulg_subr group1. Qed.
 
 Lemma mulGid : G * G = G.
 Proof.
-by apply/eqP; rewrite eqEsubset mulG_subr andbT; case/andP: (valP G).
+by apply/eqP; rewrite eqEsubset mulG_subr andbT; case/andP: [elaborate valP G].
 Qed.
 
-Lemma mulGS A B : (G * A \subset G * B) = (A \subset G * B).
+Lemma mulGS A B : (val G * A \subset val G * B) = (A \subset val G * B).
 Proof.
 apply/idP/idP; first exact: subset_trans (mulG_subr A).
 by move/(mulgS G); rewrite mulgA mulGid.
@@ -1169,14 +1174,14 @@ Qed.
 (* Membership lemmas *)
 
 Lemma groupM x y : x \in G -> y \in G -> x * y \in G.
-Proof. by case/group_setP: (valP G) x y. Qed.
+Proof. by case/group_setP: [elaborate valP G] x y. Qed.
 
 Lemma groupX x n : x \in G -> x ^+ n \in G.
 Proof. by move=> Gx; elim: n => [|n IHn]; rewrite ?group1 // expgS groupM. Qed.
 
 Lemma groupVr x : x \in G -> x^-1 \in G.
 Proof.
-move=> Gx; rewrite -(mul1g x^-1) -mem_rcoset ((G :* x =P G) _) //.
+move=> Gx; rewrite -(mul1g x^-1) -mem_rcoset ((val G :* x =P G) _) //.
 by rewrite eqEcard card_rcoset leqnn mul_subG ?sub1set.
 Qed.
 
@@ -1212,21 +1217,21 @@ Proof. by move=> G_P; elim/big_ind: _ => //; apply: groupM. Qed.
 
 (* Inverse is an anti-morphism. *)
 
-Lemma invGid : G^-1 = G. Proof. by apply/setP=> x; rewrite inE groupV. Qed.
+Lemma invGid : (val G)^-1 = val G. Proof. by apply/setP=> x; rewrite inE groupV. Qed.
 
 Lemma inv_subG A : (A^-1 \subset G) = (A \subset G).
 Proof. by rewrite -{1}invGid invSg. Qed.
 
-Lemma invg_lcoset x : (x *: G)^-1 = G :* x^-1.
+Lemma invg_lcoset x : (x *: G)^-1 = val G :* x^-1.
 Proof. by rewrite invMg invGid invg_set1. Qed.
 
-Lemma invg_rcoset x : (G :* x)^-1 = x^-1 *: G.
+Lemma invg_rcoset x : (val G :* x)^-1 = x^-1 *: G.
 Proof. by rewrite invMg invGid invg_set1. Qed.
 
-Lemma memV_lcosetV x y : (y^-1 \in x^-1 *: G) = (y \in G :* x).
+Lemma memV_lcosetV x y : (y^-1 \in x^-1 *: G) = (y \in val G :* x).
 Proof. by rewrite -invg_rcoset memV_invg. Qed.
 
-Lemma memV_rcosetV x y : (y^-1 \in G :* x^-1) = (y \in x *: G).
+Lemma memV_rcosetV x y : (y^-1 \in val G :* x^-1) = (y \in x *: G).
 Proof. by rewrite -invg_lcoset memV_invg. Qed.
 
 (* Product idempotence *)
@@ -1238,7 +1243,7 @@ apply/subsetP=> y Gy; rewrite -(mulKVg x y) mem_mulg // groupMr // groupV.
 exact: (subsetP sAG).
 Qed.
 
-Lemma mulGSgid A x : x \in A -> A \subset G -> G * A = G.
+Lemma mulGSgid A x : x \in A -> A \subset G -> val G * A = G.
 Proof.
 rewrite -memV_invg -invSg invGid => Ax sAG.
 by apply: invg_inj; rewrite invMg invGid (mulSgGid Ax).
@@ -1254,7 +1259,7 @@ Proof. by rewrite !mem_lcoset -groupV invMg invgK. Qed.
 
 Lemma lcoset_eqP {x y} : reflect (x *: G = y *: G) (x \in y *: G).
 Proof.
-suffices <-: (x *: G == y *: G) = (x \in y *: G) by apply: eqP.
+suffices <-: [elaborate (x *: G == y *: G) = (x \in y *: G)] by apply: eqP.
 by rewrite eqEsubset !mulSG !sub1set lcoset_sym andbb.
 Qed.
 
@@ -1269,15 +1274,15 @@ Proof. by move=> Gx; rewrite (lcoset_eqP (_ : x \in 1 *: G)) mul1g. Qed.
 
 (* Right cosets, with an elimination form for repr. *)
 
-Lemma rcoset_refl x : x \in G :* x.
+Lemma rcoset_refl x : x \in val G :* x.
 Proof. by rewrite mem_rcoset mulgV group1. Qed.
 
-Lemma rcoset_sym x y : (x \in G :* y) = (y \in G :* x).
+Lemma rcoset_sym x y : (x \in val G :* y) = (y \in val G :* x).
 Proof. by rewrite -!memV_lcosetV lcoset_sym. Qed.
 
-Lemma rcoset_eqP {x y} : reflect (G :* x = G :* y) (x \in G :* y).
+Lemma rcoset_eqP {x y} : reflect (val G :* x = val G :* y) (x \in val G :* y).
 Proof.
-suffices <-: (G :* x == G :* y) = (x \in G :* y) by apply: eqP.
+suffices <-: [elaborate (val G :* x == val G :* y) = (x \in val G :* y)] by apply: eqP.
 by rewrite eqEsubset !mulGS !sub1set rcoset_sym andbb.
 Qed.
 

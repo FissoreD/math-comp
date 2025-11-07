@@ -1671,12 +1671,13 @@ Variables (x y z : T) (cmp_xy : x >=< y) (cmp_xz : x >=< z) (cmp_yz : y >=< z).
 Lemma comparable_minA : min x (min y z) = min (min x y) z.
 Proof.
 move: cmp_xy cmp_xz cmp_yz; rewrite !(fun_if, if_arg)/= !lt_le_def.
-case/boolP: (x <= y) => xy;
-  case/boolP: (y <= x) => yx;
-  case/boolP: (x <= z) => xz;
-  case/boolP: (z <= x) => zx;
-  case/boolP: (y <= z) => yz;
-  case/boolP: (z <= y) => zy //= _ _ _.
+(* TOTHINK: `case/boolP: b` calls coercions, which is extremely slow considering I use elpi's coercions. *)
+case: (boolP (x <= y)) => /= xy;
+  case: (boolP (y <= x)) => /= yx;
+  case: (boolP (x <= z)) => /= xz;
+  case: (boolP (z <= x)) => /= zx;
+  case: (boolP (y <= z)) => /= yz;
+  case: (boolP (z <= y)) => /= zy //= _ _ _.
 - by move: zx; rewrite (le_trans zy yx).
 - by move: zx; rewrite (le_trans zy yx).
 - by move: zy; rewrite (le_trans zx xy).
@@ -1688,12 +1689,12 @@ Qed.
 Lemma comparable_maxA : max x (max y z) = max (max x y) z.
 Proof.
 move: cmp_xy cmp_xz cmp_yz; rewrite !(fun_if, if_arg)/= !lt_le_def.
-case/boolP: (x <= y) => xy;
-  case/boolP: (y <= x) => yx;
-  case/boolP: (x <= z) => xz;
-  case/boolP: (z <= x) => zx;
-  case/boolP: (y <= z) => yz;
-  case/boolP: (z <= y) => zy //= _ _ _.
+case: (boolP (x <= y)) => /= xy;
+  case: (boolP (y <= x)) => /= yx;
+  case: (boolP (x <= z)) => /= xz;
+  case: (boolP (z <= x)) => /= zx;
+  case: (boolP (y <= z)) => /= yz;
+  case: (boolP (z <= y)) => /= zy //= _ _ _.
 - by move: zx; rewrite (le_trans zy yx).
 - by move: zx; rewrite (le_trans zy yx).
 - by move: zy; rewrite (le_trans zx xy).
@@ -1705,12 +1706,12 @@ Qed.
 Lemma comparable_min_maxl : min (max x y) z = max (min x z) (min y z).
 Proof.
 move: cmp_xy cmp_xz cmp_yz; rewrite !(fun_if, if_arg)/= !lt_le_def.
-case/boolP: (x <= y) => xy;
-  case/boolP: (y <= x) => yx;
-  case/boolP: (x <= z) => xz;
-  case/boolP: (z <= x) => zx;
-  case/boolP: (y <= z) => yz;
-  case/boolP: (z <= y) => zy;
+case: (boolP (x <= y)) => /= xy;
+  case: (boolP (y <= x)) => /= yx;
+  case: (boolP (x <= z)) => /= xz;
+  case: (boolP (z <= x)) => /= zx;
+  case: (boolP (y <= z)) => /= yz;
+  case: (boolP (z <= y)) => /= zy;
   rewrite ?lexx => //= _ _ _.
 - by move: zx; rewrite (le_trans zy yx).
 - by move: zx; rewrite (le_trans zy yx).
@@ -1724,12 +1725,12 @@ Lemma comparable_max_minr :
   max x (min y z) = min (max x y) (max x z).
 Proof.
 move: cmp_xy cmp_xz cmp_yz; rewrite !(fun_if, if_arg)/= !lt_le_def.
-case/boolP: (x <= y) => xy;
-  case/boolP: (y <= x) => yx;
-  case/boolP: (x <= z) => xz;
-  case/boolP: (z <= x) => zx;
-  case/boolP: (y <= z) => yz;
-  case/boolP: (z <= y) => zy;
+case: (boolP (x <= y)) => /= xy;
+  case: (boolP (y <= x)) => /= yx;
+  case: (boolP (x <= z)) => /= xz;
+  case: (boolP (z <= x)) => /= zx;
+  case: (boolP (y <= z)) => /= yz;
+  case: (boolP (z <= y)) => /= zy;
   rewrite ?lexx => //= _ _ _.
 - by move: zx; rewrite (le_trans zy yx).
 - by move: zx; rewrite (le_trans zy yx).

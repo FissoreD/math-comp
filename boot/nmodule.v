@@ -703,7 +703,7 @@ Proof. by rewrite -[0]subr0 zmod_morphism_subproof subrr. Qed.
 
 Local Lemma raddfD : {morph apply : x y / x + y}.
 Proof.
-move=> x y; rewrite -[y in LHS]opprK -[- y]add0r.
+move=> x y; rewrite -[y in LHS]opprK -[- y](@add0r U).
 by rewrite !zmod_morphism_subproof raddf0 sub0r opprK.
 Qed.
 
@@ -781,8 +781,9 @@ Proof. exact: (@gmulf_prod _ _ g). Qed.
 
 Lemma can2_nmod_morphism f' : cancel f f' -> cancel f' f -> nmod_morphism f'.
 Proof.
-split; first exact/(@can2_gmulf1 _ _ g).
-exact/(@can2_gmulfM _ _ g).
+split.
+  exact: (@can2_gmulf1 (to_multiplicative U) (to_multiplicative V) g).
+exact: (@can2_gmulfM (to_multiplicative U) (to_multiplicative V) g).
 Qed.
 
 #[deprecated(since="mathcomp 2.5.0", use=can2_nmod_morphism)]
@@ -1016,9 +1017,10 @@ HB.structure Definition SubNmodule (V : nmodType) S :=
 Section subBaseAddUMagma.
 Context (V : baseAddUMagmaType) (S : pred V) (U : subBaseAddUMagma S).
 Notation val := (val : U -> V).
+
 #[export]
 HB.instance Definition _ := isNmodMorphism.Build U V val valD0_subproof.
-Lemma valD : {morph val : x y / x + y}. Proof. exact: raddfD. Qed.
+Lemma valD : {morph val : x y / x + y}. Proof. apply: raddfD. Qed.
 Lemma val0 : val 0 = 0. Proof. exact: raddf0. Qed.
 End subBaseAddUMagma.
 
@@ -1027,12 +1029,12 @@ HB.factory Record SubChoice_isSubAddUMagma (V : addUMagmaType) S U
   addumagma_closed_subproof : addumagma_closed S
 }.
 
-HB.builders Context V S U & SubChoice_isSubAddUMagma V S U.
+HB.builders Context V S U0 & SubChoice_isSubAddUMagma V S U0.
 
 #[local] HB.instance Definition _ := isAddClosed.Build V S addumagma_closed_subproof.
 
-Let inU v Sv : U := Sub v Sv.
-Let addU (u1 u2 : U) := inU (rpredD (valP u1) (valP u2)).
+Let inU v Sv : U0 := Sub v Sv.
+Let addU (u1 u2 : U0) := inU (rpredD (valP u1) (valP u2)).
 Let oneU := inU (fst addumagma_closed_subproof).
 
 Lemma addrC : commutative addU.
@@ -1041,12 +1043,12 @@ Proof. by move=> x y; apply/val_inj; rewrite !SubK addrC. Qed.
 Lemma add0r : left_id oneU addU.
 Proof. by move=> x; apply/val_inj; rewrite !SubK add0r. Qed.
 
-#[local] HB.instance Definition _ := isAddUMagma.Build U addrC add0r.
+#[local] HB.instance Definition _ := isAddUMagma.Build U0 addrC add0r.
 
-Lemma valD0 : nmod_morphism (val : U -> V).
+Lemma valD0 : nmod_morphism (val : U0 -> V).
 Proof. by split=> [|x y]; rewrite !SubK. Qed.
 
-#[local] HB.instance Definition _ := isSubBaseAddUMagma.Build V S U valD0.
+#[local] HB.instance Definition _ := isSubBaseAddUMagma.Build V S U0 valD0.
 
 HB.end.
 
@@ -1055,15 +1057,15 @@ HB.factory Record SubChoice_isSubNmodule (V : nmodType) S U
   nmod_closed_subproof : nmod_closed S
 }.
 
-HB.builders Context V S U & SubChoice_isSubNmodule V S U.
+HB.builders Context V S U0 & SubChoice_isSubNmodule V S U0.
 
 #[local] HB.instance Definition _ :=
-  SubChoice_isSubAddUMagma.Build V S U nmod_closed_subproof.
+  SubChoice_isSubAddUMagma.Build V S U0 nmod_closed_subproof.
 
-Lemma addrA : associative (@add U).
+Lemma addrA : associative (@add U0).
 Proof. by move=> x y z; apply/val_inj; rewrite !SubK addrA. Qed.
 
-#[local] HB.instance Definition _ := AddMagma_isAddSemigroup.Build U addrA.
+#[local] HB.instance Definition _ := AddMagma_isAddSemigroup.Build U0 addrA.
 
 HB.end.
 
@@ -1078,22 +1080,22 @@ Lemma valB : {morph val : x y / x - y}. Proof. exact: raddfB. Qed.
 Lemma valN : {morph val : x / - x}. Proof. exact: raddfN. Qed.
 End zmod_morphism.
 
-HB.factory Record isSubZmodule (V : zmodType) S U
-    & SubChoice V S U & Zmodule U := {
-  valB_subproof : zmod_morphism (val : U -> V)
+HB.factory Record isSubZmodule (V : zmodType) S U0
+    & SubChoice V S U0 & Zmodule U0 := {
+  valB_subproof : zmod_morphism (val : U0 -> V)
 }.
 
-HB.builders Context V S U & isSubZmodule V S U.
+HB.builders Context V S U1 & isSubZmodule V S U1.
 
-Fact valD0 : nmod_morphism (val : U -> V).
+Fact valD0 : nmod_morphism (val : U1 -> V).
 Proof.
-have val0: (val : U -> V) 0 = 0.
-  by rewrite -[X in val X](subr0 0) valB_subproof subrr.
+have val0: (val : U1 -> V) 0 = 0.
+  by rewrite -[X in val X](@subr0 U1 0) valB_subproof subrr.
 split=> // x y; apply/(@subIr _ (val y)).
 by rewrite -valB_subproof -!addrA !subrr !addr0.
 Qed.
 
-#[local] HB.instance Definition _ := isSubBaseAddUMagma.Build V S U valD0.
+#[local] HB.instance Definition _ := isSubBaseAddUMagma.Build V S U1 valD0.
 
 HB.end.
 
@@ -1102,19 +1104,19 @@ HB.factory Record SubNmodule_isSubZmodule (V : zmodType) S U
   oppr_closed_subproof : oppr_closed S
 }.
 
-HB.builders Context V S U & SubNmodule_isSubZmodule V S U.
+HB.builders Context V S U1 & SubNmodule_isSubZmodule V S U1.
 
 #[local] HB.instance Definition _ := isOppClosed.Build V S oppr_closed_subproof.
 
-Let inU v Sv : U := Sub v Sv.
-Let oppU (u : U) := inU (rpredNr (valP u)).
+Let inU v Sv : U1 := Sub v Sv.
+Let oppU (u : U1) := inU (rpredNr (valP u)).
 
-#[local] HB.instance Definition _ := hasOpp.Build U oppU.
+#[local] HB.instance Definition _ := hasOpp.Build U1 oppU.
 
-Lemma addNr : left_inverse 0 oppU (@add U).
-Proof. by move=> x; apply/val_inj; rewrite raddf0 raddfD/= SubK addNr. Qed.
+Lemma addNr : left_inverse 0 oppU (@add U1).
+Proof. by move=> x; apply/val_inj; rewrite !SubK addNr. Qed.
 
-#[local] HB.instance Definition _ := Nmodule_isZmodule.Build U addNr.
+#[local] HB.instance Definition _ := Nmodule_isZmodule.Build U1 addNr.
 
 HB.end.
 

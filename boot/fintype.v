@@ -863,7 +863,8 @@ Proof.
 case: [disjoint A & C] / (pred0P (xpredI A C)) => [A0 | nA0] /=.
   by congr (_ == 0); apply: eq_card => x; rewrite [x \in _]andb_orl A0.
 apply/pred0P=> nABC; case: nA0 => x; apply/idPn=> /=; move/(_ x): nABC.
-by rewrite [_ x]andb_orl; case/norP.
+(* TODO: ssrmatching again finds the correct pattern, HO unification works and then somehow ssrmatching switches to another pattern. *)
+by rewrite [LHS]andb_orl; case/norP.
 Qed.
 
 Lemma disjointU1 x A B :
@@ -1232,7 +1233,9 @@ Lemma iinv_f x fTfx : @iinv T (f x) fTfx = x.
 Proof. by apply: in_iinv_f; first apply: in2W. Qed.
 
 Lemma image_pre (B : pred T') : image f [preim f of B] =i [predI B & codom f].
-Proof. by move=> y; rewrite /image_mem -filter_map /= mem_filter -enumT. Qed.
+Proof.
+by move=> y; rewrite /image_mem -(filter_map _ B)/= mem_filter -enumT.
+Qed.
 
 Lemma bij_on_codom (x0 : T) : {on [pred y in codom f], bijective f}.
 Proof.

@@ -1912,7 +1912,7 @@ rewrite big_cons {}IHr; case r_i: [elaborate i \in r].
   rewrite (setUidPr _) ?bigcup_sup //.
   by apply: eq_bigl => j /[!inE]; case: eqP => // ->.
 rewrite (bigD1 i (mem_head i r)) /=; congr (_ :|: _).
-by apply: eq_bigl => j /=; rewrite andbC; case: eqP => // ->.
+by apply: eq_bigl => j /=; rewrite andbC in_cons; case: eqP => // ->.
 Qed.
 
 (* Unlike its setU counterpart, this lemma is useable. *)

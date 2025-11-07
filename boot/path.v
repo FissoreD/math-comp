@@ -323,7 +323,8 @@ Lemma sorted_leq_nth_in x0 s : all P s -> sorted leT s ->
   {in [pred n | n < size s] &, {homo nth x0 s : i j / i <= j >-> leT i j}}.
 Proof.
 move=> Ps s_sorted x y xs ys; rewrite leq_eqVlt=> /predU1P[->|].
-  exact/leT_refl/all_nthP.
+(* TODO: HO unification fails here (see the end of the unification trace. *)
+  exact/leT_refl/(@all_nthP _ (fun x => x \in P)).
 exact: sorted_ltn_nth_in.
 Qed.
 
@@ -802,7 +803,10 @@ Proof. exact/contraNF/mem2r. Qed.
 Lemma mem2_cat p1 p2 x y :
   mem2 (p1 ++ p2) x y = mem2 p1 x y || mem2 p2 x y || (x \in p1) && (y \in p2).
 Proof.
-rewrite [LHS]/mem2 index_cat fun_if if_arg !drop_cat addKn.
+rewrite [LHS]/mem2 index_cat.
+(* TODO: It looks like HO unification is happy with the correct subterm, so why 
+  does ssrmatching look for another match? *)
+rewrite [in LHS]fun_if if_arg !drop_cat addKn.
 case: ifPn => [p1x | /mem2lf->]; last by rewrite ltnNge leq_addr orbF.
 by rewrite index_mem p1x mem_cat -orbA (orb_idl (@mem2r _ _ _)).
 Qed.
@@ -1245,7 +1249,7 @@ move=> leT_total s pairwise_s; case Ds: s => // [x s1].
 rewrite -{s1}Ds -(mkseq_nth x s) sort_map.
 apply/homo_sorted_in/sort_iota_stable/(fun _ _ => leT_total _ _)/allss => y z.
 rewrite !mem_sort !mem_iota !leq0n add0n /= => ys zs /andP [->] /=.
-by case: (leT _ _); first apply: pairwiseP.
+by case: (leT _ _) => //=; apply: pairwiseP.
 Qed.
 
 Lemma sort_stable T (leT leT' : rel T) :

@@ -1679,38 +1679,15 @@ Lemma joinEdual d (T : meetSemilatticeType d) (x y : T) :
   ((x : T^d) `|^d` y) = (x `&` y).
 Proof. by []. Qed.
 
-HB.instance Definition _ d (T : tbPreorderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finPreorderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finTPreorderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finBPreorderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finTBPreorderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tPOrderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : bPOrderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tbPOrderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tMeetSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : bMeetSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tbMeetSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tJoinSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : bJoinSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tbJoinSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : latticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tLatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : bLatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : tbLatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finPOrderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finTPOrderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finBPOrderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finTBPOrderType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finMeetSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finJoinSemilatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finLatticeType d) := Preorder.on T^d.
-HB.instance Definition _ d (T : finTBLatticeType d) := Preorder.on T^d.
+HB.saturate dual.
 
 HB.instance Definition _ d (T : distrLatticeType d) :=
   Lattice_isDistributive.Build (dual_display d) T^d joinIl meetUl.
 
 HB.instance Definition _ d (T : orderType d) :=
   DistrLattice_isTotal.Build (dual_display d) T^d (fun x y => le_total y x).
+
+(*
 
 Check
 let choice_Choice_isCountable_mixin :
@@ -1847,7 +1824,7 @@ let Order_hasTop_mixin :
   Order_DistrLattice_isTotal_mixin Order_hasBottom_mixin Order_hasTop_mixin.
  }} _ _ Diag.
  }}.
-STOP.
+   STOP.*)
 HB.instance Definition _ d (T : tDistrLatticeType d) := Choice.on T^d.
 HB.instance Definition _ d (T : bDistrLatticeType d) := Choice.on T^d.
 HB.instance Definition _ d (T : tbDistrLatticeType d) := Choice.on T^d.
@@ -1858,12 +1835,7 @@ HB.instance Definition _ d (T : finDistrLatticeType d) := Choice.on T^d.
 HB.instance Definition _ d (T : finTBDistrLatticeType d) := Choice.on T^d.
 HB.instance Definition _ d (T : finOrderType d) := Choice.on T^d.
 HB.instance Definition _ d (T : finTBOrderType d) := Choice.on T^d.
-(*
-Set Printing All.
-#[verbose]
 HB.saturate dual.
-STOP.
- *)
 
 HB.instance Definition _ d (T : cDistrLatticeType d) :=
   DistrLattice_hasRelativeComplement.Build (dual_display d) T^d
@@ -3245,7 +3217,7 @@ Proof. exact: (le_big_ord ge_refl). Qed.
 
 Lemma le_bigmax_ord [x0] n m (P : {pred nat}) (F : nat -> T) : (n <= m)%N ->
   \big[max/x0]_(i < n | P i) F i <= \big[max/x0]_(i < m | P i) F i.
-Proof. exact: le_big_ord. Qed.
+Proof. exact: (le_big_ord le_refl). Qed.
 
 Lemma le_bigmin_ord_cond [x0] n m (P P' : pred nat) (F : nat -> T) :
     (m <= n)%N -> (forall i : 'I_m, P' i -> P i) ->
@@ -3255,7 +3227,7 @@ Proof. exact: (le_big_ord_cond ge_refl). Qed.
 Lemma le_bigmax_ord_cond [x0] n m (P P' : {pred nat}) (F : nat -> T) :
     (n <= m)%N -> (forall i : 'I_n, P i -> P' i) ->
   \big[max/x0]_(i < n | P i) F i <= \big[max/x0]_(i < m | P' i) F i.
-Proof. exact: le_big_ord_cond. Qed.
+Proof. exact: (le_big_ord_cond le_refl). Qed.
 
 Lemma subset_bigmin [x0] [I : finType] [A A' P : {pred I}] (F : I -> T) :
     A' \subset A ->
@@ -3265,7 +3237,7 @@ Proof. exact: (subset_le_big ge_refl). Qed.
 Lemma subset_bigmax [x0] [I : finType] (A A' P : {pred I}) (F : I -> T) :
     A \subset A' ->
   \big[max/x0]_(i in A | P i) F i <= \big[max/x0]_(i in A' | P i) F i.
-Proof. exact: subset_le_big. Qed.
+Proof. exact: (subset_le_big le_refl). Qed.
 
 Lemma subset_bigmin_cond [x0] (I : finType) (A A' P P' : {pred I}) (F : I -> T) :
     [set i in A' | P' i]  \subset [set i in A | P i] ->
@@ -3275,7 +3247,7 @@ Proof. exact: (subset_le_big_cond ge_refl). Qed.
 Lemma subset_bigmax_cond [x0] (I : finType) (A A' P P' : {pred I}) (F : I -> T) :
     [set i in A | P i]  \subset [set i in A' | P' i] ->
   \big[max/x0]_(i in A | P i) F i <= \big[max/x0]_(i in A' | P' i) F i.
-Proof. exact: subset_le_big_cond. Qed.
+Proof. exact: (subset_le_big_cond le_refl). Qed.
 
 Section bigminmax_Type.
 Context (I : Type) (r : seq I) (x : T).
@@ -6432,11 +6404,12 @@ Let T1' : Type := T1.
 HB.instance Definition _ := POrder.on T1'.
 Let T2' : Type := T2.
 HB.instance Definition _ := POrder.on T2'.
+Let pT2' : porderType disp2 := T2'.
 
 #[export]
 HB.instance Definition _ :=
   Preorder_isDuallyPOrder.Build disp3 (T1 * T2)
-  (@anti _ _ T1' T2') (@anti _ _ T1^d T2^d).
+  (@anti _ _ T1' pT2') (@anti _ _ T1^d T2^d).
 
 Lemma ltEprod x y : (x < y) = [&& x != y, x.1 <= y.1 & x.2 <= y.2].
 Proof. by rewrite lt_neqAle. Qed.
@@ -7106,11 +7079,12 @@ Let T1' : Type := T1.
 HB.instance Definition _ := POrder.on T1'.
 Let T2' : Type := T2.
 HB.instance Definition _ := POrder.on T2'.
+Let pT2' : porderType _ := T2'.
 
 #[export]
 HB.instance Definition _ :=
   Preorder_isDuallyPOrder.Build disp3 (T1 * T2)
-  (@anti _ _ T1' T2') (@anti _ _ T1^d T2^d).
+  (@anti _ _ T1' pT2') (@anti _ _ T1^d T2^d).
 
 End POrder.
 
@@ -7944,7 +7918,8 @@ HB.instance Definition _ (n : nat) (T : finOrderType disp) :=
   POrder.on (n.-tuple T).
 #[export]
 HB.instance Definition _ (n : nat) (T : finTBOrderType disp) :=
-  POrder.on (n.-tuple T).
+   POrder.on (n.-tuple T).
+
 (* /FIXME *)
 
 End TupleLexiOrder.
@@ -8314,11 +8289,6 @@ rewrite card_tagged sumnE/= big_map big_enum.
 by apply: eq_bigr => i _; rewrite card_ord.
 Qed.
 
-Import Order.SigmaOrder.
-Elpi Trace.
-Check [elaborate @sigT _ _ : preorderType _].
-STOP.
-Check [elaborate @sigT (ordinal n) (fun i => ordinal (p_ i)) : preorderType _].
 Definition sig : ordsum -> T  := enum_val \o cast_ord (esym card).
 Definition rank : T -> ordsum := cast_ord card \o enum_rank.
 
@@ -8393,21 +8363,21 @@ Qed.
 
 Lemma rankEsum p : rank p = \sum_(i < n | (i < tag p)%N) p_ i + tagged p :> nat.
 Proof.
-pose sum p := \sum_(i < n | (i < tag p)%N) p_ i + tagged p.
+pose sum p := [elaborate \sum_(i < n | (i < tag p)%N) p_ i + tagged p].
 rewrite -/(sum _); have sumlt : forall p, (sum p < \sum_i p_ i)%N.
   rewrite /sum => -[/= i j].
-  rewrite [ltnRHS](bigID [pred i' : 'I__ | (i' < i)%N])/= ltn_add2l.
+  rewrite [ltnRHS](@bigID _ _ addn _ _ [pred i' : 'I__ | (i' < i)%N])/= ltn_add2l.
   by rewrite (bigD1 i) ?ltnn//= ltn_addr.
-suff: rank =1 (fun p => Ordinal (sumlt p)) by move=> /(_ p)/(congr1 val).
+suff: rank =1 (fun p => Ordinal (sumlt p)) by move=> /(_ p)/(@congr1 _ _ val _ _).
 apply: (Order.mono_unique _ _ le_rank) => //=.
 - exact: le_total.
 - by rewrite card card_ord.
 apply: le_mono => /= -[i j] -[i' j']; rewrite ltEsig/= !ltEord/= /sum leEord/=.
-case: (ltngtP i i') => //= [ltii' _|/val_inj ii']; last first.
+case: (ltngtP i i') => //= [ltii' _|/(@val_inj _ _ _ _ _) ii']; last first.
   by rewrite -ii' in j' *; rewrite tagged_asE => ltjj'; rewrite ltn_add2l.
 rewrite ltn_addr// (@leq_trans (\sum_(i0 < n | (i0 < i)%N) p_ i0 + p_ i))%N//.
   by rewrite ltn_add2l.
-rewrite [leqRHS](bigID [pred i' : 'I__ | (i' < i)%N])/=.
+rewrite [leqRHS](@bigID _ _ addn _ _ [pred i' : 'I__ | (i' < i)%N])/=.
 rewrite leq_add//; last first.
   by rewrite (bigD1 i) ?ltnn ?ltii'//= leq_addr.
 rewrite [leqRHS](eq_bigl [pred k : 'I_n | (k < i)%N])// => k/=.

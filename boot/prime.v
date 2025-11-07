@@ -1374,8 +1374,8 @@ Qed.
 
 Lemma pnat_coprime pi m n : pi.-nat m -> pi^'.-nat n -> coprime m n.
 Proof.
-case/andP=> m_gt0 pi_m /andP[n_gt0 pi'_n]; rewrite coprime_has_primes //.
-by apply/hasPn=> p /(allP pi'_n); apply/contra/allP.
+case/andP=> m_gt0 /allP pi_m /andP[n_gt0 pi'_n]; rewrite coprime_has_primes //.
+by apply/hasPn=> p /(allP pi'_n); apply/contra/pi_m.
 Qed.
 
 Lemma p'nat_coprime pi m n : pi^'.-nat m -> pi.-nat n -> coprime m n.

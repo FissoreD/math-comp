@@ -2627,7 +2627,9 @@ Proof. by rewrite eq_sym -(@leqif_sum I P _ (fun _ => 0%N) E) ?big1_eq. Qed.
 
 Lemma sum_nat_seq_eq0 I r (P : pred I) F :
   (\sum_(i <- r | P i) F i == 0)%N = all (fun i => P i ==> (F i == 0%N)) r.
-Proof. by rewrite (big_morph _ (id1:=true) addn_eq0)// big_all_cond. Qed.
+Proof.
+by rewrite (big_morph (eq_op^~ 0) (id1:=true) addn_eq0)// big_all_cond.
+Qed.
 
 Lemma sum_nat_seq_neq0 I r (P : pred I) F :
   (\sum_(i <- r | P i) F i != 0)%N = has (fun i => P i && (F i != 0)%N) r.
@@ -2663,7 +2665,9 @@ Qed.
 
 Lemma prod_nat_seq_eq0 I r (P : pred I) F :
   (\prod_(i <- r | P i) F i == 0)%N = has (fun i => P i && (F i == 0%N)) r.
-Proof. by rewrite (big_morph _ (id1 := false) muln_eq0)// big_has_cond. Qed.
+Proof.
+by rewrite (big_morph (eq_op^~ 0) (id1 := false) muln_eq0)// big_has_cond.
+Qed.
 
 Lemma prod_nat_seq_neq0 I r (P : pred I) F :
   (\prod_(i <- r | P i) F i != 0)%N = all (fun i => P i ==> (F i != 0%N)) r.
@@ -2673,7 +2677,9 @@ Qed.
 
 Lemma prod_nat_seq_eq1 I r (P : pred I) F :
   (\prod_(i <- r | P i) F i == 1)%N = all (fun i => P i ==> (F i == 1%N)) r.
-Proof. by rewrite (big_morph _ (id1:=true) muln_eq1)// big_all_cond. Qed.
+Proof.
+by rewrite (big_morph (eq_op^~ 1) (id1:=true) muln_eq1)// big_all_cond.
+Qed.
 
 Lemma prod_nat_seq_neq1 I r (P : pred I) F :
   (\prod_(i <- r | P i) F i != 1)%N = has (fun i => P i && (F i != 1%N)) r.
