@@ -1090,7 +1090,7 @@ HB.builders Context V S U1 & isSubZmodule V S U1.
 Fact valD0 : nmod_morphism (val : U1 -> V).
 Proof.
 have val0: (val : U1 -> V) 0 = 0.
-  by rewrite -[X in val X](@subr0 U1 0) valB_subproof subrr.
+  by rewrite -(@subr0 U1 0) valB_subproof subrr.
 split=> // x y; apply/(@subIr _ (val y)).
 by rewrite -valB_subproof -!addrA !subrr !addr0.
 Qed.

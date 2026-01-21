@@ -323,7 +323,8 @@ Proof. by do 2!case; constructor. Qed.
 
 HB.instance Definition _ := hasDecEq.Build bool eqbP.
 
-Lemma eqbE : eqb = eq_op. Proof. by []. Qed.
+Lemma eqbE : eqb = eq_op.
+Proof. by []. Qed.
 
 Lemma bool_irrelevance (b : bool) (p1 p2 : b) : p1 = p2.
 Proof. exact: eq_irrelevance. Qed.

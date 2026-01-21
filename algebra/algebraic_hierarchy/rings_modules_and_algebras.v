@@ -1437,13 +1437,15 @@ HB.instance Definition _ (T : choiceType) := Choice.on T^c.
 HB.instance Definition _ (U : nmodType) := Nmodule.on U^c.
 #[export]
 HB.instance Definition _ (U : zmodType) := Zmodule.on U^c.
+(* FIXME: Used to succeed but now without giving the operation explicitly
+ I get a higher order unification problem that fails. *)
 #[export]
 HB.instance Definition _ (R : pzSemiRingType) :=
   let mul' (x y : R) := y * x in
   let mulrA' x y z := esym (mulrA z y x) in
   let mulrDl' x y z := mulrDr z x y in
   let mulrDr' x y z := mulrDl y z x in
-  Nmodule_isPzSemiRing.Build R^c
+  @Nmodule_isPzSemiRing.Build R^c _ mul'
     mulrA' mulr1 mul1r mulrDl' mulrDr' mulr0 mul0r.
 #[export]
 HB.instance Definition _ (R : pzRingType) := PzSemiRing.on R^c.
@@ -2093,7 +2095,37 @@ Fact compN1op
   (aR : pzRingType) (nu : {rmorphism aR -> R}) : (nu \; s) (-1) =1 -%R.
 Proof. by move=> v; rewrite /= rmorphN1 N1op. Qed.
 
-Module Exports. HB.reexport. End Exports.
+Module Exports.
+HB.reexport.
+
+(* N.B. This is due to a bug in HB which does not export cs clauses (because as things stand it would accumulate the clause in tc.db). *)
+Elpi Accumulate cs.db lp:{{
+cs _ {{ @PreLaw.sort lp:A4 lp:A40 }} A1 A2 :- std.do! [
+  A5 = [A4, A40, A1, A6],
+  coq.mk-app {{ @PreLaw.Pack }} A5 A3,
+  coq.mk-app {{ @PreLaw.type }} [A4, A40] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+cs _ {{ @SemiLaw.sort lp:A4 lp:A40 }} A1 A2 :- std.do! [
+  A5 = [A4, A40, A1, A6],
+  coq.mk-app {{ @SemiLaw.Pack }} A5 A3,
+  coq.mk-app {{ @SemiLaw.type }} [A4, A40] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+cs _ {{ @Law.sort lp:A4 lp:A40 }} A1 A2 :- std.do! [
+  A5 = [A4, A40, A1, A6],
+  coq.mk-app {{ @Law.Pack }} A5 A3,
+  coq.mk-app {{ @Law.type }} [A4, A40] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+}}.
+End Exports.
 
 End Scale.
 Export Scale.Exports.
@@ -2467,7 +2499,8 @@ Variables (s : R -> C -> C).
 Variables (f : {lrmorphism A -> B}) (g : {lrmorphism B -> C | s}).
 
 #[export] HB.instance Definition _ := RMorphism.on (@idfun A).
-#[export] HB.instance Definition _ := RMorphism.on (g \o f).
+(* FIXME: Bug in the tc solver, see Elpi Trace. The tc solver finds the instance of {linear _ -> _ | _} on `g` and then the last `coq.typecheck` fails because it triggers a constraint that tries to match `s` with `[eta [eta s]]`. The eta-expansion seems to be created by `tc.compile.goal.build-eta-links-of-vars` from `ho_compile.elpi`. *)
+#[export] HB.instance Definition _ := RMorphism.on ((g : {linear _ -> _ | _}) \o f).
 
 Lemma rmorph_alg a : f a%:A = a%:A.
 Proof. by rewrite linearZ /= rmorph1. Qed.
@@ -3231,12 +3264,12 @@ Proof. by move=> x; apply: val_inj; rewrite !SubK mulr1. Qed.
 Lemma mulrDl : left_distributive mulU +%R.
 Proof.
 move=> x y z; apply: val_inj.
-by rewrite SubK ![val (_ + _)](@raddfD U2 R val) !SubK mulrDl.
+by rewrite SubK ![val (_ + _)](@raddfD U2 R val)/= !SubK mulrDl.
 Qed.
 Lemma mulrDr : right_distributive mulU +%R.
 Proof.
 move=> x y z; apply: val_inj.
-by rewrite !SubK ![val (_ + _)](@raddfD U2 R val) !SubK mulrDr.
+by rewrite !SubK ![val (_ + _)](@raddfD U2 R val)/= !SubK mulrDr.
 Qed.
 Lemma mul0r : left_zero 0%R mulU.
 Proof. by move=> x; apply: val_inj; rewrite SubK val0 mul0r. Qed.

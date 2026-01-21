@@ -1911,7 +1911,7 @@ elim: r => [|i r IHr]; first by rewrite big_nil big_pred0.
 rewrite big_cons {}IHr; case r_i: [elaborate i \in r].
   rewrite (setUidPr _) ?bigcup_sup //.
   by apply: eq_bigl => j /[!inE]; case: eqP => // ->.
-rewrite (bigD1 i (mem_head i r)) /=; congr (_ :|: _).
+rewrite (@bigD1 _ _ _ _ i (mem (i :: r)) _ (mem_head i r)) /=; congr (_ :|: _).
 by apply: eq_bigl => j /=; rewrite andbC in_cons; case: eqP => // ->.
 Qed.
 
@@ -2776,6 +2776,8 @@ Lemma big_tag_cond  (Q_ : forall i, {pred T_ i})
 Proof.
 rewrite (big_sub_cond (tagged_with T_ i)).
 rewrite (reindex (tag_with i)); first exact/onW_bij/tag_with_bij.
+(* TODO: I do not understand why The `T_` is required. 
+   rewrite (reindex (@tag_with _ T_ i)); last exact/onW_bij/tag_with_bij.*)
 by apply: eq_big => [x|x Qix]; rewrite ?untagE.
 Qed.
 

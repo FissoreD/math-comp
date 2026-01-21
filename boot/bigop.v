@@ -367,7 +367,30 @@ HB.instance Definition _ := isCommutativeLaw.Build T op opC.
 
 HB.end.
 
-Module Import Exports. HB.reexport. End Exports.
+Module Import Exports.
+HB.reexport.
+
+(* N.B. This is due to a bug in HB which does not export cs clauses (because as things stand it would accumulate the clause in tc.db). *)
+Elpi Accumulate cs.db lp:{{
+cs _ {{ @Law.sort lp:A4 }} A1 A2 :- std.do! [
+  A5 = [A4, A1, A6],
+  coq.mk-app {{ @Law.Pack }} A5 A3,
+  coq.mk-app {{ @Law.type }} [A4] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+
+cs _ {{ @ComLaw.sort lp:A4 }} A1 A2 :- std.do! [
+  A5 = [A4, A1, A6],
+  coq.mk-app {{ @ComLaw.Pack }} A5 A3,
+  coq.mk-app {{ @ComLaw.type }} [A4] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+}}.
+End Exports.
 
 Module Theory.
 
@@ -469,7 +492,49 @@ HB.structure Definition AddLaw T zero mul :=
   {add of ComLaw T zero add & isAddLaw T mul add}.
 Notation add_law := AddLaw.type.
 
-Module Import Exports. HB.reexport. End Exports.
+Module Import Exports.
+HB.reexport.
+
+(* N.B. This is due to a bug in HB.saturate which does not export cs clauses (because as things stand it would accumulate the clause in tc.db). *)
+Elpi Accumulate cs.db lp:{{
+cs _ {{ @Law.sort lp:A4 lp:A40 }} A1 A2 :- std.do! [
+  A5 = [A4, A40, A1, A6],
+  coq.mk-app {{ @Law.Pack }} A5 A3,
+  coq.mk-app {{ @Law.type }} [A4, A40] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+
+cs _ {{ @ComLaw.sort lp:A4 lp:A40 }} A1 A2 :- std.do! [
+  A5 = [A4, A40, A1, A6],
+  coq.mk-app {{ @ComLaw.Pack }} A5 A3,
+  coq.mk-app {{ @ComLaw.type }} [A4, A40] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+
+cs _ {{ @MulLaw.sort lp:A4 lp:A40 }} A1 A2 :- std.do! [
+  A5 = [A4, A40, A1, A6],
+  coq.mk-app {{ @MulLaw.Pack }} A5 A3,
+  coq.mk-app {{ @MulLaw.type }} [A4, A40] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+
+cs _ {{ @AddLaw.sort lp:A4 lp:A40 lp:A41 }} A1 A2 :- std.do! [
+  A5 = [A4, A40, A41, A1, A6],
+  coq.mk-app {{ @AddLaw.Pack }} A5 A3,
+  coq.mk-app {{ @AddLaw.type }} [A4, A40, A41] A7,
+  coq.typecheck A3 A7 ok, 
+  coq.ltac.collect-goals A6 [A8] [], 
+  coq.ltac.open (coq.ltac.call-ltac1 "done_tc") A8 _, 
+  A2 = A3].
+}}.
+
+End Exports.
 
 Section CommutativeAxioms.
 
@@ -1341,7 +1406,7 @@ Section Abelian.
 Variable op : SemiGroup.com_law R.
 
 Let opCA : left_commutative op.
-Proof. by move=> x *; rewrite !opA /= (opC x). Qed.
+Proof. by move=> x *; rewrite !opA/= (opC x). Qed.
 
 Variable x : R.
 

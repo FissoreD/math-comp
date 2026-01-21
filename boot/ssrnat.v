@@ -1896,7 +1896,7 @@ Proof. exact: (@homoW_in _ _ _ _ ltn _ ltn). Qed.
 
 Lemma ltnW_nhomo_in : {in D & D', {homo f : m n /~ m < n}} ->
                  {in D & D', {homo f : m n /~ m <= n}}.
-Proof. exact: (@homoW_in _ _ _ _ (fun x y => y < x) _ ltn). Qed.
+Proof. exact: homoW_in. Qed.
 
 Lemma inj_homo_ltn_in : {in D & D', injective f} ->
                         {in D & D', {homo f : m n / m <= n}} ->

@@ -602,7 +602,7 @@ Notation "x = y %[mod_eq r ]" := (x = y %[mod {eq_quot r}]) : quotient_scope.
 Notation "x != y %[mod_eq r ]" := (x != y %[mod {eq_quot r}]) : quotient_scope.
 Notation "x <> y %[mod_eq r ]" := (x <> y %[mod {eq_quot r}]) : quotient_scope.
 
-(***********************************************************)
+(***********************G************************************)
 (* If the type is directly a choiceType, no need to encode *)
 (***********************************************************)
 

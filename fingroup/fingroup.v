@@ -1458,7 +1458,8 @@ HB.instance Definition _ := subg_of_Sub.
 #[hnf] HB.instance Definition _ := [Finite of subg_of by <:].
 
 Lemma subgP u : sgval u \in G.
-Proof. exact: valP. Qed.
+(* TODO: I do not understand why master tries `val _ = sgval u` and not this branch. *)
+Proof. exact: (valP u). Qed.
 Lemma subg_inj : injective sgval.
 Proof. exact: val_inj. Qed.
 Lemma congr_subg u v : u = v -> sgval u = sgval v.
