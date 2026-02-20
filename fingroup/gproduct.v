@@ -1239,7 +1239,9 @@ apply/eqP; rewrite eqEsubset morphimE setTI /=.
 apply/andP; split; apply/subsetP=> x.
   by case/imsetP => x0 /[1!inE] /forallP/(_ i)/= ? ->.
 move=> Hx1; apply/imsetP; exists (dfung1 x); last by rewrite dfung1_id.
-by rewrite in_setXn; apply/forallP => j /[!ffunE]; case: dfwithP.
+rewrite in_setXn; apply/forallP => j.
+(* FIXME: Why does move=> /[!ffunE] fail? *)
+by rewrite ffunE; case: dfwithP.
 Qed.
 
 Lemma set1gXn_group_set {i} (H : {group gT i}) : group_set (set1gXn H).
@@ -1249,10 +1251,11 @@ Canonical groupXn1 {i} (H : {group gT i}) := Group (set1gXn_group_set H).
 
 Lemma setXn_prod H : \prod_i set1gXn (H i) = setXn H.
 Proof.
-apply/setP => /= x; apply/prodsgP /setXnP => [[/= f fH {x}-> i]|xH /=].
+apply/setP => /= x; apply/prodsgP /setXnP => [[/= f fH {x}-> i]|/= xH].
   rewrite prodg_ffun group_prod// => j _.
   by have /set1gXnP[x xH ->] := fH j isT; rewrite ffunE; case: dfwithP.
-exists (fun i => dfung1 (x i)) => [i _|]; first by apply/set1gXnP; exists (x i).
+(* FIXME: I need to simplify the goal to make it match the `xH` hypothesis. *)
+exists (fun i => dfung1 (x i)) => [i _|]; first by apply/set1gXnP; exists (x i) => /=.
 apply/ffunP => i; rewrite prodg_ffun (big_only1 i) ?dfung1_id//.
 by move=> j ij _; rewrite dfung1_dflt.
 Qed.
@@ -1278,7 +1281,13 @@ apply/andP; split.
   apply/ffunP => j; rewrite !ffunE/=.
   rewrite (big_morph _ (@dffunM j) (_ : _ = 1)) ?ffunE//.
   case: dfwithP => {j} [|? ?]; last by rewrite mulg1 mul1g.
-  rewrite big1 ?mulg1 ?mul1g// => j neq_ji.
+  (* FIXME: unification bug? *)
+  rewrite (@big1 _ _ (@mulg ({|
+               BaseFinGroup.sort := gT i;
+               BaseFinGroup.class := BaseFinGroup.class (gT i)
+             |}) : @Monoid.Law.type (FinGroup.sort (gT i)) 1)).
+    by rewrite mulg1 mul1g.
+  move=> j neq_ji.
   by have /set1gXnP[? _ ->] := h_P j neq_ji; rewrite ffunE dfwith_out.
 rewrite -setI_eq0 -subset0; apply/subsetP => /= x; rewrite !inE.
 rewrite comm_prodG; first by apply: in2W; apply: set1gXn_commute.
@@ -1286,7 +1295,10 @@ move=> /and3P[+ + /set1gXnP [h _ x_h]]; rewrite {x}x_h.
 move=> /prodsgP[x_ x_P /ffunP/(_ i)]; rewrite ffunE dfwith_in => {h}->.
 apply: contra_neqT => _; apply/ffunP => j; rewrite !ffunE/=.
 case: dfwithP => // {j}; rewrite (big_morph _ (@dffunM i) (_ : _ = 1)) ?ffunE//.
-rewrite big1// => j neq_ji.
+rewrite (@big1 _ _ (@mulg ({|
+             BaseFinGroup.sort := gT i;
+             BaseFinGroup.class := BaseFinGroup.class (gT i)
+           |}) : @Monoid.Law.type (FinGroup.sort (gT i)) 1))// => j neq_ji.
 by have /set1gXnP[g gH /ffunP->] := x_P _ neq_ji; rewrite ffunE dfwith_out.
 Qed.
 
@@ -1389,7 +1401,7 @@ Qed.
 Lemma sdpair2_morphM : {in D &, {morph sdpair2 : a b / a * b}}.
 Proof.
 move=> a b Da Db; apply: val_inj.
-by rewrite /= !val_insubd !inE !group1 !groupM ?Da ?Db //= mulg1 gact1.
+by rewrite /= !val_insubd ![_ \in setX _ _]inE/= !group1 !groupM ?Da ?Db //= mulg1 gact1.
 Qed.
 
 Canonical sdpair1_morphism := Morphism sdpair1_morphM.
@@ -1411,14 +1423,14 @@ Qed.
 Lemma sdpairE (u : sdT) : u = sdpair2 u.1 * sdpair1 u.2.
 Proof.
 apply: val_inj; case: u => [[a x] /= /setXP[Da Rx]].
-by rewrite !val_insubd !inE Da Rx !(group1, gact1) // mulg1 mul1g.
+by rewrite !val_insubd ![_ \in setX _ _]inE Da Rx !(group1, gact1) // mulg1 mul1g.
 Qed.
 
 Lemma sdpair_act : {in R & D,
   forall x a, sdpair1 (to x a) = sdpair1 x ^ sdpair2 a}.
 Proof.
 move=> x a Rx Da; apply: val_inj.
-rewrite /= !val_insubd !inE !group1 gact_stable ?Da ?Rx //=.
+rewrite /= !val_insubd ![_ \in setX _ _]inE !group1 gact_stable ?Da ?Rx //=.
 by rewrite !mul1g mulVg invg1 mulg1 actKVin ?mul1g.
 Qed.
 
@@ -1445,7 +1457,7 @@ Lemma im_sdpair_TI : (sdpair1 @* R) :&: (sdpair2 @* D) = 1.
 Proof.
 apply/trivgP; apply/subsetP=> _ /setIP[/morphimP[x _ Rx ->]].
 case/morphimP=> a _ Da /eqP; rewrite inE -!val_eqE.
-by rewrite !val_insubd !inE Da Rx !group1 /eq_op /= eqxx; case/andP.
+by rewrite !val_insubd ![_ \in setX _ _]inE Da Rx !group1 /eq_op /= eqxx; case/andP.
 Qed.
 
 Lemma im_sdpair : (sdpair1 @* R) * (sdpair2 @* D) = setT.

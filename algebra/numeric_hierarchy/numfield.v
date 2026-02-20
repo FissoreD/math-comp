@@ -73,7 +73,7 @@ Import orderedzmod.Num numdomain.Num.
 
 Module Num.
 
-#[short(type="numFieldType")]
+#[export, primitive, short(type="numFieldType")]
 HB.structure Definition NumField := { R of GRing.UnitRing_isField R &
      GRing.IntegralDomain R &
      POrderZmodule R &
@@ -85,14 +85,14 @@ Bind Scope ring_scope with NumField.sort.
 End NumFieldExports.
 HB.export NumFieldExports.
 
-HB.mixin Record NumField_isImaginary R & NumField R := {
-  imaginary : R;
-  conj_subdef : {rmorphism R -> R};
+HB.mixin Record NumField_isImaginary R3 & NumField R3 := {
+  imaginary : R3;
+  conj_op : {rmorphism R3 -> R3};
   sqrCi : imaginary ^+ 2 = - 1;
   normCK_subdef : forall x, `|x| ^+ 2 = x * conj_subdef x;
 }.
 
-#[short(type="numClosedFieldType")]
+#[export, primitive, short(type="numClosedFieldType")]
 HB.structure Definition ClosedField :=
   { R of NumField_isImaginary R & GRing.ClosedField R & NumField R }.
 
@@ -106,7 +106,7 @@ Bind Scope ring_scope with ClosedField.sort.
 End ClosedFieldExports.
 HB.export ClosedFieldExports.
 
-#[short(type="realFieldType")]
+#[export, primitive, short(type="realFieldType")]
 HB.structure Definition RealField :=
   { R of Order.Total ring_display R & NumField R }.
 
@@ -115,11 +115,11 @@ Bind Scope ring_scope with RealField.sort.
 End RealFieldExports.
 HB.export RealFieldExports.
 
-HB.mixin Record RealField_isClosed R & RealField R := {
-  poly_ivt_subproof : real_closed_axiom R
+HB.mixin Record RealField_isClosed R4 & RealField R4 := {
+  poly_ivt_subproof : real_closed_axiom R4
 }.
 
-#[short(type="rcfType")]
+#[export, primitive, short(type="rcfType")]
 HB.structure Definition RealClosedField :=
   { R of RealField_isClosed R & RealField R }.
 
@@ -758,7 +758,7 @@ Proof. by rewrite -normCK expf_eq0 normr_eq0. Qed.
 
 Lemma conjC_ge0 x : (0 <= x^* ) = (0 <= x).
 Proof.
-wlog suffices: x / 0 <= x -> 0 <= x^*.
+wlog suffices: x / (0 : C) <= x -> (0 : C) <= x^*.
   by move=> IH; apply/idP/idP=> /IH; rewrite ?conjCK.
 rewrite [in X in X -> _]le0r => /predU1P[-> | x_gt0]; first by rewrite rmorph0.
 by rewrite -(pmulr_rge0 _ x_gt0) mul_conjC_ge0.
@@ -1103,7 +1103,7 @@ apply: wlog_neg; rewrite -real_ltNge ?rpred0 // => ltIy0.
 suffices [z zn_x leI0z]: exists2 z, z ^+ n = x & 'Im z >= 0.
   by rewrite /y; case_rootC => /= y1 _ /(_ z n_gt0 zn_x)/argCleP[].
 have [w wn1 ltRw0] := neg_unity_root n_gt1.
-wlog leRI0yw: w wn1 ltRw0 / 0 <= 'Re y * 'Im w.
+wlog leRI0yw: w wn1 ltRw0 / (0 : C) <= 'Re y * 'Im w.
   move=> IHw; have: 'Re y * 'Im w \is real by rewrite rpredM.
   case/real_ge0P=> [|/ltW leRIyw0]; first exact: IHw.
   apply: (IHw w^* ); rewrite ?Re_conj ?Im_conj ?mulrN ?oppr_ge0 //.
@@ -1123,7 +1123,7 @@ have [z zn_x leR0z]: exists2 z, z ^+ n = x & 'Re z >= 0.
   have [w wn1 ltRw0] := neg_unity_root n_gt1.
   exists (w * y); first by rewrite exprMn wn1 mul1r rootCK.
   by rewrite ReMr ?ltr0_real // ltW // nmulr_lgt0.
-without loss leI0z: z zn_x leR0z / 'Im z >= 0.
+without loss leI0z: z zn_x leR0z / 'Im z >= (0 : C).
   move=> IHz; have: 'Im z \is real by [].
   case/real_ge0P=> [|/ltW leIz0]; first exact: IHz.
   apply: (IHz z^* ); rewrite ?Re_conj ?Im_conj ?oppr_ge0 //.

@@ -598,7 +598,7 @@ HB.mixin Record Nmodule_isPzSemiRing R & Nmodule R := {
   mulr0 : right_zero zero mul;
 }.
 
-#[primitive, short(type="pzSemiRingType")]
+#[export, primitive, short(type="pzSemiRingType")]
 HB.structure Definition PzSemiRing :=
   { R of Nmodule_isPzSemiRing R & Nmodule R }.
 
@@ -637,7 +637,7 @@ HB.mixin Record PzSemiRing_isNonZero R0 & PzSemiRing R0 := {
   oner_neq0 : @one R0 != 0
 }.
 
-#[primitive, short(type="nzSemiRingType")]
+#[export, primitive, short(type="nzSemiRingType")]
 HB.structure Definition NzSemiRing :=
   { R of PzSemiRing_isNonZero R & PzSemiRing R }.
 
@@ -1081,7 +1081,7 @@ End Char2.
 
 End NzSemiRingTheory.
 
-#[primitive, short(type="pzRingType")]
+#[export, primitive, short(type="pzRingType")]
 HB.structure Definition PzRing := { R of PzSemiRing R & Zmodule R }.
 
 HB.factory Record Zmodule_isPzRing R2 & Zmodule R2 := {
@@ -1137,7 +1137,7 @@ Bind Scope ring_scope with PzRing.sort.
 End PzRingExports.
 HB.export PzRingExports.
 
-#[short(type="nzRingType")]
+#[primitive, short(type="nzRingType")]
 HB.structure Definition NzRing := { R of NzSemiRing R & Zmodule R }.
 
 HB.factory Record Zmodule_isNzRing R3 & Zmodule R3 := {
@@ -1507,7 +1507,7 @@ HB.mixin Record Nmodule_isLSemiModule (R : pzSemiRingType) V6 & Nmodule V6 := {
   scalerDr : right_distributive scale +%R;
   scalerDl : forall v, {morph scale^~ v: a b / a + b}
 }.
-#[short(type="lSemiModType")]
+#[export, short(type="lSemiModType")]
 HB.structure Definition LSemiModule (R : pzSemiRingType) :=
   {M of Nmodule M & Nmodule_isLSemiModule R M}.
 
@@ -1519,7 +1519,7 @@ HB.export LSemiModExports.
 Local Notation "*:%R" := (@scale _ _) : function_scope.
 Local Notation "a *: v" := (scale a v) : ring_scope.
 
-#[short(type="lmodType")]
+#[export, short(type="lmodType")]
 HB.structure Definition Lmodule (R : pzRingType) :=
   {M of Zmodule M & Nmodule_isLSemiModule R M}.
 
@@ -1679,7 +1679,7 @@ HB.mixin Record LSemiModule_isLSemiAlgebra R V7
   scalerAl : forall (a : R) (u v : V7), a *: (u * v) = (a *: u) * v
 }.
 
-#[short(type="pzLSemiAlgType")]
+#[primitive, short(type="pzLSemiAlgType")]
 HB.structure Definition PzLSemiAlgebra R :=
   {A of LSemiModule R A & PzSemiRing A & LSemiModule_isLSemiAlgebra R A}.
 
@@ -1688,7 +1688,7 @@ Bind Scope ring_scope with PzLSemiAlgebra.sort.
 End PzLSemiAlgExports.
 HB.export PzLSemiAlgExports.
 
-#[short(type="nzLSemiAlgType")]
+#[primitive, short(type="nzLSemiAlgType")]
 HB.structure Definition NzLSemiAlgebra (R : nzSemiRingType) :=
   {A of LSemiModule R A & NzSemiRing A & LSemiModule_isLSemiAlgebra R A}.
 
@@ -1700,7 +1700,7 @@ HB.export NzLSemiAlgExports.
 (* Scalar injection (see the definition of in_alg A below). *)
 Local Notation "k %:A" := (k *: 1) : ring_scope.
 
-#[short(type="pzLalgType")]
+#[primitive, short(type="pzLalgType")]
 HB.structure Definition PzLalgebra R :=
   {A of Lmodule R A & PzRing A & LSemiModule_isLSemiAlgebra R A}.
 
@@ -1709,7 +1709,7 @@ Bind Scope ring_scope with PzLalgebra.sort.
 End PzLalgExports.
 HB.export PzLalgExports.
 
-#[short(type="nzLalgType")]
+#[primitive, short(type="nzLalgType")]
 HB.structure Definition NzLalgebra (R : nzRingType) :=
   {A of Lmodule R A & NzRing A & LSemiModule_isLSemiAlgebra R A}.
 
@@ -1921,7 +1921,7 @@ HB.mixin Record isMonoidMorphism (R S : pzSemiRingType) (f : R -> S) := {
   monoid_morphism_subproof : monoid_morphism f
 }.
 
-#[primitive]
+#[export, primitive]
 HB.structure Definition RMorphism (R S : pzSemiRingType) :=
   {f of @isNmodMorphism R S f & isMonoidMorphism R S f}.
 (* FIXME: remove the @ once
@@ -2187,6 +2187,7 @@ HB.mixin Record isScalable (R : pzSemiRingType) (U : lSemiModType R)
   semi_linear_subproof : scalable_for s f;
 }.
 
+#[export]
 HB.structure Definition Linear (R : pzSemiRingType)
     (U : lSemiModType R) (V : nmodType) (s : R -> V -> V) :=
   {f of @isNmodMorphism U V f & isScalable R U V s f}.
@@ -2522,7 +2523,7 @@ End SemiRing_hasCommutativeMul.
 Notation SemiRing_hasCommutativeMul R :=
   (PzSemiRing_hasCommutativeMul R) (only parsing).
 
-#[primitive, short(type="comPzSemiRingType")]
+#[export, primitive, short(type="comPzSemiRingType")]
 HB.structure Definition ComPzSemiRing :=
   {R of PzSemiRing R & SemiRing_hasCommutativeMul R}.
 
@@ -2553,7 +2554,7 @@ HB.builders Context R5 & Nmodule_isComPzSemiRing R5.
   HB.instance Definition _ := SemiRing_hasCommutativeMul.Build R5 mulrC.
 HB.end.
 
-#[primitive, short(type="comNzSemiRingType")]
+#[export, primitive, short(type="comNzSemiRingType")]
 HB.structure Definition ComNzSemiRing :=
   {R of NzSemiRing R & SemiRing_hasCommutativeMul R}.
 
@@ -2681,7 +2682,7 @@ Qed.
 
 End ComNzSemiRingTheory.
 
-#[primitive, short(type="comPzRingType")]
+#[export, primitive, short(type="comPzRingType")]
 HB.structure Definition ComPzRing := {R of PzRing R & ComPzSemiRing R}.
 
 HB.factory Record Zmodule_isComPzRing R6 & Zmodule R6 := {
@@ -2708,7 +2709,7 @@ Bind Scope ring_scope with ComPzRing.sort.
 End ComPzRingExports.
 HB.export ComPzRingExports.
 
-#[short(type="comNzRingType")]
+#[primitive, short(type="comNzRingType")]
 HB.structure Definition ComNzRing := {R of NzRing R & ComNzSemiRing R}.
 
 HB.factory Record Zmodule_isComNzRing R7 & Zmodule R7 := {
@@ -2766,7 +2767,7 @@ HB.mixin Record LSemiAlgebra_isSemiAlgebra R V0 & PzLSemiAlgebra R V0 := {
   scalerAr : forall k (x y : V0), k *: (x * y) = x * (k *: y);
 }.
 
-#[short(type="pzSemiAlgType")]
+#[primitive, short(type="pzSemiAlgType")]
 HB.structure Definition PzSemiAlgebra (R : pzSemiRingType) :=
   {A of LSemiAlgebra_isSemiAlgebra R A & PzLSemiAlgebra R A}.
 
@@ -2774,7 +2775,7 @@ Module PzSemiAlgExports.
 Bind Scope ring_scope with PzSemiAlgebra.sort.
 End PzSemiAlgExports.
 
-#[short(type="nzSemiAlgType")]
+#[primitive, short(type="nzSemiAlgType")]
 HB.structure Definition NzSemiAlgebra (R : nzSemiRingType) :=
   {A of LSemiAlgebra_isSemiAlgebra R A & NzLSemiAlgebra R A}.
 
@@ -2820,7 +2821,7 @@ Bind Scope ring_scope with NzAlgebra.sort.
 End NzAlgExports.
 HB.export NzAlgExports.
 
-#[short(type="comPzSemiAlgType")]
+#[primitive, short(type="comPzSemiAlgType")]
 HB.structure Definition ComPzSemiAlgebra (R : pzSemiRingType) :=
   {V of ComPzSemiRing V & PzSemiAlgebra R V}.
 
@@ -2853,7 +2854,7 @@ HB.instance Definition _ (R : comNzSemiRingType) := ComNzSemiRing.on R^c.
 HB.instance Definition _ (R : comNzSemiRingType) := ComNzSemiRing.on R^o.
 End SemiAlgebraTheory.
 
-#[short(type="comPzAlgType")]
+#[primitive, short(type="comPzAlgType")]
 HB.structure Definition ComPzAlgebra (R : pzRingType) :=
   {V of ComPzRing V & PzAlgebra R V}.
 
@@ -2990,35 +2991,35 @@ HB.mixin Record isScaleClosed (R : pzSemiRingType) (V : lSemiModType R)
 Local Notation addrClosed := addrClosed.
 Local Notation opprClosed := opprClosed.
 
-#[short(type="mulr2Closed")]
+#[export, primitive, short(type="mulr2Closed")]
 HB.structure Definition Mul2Closed (R : pzSemiRingType) :=
   {S of isMul2Closed R S}.
 
-#[short(type="mulrClosed")]
+#[export, primitive, short(type="mulrClosed")]
 HB.structure Definition MulClosed (R : pzSemiRingType) :=
   {S of Mul2Closed R S & isMul1Closed R S}.
 
-#[primitive, short(type="semiring2Closed")]
+#[export, primitive, short(type="semiring2Closed")]
 HB.structure Definition Semiring2Closed (R : pzSemiRingType) :=
   {S of AddClosed R S & Mul2Closed R S}.
 
-#[primitive, short(type="semiringClosed")]
+#[export, primitive, short(type="semiringClosed")]
 HB.structure Definition SemiringClosed (R : pzSemiRingType) :=
   {S of AddClosed R S & MulClosed R S}.
 
-#[short(type="smulClosed")]
+#[export, primitive, short(type="smulClosed")]
 HB.structure Definition SmulClosed (R : pzRingType) :=
   {S of OppClosed R S & MulClosed R S}.
 
-#[short(type="subringClosed")]
+#[export, primitive, short(type="subringClosed")]
 HB.structure Definition SubringClosed (R : pzRingType) :=
   {S of ZmodClosed R S & MulClosed R S}.
 
-#[short(type="submodClosed")]
+#[export, primitive, short(type="submodClosed")]
 HB.structure Definition SubmodClosed (R : pzSemiRingType) (V : lSemiModType R)
   := {S of AddClosed V S & isScaleClosed R V S}.
 
-#[short(type="subalgClosed")]
+#[export, primitive, short(type="subalgClosed")]
 HB.structure Definition SubalgClosed (R : pzSemiRingType) (A : pzLSemiAlgType R)
   := {S of SemiringClosed A S & isScaleClosed R A S}.
 
@@ -3227,7 +3228,7 @@ HB.mixin Record isSubPzSemiRing (R : pzSemiRingType) (S : pred R) U1
 HB.structure Definition SubPzSemiRing (R : pzSemiRingType) (S : pred R) :=
   { U of SubNmodule R S U & PzSemiRing U & isSubPzSemiRing R S U }.
 
-#[primitive, short(type="subNzSemiRingType")]
+#[export, primitive, short(type="subNzSemiRingType")]
 HB.structure Definition SubNzSemiRing (R : nzSemiRingType) (S : pred R) :=
   { U of SubNmodule R S U & NzSemiRing U & isSubPzSemiRing R S U }.
 
@@ -3306,7 +3307,7 @@ HB.instance Definition _ := SubNmodule_isSubPzSemiRing.Build R S U2
 HB.instance Definition _ := SubPzSemiRing_isNonZero.Build R S U2.
 HB.end.
 
-#[primitive, short(type="subComPzSemiRingType")]
+#[export, primitive, short(type="subComPzSemiRingType")]
 HB.structure Definition SubComPzSemiRing (R : pzSemiRingType) S :=
   {U of SubPzSemiRing R S U & ComPzSemiRing U}.
 
@@ -3321,11 +3322,11 @@ Proof. by move=> x y; apply: val_inj; rewrite !rmorphM mulrC. Qed.
 HB.instance Definition _ := SemiRing_hasCommutativeMul.Build U2 mulrC.
 HB.end.
 
-#[primitive, short(type="subComNzSemiRingType")]
+#[export, primitive, short(type="subComNzSemiRingType")]
 HB.structure Definition SubComNzSemiRing (R : nzSemiRingType) S :=
   {U of SubNzSemiRing R S U & ComNzSemiRing U}.
 
-#[short(type="subPzRingType")]
+#[primitive, short(type="subPzRingType")]
 HB.structure Definition SubPzRing (R : pzRingType) (S : pred R) :=
   { U of SubPzSemiRing R S U & PzRing U & isSubZmodule R S U }.
 
@@ -3340,7 +3341,7 @@ HB.instance Definition _ := SubNmodule_isSubPzSemiRing.Build R S U2
   (smulr_closedM (subring_closedM subring_closed_subproof)).
 HB.end.
 
-#[short(type="subNzRingType")]
+#[export, short(type="subNzRingType")]
 HB.structure Definition SubNzRing (R : nzRingType) (S : pred R) :=
   { U of SubNzSemiRing R S U & NzRing U & isSubBaseAddUMagma R S U }.
 
@@ -3355,7 +3356,7 @@ HB.instance Definition _ := SubNmodule_isSubNzSemiRing.Build R S U2
   (smulr_closedM (subring_closedM subring_closed_subproof)).
 HB.end.
 
-#[primitive, short(type="subComPzRingType")]
+#[export, primitive, short(type="subComPzRingType")]
 HB.structure Definition SubComPzRing (R : pzRingType) S :=
   {U of SubPzRing R S U & ComPzRing U}.
 
@@ -3368,13 +3369,13 @@ HB.mixin Record isSubLSemiModule (R : pzSemiRingType) (V : lSemiModType R)
   valZ : scalable (val : W -> V);
 }.
 
-#[short(type="subLSemiModType")]
+#[export, short(type="subLSemiModType")]
 HB.structure Definition SubLSemiModule (R : pzSemiRingType) (V : lSemiModType R)
     (S : pred V) :=
   { W of SubNmodule V S W &
          Nmodule_isLSemiModule R W & isSubLSemiModule R V S W}.
 
-#[short(type="subLmodType")]
+#[export, short(type="subLmodType")]
 HB.structure Definition SubLmodule (R : pzRingType) (V : lmodType R)
     (S : pred V) :=
   { W of SubZmodule V S W &
@@ -3438,11 +3439,11 @@ HB.structure Definition SubNzLSemiAlgebra
     (R : nzSemiRingType) (V : nzLSemiAlgType R) S :=
   {W of SubNzSemiRing V S W & @SubLSemiModule R V S W & NzLSemiAlgebra R W}.
 
-#[short(type="subPzLalgType")]
+#[primitive, short(type="subPzLalgType")]
 HB.structure Definition SubPzLalgebra (R : pzRingType) (V : pzLalgType R) S :=
   {W of SubPzRing V S W & @SubLmodule R V S W & PzLalgebra R W}.
 
-#[short(type="subNzLalgType")]
+#[primitive, short(type="subNzLalgType")]
 HB.structure Definition SubNzLalgebra (R : nzRingType) (V : nzLalgType R) S :=
   {W of SubNzRing V S W & @SubLmodule R V S W & NzLalgebra R W}.
 
@@ -3466,21 +3467,21 @@ HB.instance Definition _ :=
   SubNzSemiRing_SubLSemiModule_isSubLSemiAlgebra.Build R V S W1.
 HB.end.
 
-#[short(type="subPzSemiAlgType")]
+#[primitive, short(type="subPzSemiAlgType")]
 HB.structure Definition SubPzSemiAlgebra
     (R : pzSemiRingType) (V : pzSemiAlgType R) S :=
   {W of @SubPzLSemiAlgebra R V S W & PzSemiAlgebra R W}.
 
-#[short(type="subNzSemiAlgType")]
+#[primitive, short(type="subNzSemiAlgType")]
 HB.structure Definition SubNzSemiAlgebra
     (R : nzSemiRingType) (V : nzSemiAlgType R) S :=
   {W of @SubNzLSemiAlgebra R V S W & NzSemiAlgebra R W}.
 
-#[short(type="subPzAlgType")]
+#[primitive, short(type="subPzAlgType")]
 HB.structure Definition SubPzAlgebra (R : pzRingType) (V : pzAlgType R) S :=
   {W of @SubPzLalgebra R V S W & PzAlgebra R W}.
 
-#[short(type="subNzAlgType")]
+#[primitive, short(type="subNzAlgType")]
 HB.structure Definition SubNzAlgebra (R : nzRingType) (V : nzAlgType R) S :=
   {W of @SubNzLalgebra R V S W & NzAlgebra R W}.
 

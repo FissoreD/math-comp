@@ -642,14 +642,14 @@ Proof. by move/colP=> eqA12 i; have /[!mxE] := eqA12 i. Qed.
 Lemma row'_eq m n i0 (A B : 'M_(m, n)) :
   row' i0 A = row' i0 B -> {in predC1 i0, A =2 B}.
 Proof.
-move=> /matrixP eqAB' i /[!inE]/[1!eq_sym]/unlift_some[i' -> _] j.
+move=> /matrixP eqAB' i; rewrite inE eq_sym => /unlift_some[i' -> _] j.
 by have /[!mxE] := eqAB' i' j.
 Qed.
 
 Lemma col'_eq m n j0 (A B : 'M_(m, n)) :
   col' j0 A = col' j0 B -> forall i, {in predC1 j0, A i =1 B i}.
 Proof.
-move=> /matrixP eqAB' i j /[!inE]/[1!eq_sym]/unlift_some[j' -> _].
+move=> /matrixP eqAB' i j; rewrite inE eq_sym => /unlift_some[j' -> _].
 by have  /[!mxE] := eqAB' i j'.
 Qed.
 
@@ -3868,6 +3868,7 @@ Section GL_unit.
 Variables (n : nat) (R : finComUnitRingType).
 
 HB.instance Definition _ := [Finite of {'GL_n[R]} by <:].
+(* FIXME: This is absurdly slow. *)
 HB.instance Definition _ := FinGroup.on {'GL_n[R]}.
 
 Definition GLgroup := [set: {'GL_n[R]}].
@@ -3953,12 +3954,12 @@ have [w0 [/rV0Pn[j nz_w0j] w00_0 w0A']] := w_ 0; pose a0 := (w0 *m vA) 0 0.
 have{w_} [wj [nz_wj wj0_0 wjA']] := w_ j; pose aj := (wj *m vA) 0 0.
 have [aj0 | nz_aj] := eqVneq aj 0.
   exists wj => //; rewrite defA (@mul_mx_row _ _ _ 1) [_ *m _]mx11_scalar -/aj.
-  by rewrite aj0 raddf0 wjA' row_mx0.
+  by rewrite aj0 [0%:M]raddf0 wjA' row_mx0.
 exists (aj *: w0 - a0 *: wj).
   apply: contraNneq nz_aj; move/rowP/(_ j)/eqP; rewrite !mxE wj0_0 mulr0 subr0.
   by rewrite mulf_eq0 (negPf nz_w0j) orbF.
-rewrite defA (@mul_mx_row _ _ _ 1) !mulmxBl -!scalemxAl w0A' wjA' !linear0.
-by rewrite -mul_mx_scalar -mul_scalar_mx -!mx11_scalar subrr addr0 row_mx0.
+rewrite defA (@mul_mx_row _ _ _ 1) !mulmxBl -!scalemxAl w0A' wjA' !scaler0.
+by rewrite -mul_mx_scalar -mul_scalar_mx -!mx11_scalar !subrr row_mx0.
 Qed.
 
 End MatrixDomain.
@@ -4029,7 +4030,7 @@ Fixpoint cormen_lup {n} :=
     let P1 : 'M_(1 + _) := tperm_mx 0 k in
     let Schur := ((A k 0)^-1 *: dlsubmx A1) *m ursubmx A1 in
     let: (P2, L2, U2) := cormen_lup (drsubmx A1 - Schur) in
-    let P := block_mx 1 0 0 P2 *m P1 in
+    let P := block_mx 1 (0 : 'M[F]__) 0 P2 *m P1 in
     let L := block_mx 1 0 ((A k 0)^-1 *: (P2 *m dlsubmx A1)) L2 in
     let U := block_mx (ulsubmx A1) (ursubmx A1) 0 U2 in
     (P, L, U)
@@ -4150,8 +4151,11 @@ HB.instance Definition _ :=
     mxOver_opp_subproof.
 End mxOverOpp.
 
+#[verbose]
+Elpi Trace.
 HB.instance Definition _ (zmodS : zmodClosed M) :=
   GRing.OppClosed.on (mxOver_pred zmodS).
+STOP.
 
 End mxOverZmodule.
 
@@ -4906,7 +4910,8 @@ Lemma mxdiag_sum (I : finType) (B_ : forall k i, 'M[V]_(p_ i)) (P : {pred I}) :
   \mxdiag_i (\sum_(k | P k) B_ k i) = \sum_(k | P k) \mxdiag_i (B_ k i).
 Proof.
 rewrite /mxdiag -mxblock_sum; apply/eq_mxblock => i j.
-case: eqVneq => [->|]; rewrite ?conform_mx_id//; last by rewrite big1.
+case: eqVneq => [->|]; last by rewrite [RHS](@big1 _ _ (@GRing.add _)).
+rewrite conform_mx_id.
 by apply: eq_bigr => k; rewrite conform_mx_id.
 Qed.
 
@@ -5011,7 +5016,7 @@ Lemma mul_mxdiag_mxcol m
 Proof.
 rewrite /mxdiag mxblockEh mul_mxrow_mxcol.
 under [LHS]eq_bigr do rewrite mxcol_mul; rewrite -mxcol_sum.
-apply/eq_mxcol => i; rewrite (bigD1 i)//= eqxx conform_mx_id big1 ?addr0//.
+apply/eq_mxcol => i; rewrite (@bigD1 _ (@GRing.add _) _ _ i)//= eqxx conform_mx_id (@big1 _ _ (@GRing.add _)) ?addr0//.
 by move=> j; case: eqVneq => //=; rewrite mul0mx.
 Qed.
 

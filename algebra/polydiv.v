@@ -1,5 +1,6 @@
 (* (c) Copyright 2006-2016 Microsoft Corporation and Inria.                  *)
 (* Distributed under the terms of CeCILL-B.                                  *)
+From HB Require Import structures.
 From mathcomp Require Import ssreflect ssrfun ssrbool eqtype ssrnat seq choice.
 From mathcomp Require Import fintype bigop nmodule rings_modules_and_algebras.
 From mathcomp Require Import divalg decfield poly.
@@ -386,7 +387,7 @@ Lemma rmodpp p : GRing.comm p (lead_coef p)%:P -> rmodp p p = 0.
 Proof.
 move=> hC; rewrite /rmodp unlock; have [-> //|] := eqVneq.
 rewrite -size_poly_eq0 /redivp_rec; case sp: (size p)=> [|n] // _.
-rewrite sp ltnn subnn expr0 hC alg_polyC !simp subrr.
+rewrite sp ltnn subnn expr0 hC alg_polyC mul0r add0r subrr.
 by case: n sp => [|n] sp; rewrite size_polyC /= eqxx.
 Qed.
 
@@ -1286,8 +1287,7 @@ apply/idP/idP; rewrite dvdp_eq; set c2 := _ ^+ _; set q2 := _ %/ _.
   rewrite mulrC [_ * c2]mulrC mulrA -[((_ * _) * _) *: _]scalerA -scalerBr.
   by rewrite divp_eq addrC addKr.
 have sn0 : c1 * c2 * lead_coef n ^+ scalp m n != 0.
-  rewrite !mulf_neq0 // expf_eq0 lead_coef_eq0 ?(negPf dn0) ?andbF //.
-  by rewrite (negPf nn0) andbF.
+  by rewrite !mulf_neq0 // expf_eq0 lead_coef_eq0 (negPf dn0) andbF.
 move/eqP=> Eq2; apply: (@eq_dvdp _ (c2 *: (m %/ n) * q1 + c1 *: q2) _ _ sn0).
 rewrite -scalerA divp_eq scalerDr -!scalerA Eq2 scalerAl scalerAr Eq1.
 by rewrite scalerAl mulrDl mulrA.

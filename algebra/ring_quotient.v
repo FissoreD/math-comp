@@ -96,13 +96,13 @@ Variable eqT : rel T.
 Variables (zeroT : T) (oppT : T -> T) (addT : T -> T -> T). *)
 
 HB.mixin Record isZmodQuotient T eqT (zeroT : T) (oppT : T -> T) (addT : T -> T -> T)
-(Q : Type) & GRing.Zmodule Q & EqQuotient T eqT Q := {
-  pi_zeror : \pi_Q zeroT = 0;
-  pi_oppr : {morph \pi_Q : x / oppT x >-> - x};
-  pi_addr : {morph \pi_Q : x y / addT x y >-> x + y}
+(Q0 : Type) & GRing.Zmodule Q0 & EqQuotient T eqT Q0 := {
+  pi_zeror : \pi_Q0 zeroT = 0;
+  pi_oppr : {morph \pi_Q0 : x / oppT x >-> - x};
+  pi_addr : {morph \pi_Q0 : x y / addT x y >-> x + y}
 }.
 
-#[short(type="zmodQuotType")]
+#[export, short(type="zmodQuotType")]
 HB.structure Definition ZmodQuotient T eqT zeroT oppT addT :=
   {Q of isZmodQuotient T eqT zeroT oppT addT Q &
         GRing.Zmodule Q & EqQuotient T eqT Q}.
@@ -140,11 +140,11 @@ Variables (zeroT : T) (oppT : T -> T) (addT : T -> T -> T).
 Variables (oneT : T) (mulT : T -> T -> T).
  *)
 HB.mixin Record isNzRingQuotient T eqT zeroT oppT
-addT (oneT : T) (mulT : T -> T -> T) (Q : Type)
-  & ZmodQuotient T eqT zeroT oppT addT Q & GRing.NzRing Q:=
+addT (oneT : T) (mulT : T -> T -> T) (Q1 : Type)
+  & ZmodQuotient T eqT zeroT oppT addT Q1 & GRing.NzRing Q1:=
   {
-    pi_oner : \pi_Q oneT = 1;
-    pi_mulr : {morph \pi_Q : x y / mulT x y >-> x * y}
+    pi_oner : \pi_Q1 oneT = 1;
+    pi_mulr : {morph \pi_Q1 : x y / mulT x y >-> x * y}
   }.
 
 Module isRingQuotient.
@@ -157,7 +157,7 @@ End isRingQuotient.
 Notation isRingQuotient T eqT zeroT oppT addT oneT mulT Q :=
   (isNzRingQuotient T eqT zeroT oppT addT oneT mulT Q) (only parsing).
 
-#[short(type="nzRingQuotType")]
+#[export, short(type="nzRingQuotType")]
 HB.structure Definition NzRingQuotient T eqT zeroT oppT addT oneT mulT :=
   {Q of isNzRingQuotient T eqT zeroT oppT addT oneT mulT Q &
    ZmodQuotient T eqT zeroT oppT addT Q & GRing.NzRing Q }.
@@ -195,13 +195,13 @@ HB.instance Definition _ := GRing.isMonoidMorphism.Build R Q \pi_Q
 End PiRMorphism.
 
 HB.mixin Record isUnitRingQuotient T eqT zeroT oppT addT oneT mulT (unitT : pred T) (invT : T -> T)
-  (Q : Type) & NzRingQuotient T eqT zeroT oppT addT oneT mulT Q & GRing.UnitRing Q :=
+  (Q2 : Type) & NzRingQuotient T eqT zeroT oppT addT oneT mulT Q2 & GRing.UnitRing Q2 :=
   {
-    pi_unitr : {mono \pi_Q : x / unitT x >-> x \in GRing.unit};
-    pi_invr : {morph \pi_Q : x / invT x >-> x^-1}
+    pi_unitr : {mono \pi_Q2 : x / unitT x >-> x \in GRing.unit};
+    pi_invr : {morph \pi_Q2 : x / invT x >-> x^-1}
   }.
 
-#[short(type="unitRingQuotType")]
+#[export, short(type="unitRingQuotType")]
 HB.structure Definition UnitRingQuotient T eqT zeroT oppT addT oneT mulT unitT invT :=
   {Q of isUnitRingQuotient T eqT zeroT oppT addT oneT mulT unitT invT Q & GRing.UnitRing Q & isQuotient T Q & isEqQuotient T eqT Q & isZmodQuotient T eqT zeroT oppT addT Q & isNzRingQuotient T eqT zeroT oppT addT oneT mulT Q}.
 
@@ -237,10 +237,10 @@ HB.mixin Record isProperIdeal (R : nzRingType) (S : R -> bool) := {
   proper_ideal_subproof : proper_ideal S
 }.
 
-#[short(type="proper_ideal")]
+#[export, short(type="proper_ideal")]
 HB.structure Definition ProperIdeal R := {S of isProperIdeal R S}.
 
-#[short(type="idealr")]
+#[export, short(type="idealr")]
 HB.structure Definition Idealr (R : nzRingType) :=
   {S of GRing.ZmodClosed R S & ProperIdeal R S}.
 
@@ -248,7 +248,7 @@ HB.mixin Record isPrimeIdealrClosed (R : nzRingType) (S : R -> bool) := {
   prime_idealr_closed_subproof : prime_idealr_closed S
 }.
 
-#[short(type="prime_idealr")]
+#[export, short(type="prime_idealr")]
 HB.structure Definition PrimeIdealr (R : nzRingType) :=
   {S of Idealr R S & isPrimeIdealrClosed R S}.
 

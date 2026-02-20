@@ -69,7 +69,7 @@ HB.mixin Record NumDomain_hasFloorCeilTruncn R & Num.NumDomain R := {
   nat_num_subproof : forall x, reflect (exists n, x = n%:R) (nat_num_subdef x);
 }.
 
-#[short(type="archiNumDomainType")]
+#[export, short(type="archiNumDomainType")]
 HB.structure Definition ArchiNumDomain :=
   { R of NumDomain_hasFloorCeilTruncn R & Num.NumDomain R }.
 
@@ -78,7 +78,7 @@ Bind Scope ring_scope with ArchiNumDomain.sort.
 End ArchiNumDomainExports.
 HB.export ArchiNumDomainExports.
 
-#[short(type="archiNumFieldType")]
+#[export, short(type="archiNumFieldType")]
 HB.structure Definition ArchiNumField :=
   { R of NumDomain_hasFloorCeilTruncn R & Num.NumField R }.
 
@@ -87,7 +87,7 @@ Bind Scope ring_scope with ArchiNumField.sort.
 End ArchiNumFieldExports.
 HB.export ArchiNumFieldExports.
 
-#[short(type="archiClosedFieldType")]
+#[export, short(type="archiClosedFieldType")]
 HB.structure Definition ArchiClosedField :=
   { R of NumDomain_hasFloorCeilTruncn R & Num.ClosedField R }.
 
@@ -96,7 +96,7 @@ Bind Scope ring_scope with ArchiClosedField.sort.
 End ArchiClosedFieldExports.
 HB.export ArchiClosedFieldExports.
 
-#[short(type="archiRealDomainType")]
+#[export, short(type="archiRealDomainType")]
 HB.structure Definition ArchiRealDomain :=
   { R of NumDomain_hasFloorCeilTruncn R & Num.RealDomain R }.
 
@@ -105,7 +105,7 @@ Bind Scope ring_scope with ArchiRealDomain.sort.
 End ArchiRealDomainExports.
 HB.export ArchiRealDomainExports.
 
-#[short(type="archiRealFieldType")]
+#[export, short(type="archiRealFieldType")]
 HB.structure Definition ArchiRealField :=
   { R of NumDomain_hasFloorCeilTruncn R & Num.RealField R }.
 
@@ -114,7 +114,7 @@ Bind Scope ring_scope with ArchiRealField.sort.
 End ArchiRealFieldExports.
 HB.export ArchiRealFieldExports.
 
-#[short(type="archiRcfType")]
+#[export, short(type="archiRcfType")]
 HB.structure Definition ArchiRealClosedField :=
   { R of NumDomain_hasFloorCeilTruncn R & Num.RealClosedField R }.
 

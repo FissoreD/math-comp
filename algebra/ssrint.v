@@ -544,10 +544,10 @@ Implicit Types x y z : M.
 Fact mulrzA_C m n x : (x *~ n) *~ m = x *~ (m * n).
 Proof.
 elim: m=> [|m _|m _]; elim: n=> [|n _|n _]; rewrite /intmul //=;
-rewrite ?(muln0, mulr0n, mul0rn, oppr0, mulNrn, opprK) //;
- do ?by rewrite mulnC mulrnA.
-* by rewrite -mulrnA mulnC.
-* by rewrite -mulrnA.
+rewrite ?(muln0, @mulr0n M, @mul0rn M, @oppr0 M, @mulNrn M, @opprK M) //;
+ do ?by rewrite mulnC (@mulrnA M).
+* by rewrite -(@mulrnA M) mulnC.
+* by rewrite -(@mulrnA M).
 Qed.
 
 Fact mulrzAC m n x : (x *~ n) *~ m = (x *~ m) *~ n.
@@ -1082,7 +1082,7 @@ Qed.
 
 Lemma exprz_exp x m n : (x ^ m) ^ n = (x ^ (m * n)).
 Proof.
-wlog: n / 0 <= n.
+wlog: n / (0 : int) <= n.
   by case: n=> [n -> //|n]; rewrite ?NegzE mulrN -?invr_expz=> -> /=.
 elim: n x m=> [|n ihn|n ihn] x m // _; first by rewrite mulr0 !expr0z.
 rewrite exprSz ihn // intS mulrDr mulr1 exprzD_ss //.
@@ -1487,8 +1487,10 @@ Proof. by rewrite -eqr_oppLR -mulrN -sgzN mulz_sg_eq1. Qed.
 Lemma sgzM x y : sgz (x * y) = sgz x * sgz y.
 Proof.
 rewrite -sgz_sgr -(sgz_sgr x) -(sgz_sgr y) sgrM.
-by case: sgrP; case: sgrP; rewrite /sgz ?(mulNr, mul0r, mul1r);
-  rewrite ?(oppr_eq0, oppr_cp0, eqxx, ltxx, ltr01, ltr10, oner_eq0).
+by case: sgrP; case: sgrP;
+  rewrite ?(@mulN1r R, @mul0r R, @mul1r R, @opprK R, @oppr0 R)
+          ?(sgz0, sgz1, sgzN1)
+          ?(@mulN1r int, @mul0r int, @mul1r int, @opprK int, @oppr0 int).
 Qed.
 
 Lemma sgzX (n : nat) x : sgz (x ^+ n) = (sgz x) ^+ n.

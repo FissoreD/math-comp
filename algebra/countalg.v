@@ -42,16 +42,16 @@ Module CountRing.
 
 Import GRing.Theory.
 
-#[short(type="countNmodType")]
+#[export, short(type="countNmodType")]
 HB.structure Definition Nmodule := {M of GRing.Nmodule M & Countable M}.
 
-#[short(type="countZmodType")]
+#[export, short(type="countZmodType")]
 HB.structure Definition Zmodule := {M of GRing.Zmodule M & Countable M}.
 
-#[short(type="countPzSemiRingType")]
+#[export, short(type="countPzSemiRingType")]
 HB.structure Definition PzSemiRing := {R of GRing.PzSemiRing R & Countable R}.
 
-#[short(type="countNzSemiRingType")]
+#[export, short(type="countNzSemiRingType")]
 HB.structure Definition NzSemiRing := {R of GRing.NzSemiRing R & Countable R}.
 
 #[deprecated(since="mathcomp 2.4.0", use=CountRing.NzSemiRing)]
@@ -66,10 +66,10 @@ Notation on R := (NzSemiRing.on R) (only parsing).
 Notation copy T U := (NzSemiRing.copy T U) (only parsing).
 End SemiRing.
 
-#[short(type="countPzRingType")]
+#[export, short(type="countPzRingType")]
 HB.structure Definition PzRing := {R of GRing.PzRing R & Countable R}.
 
-#[short(type="countNzRingType")]
+#[export, short(type="countNzRingType")]
 HB.structure Definition NzRing := {R of GRing.NzRing R & Countable R}.
 
 #[deprecated(since="mathcomp 2.4.0", use=CountRing.NzRing)]
@@ -84,11 +84,11 @@ Notation on R := (NzRing.on R) (only parsing).
 Notation copy T U := (NzRing.copy T U) (only parsing).
 End Ring.
 
-#[short(type="countComPzSemiRingType")]
+#[export, short(type="countComPzSemiRingType")]
 HB.structure Definition ComPzSemiRing :=
   {R of GRing.ComPzSemiRing R & Countable R}.
 
-#[short(type="countComNzSemiRingType")]
+#[export, short(type="countComNzSemiRingType")]
 HB.structure Definition ComNzSemiRing :=
   {R of GRing.ComNzSemiRing R & Countable R}.
 
@@ -104,10 +104,10 @@ Notation on R := (ComNzSemiRing.on R) (only parsing).
 Notation copy T U := (ComNzSemiRing.copy T U) (only parsing).
 End ComSemiRing.
 
-#[short(type="countComPzRingType")]
+#[export, short(type="countComPzRingType")]
 HB.structure Definition ComPzRing := {R of GRing.ComPzRing R & Countable R}.
 
-#[short(type="countComNzRingType")]
+#[export, short(type="countComNzRingType")]
 HB.structure Definition ComNzRing := {R of GRing.ComNzRing R & Countable R}.
 
 #[deprecated(since="mathcomp 2.4.0", use=CountRing.ComNzRing)]
@@ -122,24 +122,24 @@ Notation on R := (ComNzRing.on R) (only parsing).
 Notation copy T U := (ComNzRing.copy T U) (only parsing).
 End ComRing.
 
-#[short(type="countUnitRingType")]
+#[export, short(type="countUnitRingType")]
 HB.structure Definition UnitRing := {R of GRing.UnitRing R & Countable R}.
 
-#[short(type="countComUnitRingType")]
+#[export, short(type="countComUnitRingType")]
 HB.structure Definition ComUnitRing := {R of GRing.ComUnitRing R & Countable R}.
 
-#[short(type="countIdomainType")]
+#[export, short(type="countIdomainType")]
 HB.structure Definition IntegralDomain :=
   {R of GRing.IntegralDomain R & Countable R}.
 
-#[short(type="countFieldType")]
+#[export, short(type="countFieldType")]
 HB.structure Definition Field := {R of GRing.Field R & Countable R}.
 
-#[short(type="countDecFieldType")]
+#[export, short(type="countDecFieldType")]
 HB.structure Definition DecidableField :=
   {R of GRing.DecidableField R & Countable R}.
 
-#[short(type="countClosedFieldType")]
+#[export, short(type="countClosedFieldType")]
 HB.structure Definition ClosedField := {R of GRing.ClosedField R & Countable R}.
 
 Module ReguralExports.

@@ -690,7 +690,7 @@ HB.mixin Record isDuallyPreorder (d : disp_t) T & Equality T := {
   ge_trans : transitive    (fun x y => le y x);
 }.
 
-#[primitive, short(type="preorderType")]
+#[primitive, export, export, short(type="preorderType")]
 HB.structure Definition Preorder (d : disp_t) :=
   { T of Choice T & isDuallyPreorder d T }.
 
@@ -706,11 +706,11 @@ HB.mixin Record hasTop d T0 & Preorder d T0 := {
   lex1 : forall x, le x top;
 }.
 
-#[primitive, short(type="bPreorderType")]
+#[primitive, export, short(type="bPreorderType")]
 HB.structure Definition BPreorder d := { T of hasBottom d T & Preorder d T }.
-#[primitive, short(type="tPreorderType")]
+#[primitive, export, short(type="tPreorderType")]
 HB.structure Definition TPreorder d := { T of hasTop d T & Preorder d T }.
-#[primitive, short(type="tbPreorderType")]
+#[primitive, export, short(type="tbPreorderType")]
 HB.structure Definition TBPreorder d := { T of hasTop d T & BPreorder d T }.
 
 Section PreorderDef.
@@ -952,16 +952,16 @@ HB.export PreOCoercions.
 (* FINITE *)
 (**********)
 
-#[primitive, short(type="finPreorderType")]
+#[primitive, export, short(type="finPreorderType")]
 HB.structure Definition FinPreorder d := { T of Finite T & Preorder d T }.
 
-#[primitive, short(type="finBPreorderType")]
+#[primitive, export, short(type="finBPreorderType")]
 HB.structure Definition FinBPreorder d := { T of FinPreorder d T & hasBottom d T }.
 
-#[primitive, short(type="finTPreorderType")]
+#[primitive, export, short(type="finTPreorderType")]
 HB.structure Definition FinTPreorder d := { T of FinPreorder d T & hasTop d T }.
 
-#[primitive, short(type="finTBPreorderType")]
+#[primitive, export, short(type="finTBPreorderType")]
 HB.structure Definition FinTBPreorder d := { T of FinBPreorder d T & hasTop d T }.
 
 (********)
@@ -2058,7 +2058,7 @@ HB.mixin Record isOrderMorphism d (T : preorderType d) d' (T' : preorderType d')
   omorph_le_subproof : {homo apply : x y / x <= y} ;
 }.
 
-#[primitive]
+#[primitive, export]
 HB.structure Definition OrderMorphism d (T : preorderType d)
   d' (T' : preorderType d') := {f of isOrderMorphism d T d' T' f}.
 
@@ -2104,7 +2104,7 @@ HB.mixin Record isSubPreorder d (T : preorderType d) (S : pred T) d' U
   le_val : {mono (val : U -> T) : x y / x <= y};
 }.
 
-#[primitive, short(type="subPreorder")]
+#[primitive, export, short(type="subPreorder")]
 HB.structure Definition SubPreorder d (T : preorderType d) S d' :=
   { U of SubEquality T S U & Preorder d' U & isSubPreorder d T S d' U }.
 

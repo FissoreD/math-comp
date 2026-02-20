@@ -1,5 +1,6 @@
 (* (c) Copyright 2006-2016 Microsoft Corporation and Inria.                  *)
 (* Distributed under the terms of CeCILL-B.                                  *)
+From HB Require Import structures.
 From mathcomp Require Import ssreflect ssrfun ssrbool eqtype ssrnat fintype.
 From mathcomp Require Import bigop finset binomial fingroup morphism.
 From mathcomp Require Import automorphism quotient gfunctor.

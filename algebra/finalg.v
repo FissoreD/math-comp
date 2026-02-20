@@ -42,10 +42,10 @@ Module FinRing.
 
 Import GRing.Theory.
 
-#[short(type="finNmodType")]
+#[export, short(type="finNmodType")]
 HB.structure Definition Nmodule := {M of GRing.Nmodule M & Finite M}.
 
-#[short(type="finZmodType")]
+#[export, short(type="finZmodType")]
 HB.structure Definition Zmodule := {M of GRing.Zmodule M & Finite M}.
 
 Module ZmoduleExports.
@@ -55,10 +55,10 @@ Notation "[ 'finGroupMixin' 'of' R 'for' +%R ]" :=
 End ZmoduleExports.
 HB.export ZmoduleExports.
 
-#[short(type="finPzSemiRingType")]
+#[export, short(type="finPzSemiRingType")]
 HB.structure Definition PzSemiRing := {R of GRing.PzSemiRing R & Finite R}.
 
-#[short(type="finNzSemiRingType")]
+#[export, short(type="finNzSemiRingType")]
 HB.structure Definition NzSemiRing := {R of GRing.NzSemiRing R & Finite R}.
 
 #[deprecated(since="mathcomp 2.4.0", use=FinRing.NzSemiRing)]
@@ -73,10 +73,10 @@ Notation on R := (NzSemiRing.on R) (only parsing).
 Notation copy T U := (NzSemiRing.copy T U) (only parsing).
 End SemiRing.
 
-#[short(type="finPzRingType")]
+#[export, short(type="finPzRingType")]
 HB.structure Definition PzRing := {R of GRing.PzRing R & Finite R}.
 
-#[short(type="finNzRingType")]
+#[export, short(type="finNzRingType")]
 HB.structure Definition NzRing := {R of GRing.NzRing R & Finite R}.
 
 #[deprecated(since="mathcomp 2.4.0", use=FinRing.NzRing)]
@@ -91,11 +91,11 @@ Notation on R := (NzRing.on R) (only parsing).
 Notation copy T U := (NzRing.copy T U) (only parsing).
 End Ring.
 
-#[short(type="finComPzSemiRingType")]
+#[export, short(type="finComPzSemiRingType")]
 HB.structure Definition ComPzSemiRing :=
   {R of GRing.ComPzSemiRing R & Finite R}.
 
-#[short(type="finComNzSemiRingType")]
+#[export, short(type="finComNzSemiRingType")]
 HB.structure Definition ComNzSemiRing :=
   {R of GRing.ComNzSemiRing R & Finite R}.
 
@@ -111,10 +111,10 @@ Notation on R := (ComNzSemiRing.on R) (only parsing).
 Notation copy T U := (ComNzSemiRing.copy T U) (only parsing).
 End ComSemiRing.
 
-#[short(type="finComPzRingType")]
+#[export, short(type="finComPzRingType")]
 HB.structure Definition ComPzRing := {R of GRing.ComPzRing R & Finite R}.
 
-#[short(type="finComNzRingType")]
+#[export, short(type="finComNzRingType")]
 HB.structure Definition ComNzRing := {R of GRing.ComNzRing R & Finite R}.
 
 #[deprecated(since="mathcomp 2.4.0", use=FinRing.ComNzRing)]
@@ -129,24 +129,24 @@ Notation on R := (ComNzRing.on R) (only parsing).
 Notation copy T U := (ComNzRing.copy T U) (only parsing).
 End ComRing.
 
-#[short(type="finUnitRingType")]
+#[export, short(type="finUnitRingType")]
 HB.structure Definition UnitRing := {R of GRing.UnitRing R & Finite R}.
 
-#[short(type="finComUnitRingType")]
+#[export, short(type="finComUnitRingType")]
 HB.structure Definition ComUnitRing := {R of GRing.ComUnitRing R & Finite R}.
 
-#[short(type="finIdomainType")]
+#[export, short(type="finIdomainType")]
 HB.structure Definition IntegralDomain :=
   {R of GRing.IntegralDomain R & Finite R}.
 
-#[short(type="finFieldType")]
+#[export, short(type="finFieldType")]
 HB.structure Definition Field := {R of GRing.Field R & Finite R}.
 
-#[short(type="finLmodType")]
+#[export, short(type="finLmodType")]
 HB.structure Definition Lmodule (R : nzRingType) :=
   {M of GRing.Lmodule R M & Finite M}.
 
-#[short(type="finNzLalgType")]
+#[export, short(type="finNzLalgType")]
 HB.structure Definition NzLalgebra (R : nzRingType) :=
   {M of GRing.NzLalgebra R M & Finite M}.
 
@@ -162,7 +162,7 @@ Notation on R := (NzLalgebra.on R) (only parsing).
 Notation copy T U := (NzLalgebra.copy T U) (only parsing).
 End Lalgebra.
 
-#[short(type="finNzAlgType")]
+#[export, short(type="finNzAlgType")]
 HB.structure Definition NzAlgebra (R : nzRingType) :=
   {M of GRing.NzAlgebra R M & Finite M}.
 
@@ -178,7 +178,7 @@ Notation on R := (NzAlgebra.on R) (only parsing).
 Notation copy T U := (NzAlgebra.copy T U) (only parsing).
 End Algebra.
 
-#[short(type="finUnitAlgType")]
+#[export, short(type="finUnitAlgType")]
 HB.structure Definition UnitAlgebra (R : unitRingType) :=
   {M of GRing.UnitAlgebra R M & Finite M}.
 
@@ -220,9 +220,9 @@ End isRing.
 #[deprecated(since="mathcomp 2.4.0", use=FinRing.isNzRing)]
 Notation isRing R := (isNzRing R) (only parsing).
 
-HB.builders Context R & isNzRing R.
-  Definition is_inv (x y : R) := (x * y == 1) && (y * x == 1).
-  Definition unit := [qualify a x : R | [exists y, is_inv x y]].
+HB.builders Context R0 & isNzRing R0.
+  Definition is_inv (x y : R0) := (x * y == 1) && (y * x == 1).
+  Definition unit := [qualify a x : R0 | [exists y, is_inv x y]].
   Definition inv x := odflt x (pick (is_inv x)).
 
   Lemma mulVr : {in unit, left_inverse 1 inv *%R}.
@@ -249,7 +249,7 @@ HB.builders Context R & isNzRing R.
   Qed.
 
   HB.instance Definition _ :=
-    GRing.NzRing_hasMulInverse.Build R mulVr mulrV intro_unit invr_out.
+    GRing.NzRing_hasMulInverse.Build R0 mulVr mulrV intro_unit invr_out.
 HB.end.
 
 #[export, non_forgetful_inheritance]
@@ -345,9 +345,9 @@ HB.instance Definition _ (R : finFieldType) := [finGroupMixin of R for +%R].
 Coercion Field_to_baseFinGroup (R : finFieldType) := FinStarMonoid.clone R _.
 Coercion Field_to_finGroup (R : finFieldType) := FinGroup.clone R _.
 
-HB.factory Record isField F & Field F := {}.
+HB.factory Record isField F0 & Field F0 := {}.
 
-HB.builders Context F & isField F.
+HB.builders Context F0 & isField F0.
   Fixpoint sat e f :=
     match f with
     | GRing.Bool b => b
@@ -357,8 +357,8 @@ HB.builders Context F & isField F.
     | f1 \/ f2 => sat e f1 || sat e f2
     | f1 ==> f2 => (sat e f1 ==> sat e f2)%bool
     | ~ f1 => ~~ sat e f1
-    | ('exists 'X_k, f1) => [exists x : F, sat (set_nth 0%R e k x) f1]
-    | ('forall 'X_k, f1) => [forall x : F, sat (set_nth 0%R e k x) f1]
+    | ('exists 'X_k, f1) => [exists x : F0, sat (set_nth 0%R e k x) f1]
+    | ('forall 'X_k, f1) => [forall x : F0, sat (set_nth 0%R e k x) f1]
     end%T.
 
   Lemma decidable : GRing.decidable_field_axiom sat.
@@ -373,7 +373,7 @@ HB.builders Context F & isField F.
     by move=> i f IH e; apply: (iffP forallP) => f_ x; apply/IH.
   Qed.
 
-  HB.instance Definition _ := GRing.Field_isDecField.Build F decidable.
+  HB.instance Definition _ := GRing.Field_isDecField.Build F0 decidable.
 HB.end.
 
 #[export, non_forgetful_inheritance]

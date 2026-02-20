@@ -1163,15 +1163,15 @@ HB.mixin Record Preorder_isDuallyPOrder (d : disp_t) T1 & Preorder d T1 := {
   ge_anti  : antisymmetric (fun x y => @le d T1 y x);
 }.
 
-#[short(type="porderType")]
+#[export, short(type="porderType")]
 HB.structure Definition POrder (d : disp_t) :=
   { T of Preorder d T & Preorder_isDuallyPOrder d T }.
 
-#[short(type="bPOrderType")]
+#[export, short(type="bPOrderType")]
 HB.structure Definition BPOrder d := { T of hasBottom d T & POrder d T }.
-#[short(type="tPOrderType")]
+#[export, short(type="tPOrderType")]
 HB.structure Definition TPOrder d := { T of hasTop d T & POrder d T }.
-#[short(type="tbPOrderType")]
+#[export, short(type="tbPOrderType")]
 HB.structure Definition TBPOrder d := { T of hasTop d T & BPOrder d T }.
 
 Module POrderExports.
@@ -1193,49 +1193,49 @@ HB.mixin Record POrder_isJoinSemilattice d T3 & POrder d T3 := {
   leUx : forall x y z, (join x y <= z) = (x <= z) && (y <= z);
 }.
 
-#[short(type="meetSemilatticeType")]
+#[export, short(type="meetSemilatticeType")]
 HB.structure Definition MeetSemilattice d :=
   { T of POrder d T & POrder_isMeetSemilattice d T }.
 
-#[short(type="bMeetSemilatticeType")]
+#[export, short(type="bMeetSemilatticeType")]
 HB.structure Definition BMeetSemilattice d :=
   { T of MeetSemilattice d T & hasBottom d T }.
 
-#[short(type="tMeetSemilatticeType")]
+#[export, short(type="tMeetSemilatticeType")]
 HB.structure Definition TMeetSemilattice d :=
   { T of MeetSemilattice d T & hasTop d T }.
 
-#[short(type="tbMeetSemilatticeType")]
+#[export, short(type="tbMeetSemilatticeType")]
 HB.structure Definition TBMeetSemilattice d :=
   { T of BMeetSemilattice d T & hasTop d T }.
 
-#[short(type="joinSemilatticeType")]
+#[export, short(type="joinSemilatticeType")]
 HB.structure Definition JoinSemilattice d :=
   { T of POrder d T & POrder_isJoinSemilattice d T }.
 
-#[short(type="bJoinSemilatticeType")]
+#[export, short(type="bJoinSemilatticeType")]
 HB.structure Definition BJoinSemilattice d :=
   { T of JoinSemilattice d T & hasBottom d T }.
 
-#[short(type="tJoinSemilatticeType")]
+#[export, short(type="tJoinSemilatticeType")]
 HB.structure Definition TJoinSemilattice d :=
   { T of JoinSemilattice d T & hasTop d T }.
 
-#[short(type="tbJoinSemilatticeType")]
+#[export, short(type="tbJoinSemilatticeType")]
 HB.structure Definition TBJoinSemilattice d :=
   { T of BJoinSemilattice d T & hasTop d T }.
 
-#[short(type="latticeType")]
+#[export, short(type="latticeType")]
 HB.structure Definition Lattice d :=
   { T of JoinSemilattice d T & POrder_isMeetSemilattice d T }.
 
-#[short(type="bLatticeType")]
+#[export, short(type="bLatticeType")]
 HB.structure Definition BLattice d := { T of Lattice d T & hasBottom d T }.
 
-#[short(type="tLatticeType")]
+#[export, short(type="tLatticeType")]
 HB.structure Definition TLattice d := { T of Lattice d T & hasTop d T }.
 
-#[short(type="tbLatticeType")]
+#[export, short(type="tbLatticeType")]
 HB.structure Definition TBLattice d := { T of BLattice d T & hasTop d T }.
 
 Section LatticeDef.
@@ -1350,19 +1350,19 @@ HB.mixin Record Lattice_isDistributive d (T : Type) & Lattice d T := {
   joinIl : @left_distributive T T join meet; (* dual of meetUl *)
 }.
 
-#[short(type="distrLatticeType")]
+#[export, short(type="distrLatticeType")]
 HB.structure Definition DistrLattice d :=
   { T of Lattice_isDistributive d T & Lattice d T }.
 
-#[short(type="bDistrLatticeType")]
+#[export, short(type="bDistrLatticeType")]
 HB.structure Definition BDistrLattice d :=
   { T of DistrLattice d T & hasBottom d T }.
 
-#[short(type="tDistrLatticeType")]
+#[export, short(type="tDistrLatticeType")]
 HB.structure Definition TDistrLattice d :=
   { T of DistrLattice d T & hasTop d T }.
 
-#[short(type="tbDistrLatticeType")]
+#[export, short(type="tbDistrLatticeType")]
 HB.structure Definition TBDistrLattice d :=
   { T of BDistrLattice d T  & hasTop d T }.
 
@@ -1370,17 +1370,17 @@ HB.structure Definition TBDistrLattice d :=
 HB.mixin Record DistrLattice_isTotal d T4 & DistrLattice d T4 :=
   { le_total : total (<=%O : rel T4) }.
 
-#[short(type="orderType")]
+#[export, short(type="orderType")]
 HB.structure Definition Total d :=
   { T of DistrLattice_isTotal d T & DistrLattice d T }.
 
-#[short(type="bOrderType")]
+#[export, short(type="bOrderType")]
 HB.structure Definition BTotal d := { T of Total d T & hasBottom d T }.
 
-#[short(type="tOrderType")]
+#[export, short(type="tOrderType")]
 HB.structure Definition TTotal d := { T of Total d T & hasTop d T }.
 
-#[short(type="tbOrderType")]
+#[export, short(type="tbOrderType")]
 HB.structure Definition TBTotal d := { T of BTotal d T & hasTop d T }.
 
 #[key="T5", primitive]
@@ -1391,7 +1391,7 @@ HB.mixin Record DistrLattice_hasRelativeComplement d T5 & DistrLattice d T5 := {
   rcomplPjoin : forall x y z, ((y `|` x) `&` z) `|` rcompl x y z = y `|` x;
 }.
 
-#[short(type="cDistrLatticeType")]
+#[export, short(type="cDistrLatticeType")]
 HB.structure Definition CDistrLattice d :=
   { T of DistrLattice d T & DistrLattice_hasRelativeComplement d T }.
 
@@ -1403,7 +1403,7 @@ HB.mixin Record CDistrLattice_hasSectionalComplement d T
   diffErcompl : forall x y, diff x y = rcompl (\bot : T) x y;
 }.
 
-#[short(type="cbDistrLatticeType")]
+#[export, short(type="cbDistrLatticeType")]
 HB.structure Definition CBDistrLattice d :=
   { T of CDistrLattice d T & hasBottom d T &
          CDistrLattice_hasSectionalComplement d T }.
@@ -1415,7 +1415,7 @@ HB.mixin Record CDistrLattice_hasDualSectionalComplement d T6
   codiffErcompl : forall x y, codiff x y = rcompl x \top y;
 }.
 
-#[short(type="ctDistrLatticeType")]
+#[export, short(type="ctDistrLatticeType")]
 HB.structure Definition CTDistrLattice d :=
   { T of CDistrLattice d T & hasTop d T &
          CDistrLattice_hasDualSectionalComplement d T }.
@@ -1433,7 +1433,7 @@ HB.mixin Record CDistrLattice_hasComplement d T7 &
   complEcodiff : forall x : T7, compl x = codiff (\bot : T7) x;
 }.
 
-#[short(type="ctbDistrLatticeType")]
+#[export, short(type="ctbDistrLatticeType")]
 HB.structure Definition CTBDistrLattice d :=
   { T of CBDistrLattice d T & CTDistrLattice d T &
          CDistrLattice_hasComplement d T }.
@@ -1446,59 +1446,59 @@ End CTBDistrLatticeSyntax.
 (* FINITE *)
 (**********)
 
-#[short(type="finPOrderType")]
+#[export, short(type="finPOrderType")]
 HB.structure Definition FinPOrder d := { T of Finite T & POrder d T }.
 
-#[short(type="finBPOrderType")]
+#[export, short(type="finBPOrderType")]
 HB.structure Definition FinBPOrder d := { T of FinPOrder d T & hasBottom d T }.
 
-#[short(type="finTPOrderType")]
+#[export, short(type="finTPOrderType")]
 HB.structure Definition FinTPOrder d := { T of FinPOrder d T & hasTop d T }.
 
-#[short(type="finTBPOrderType")]
+#[export, short(type="finTBPOrderType")]
 HB.structure Definition FinTBPOrder d := { T of FinBPOrder d T & hasTop d T }.
 
-#[short(type="finMeetSemilatticeType")]
+#[export, short(type="finMeetSemilatticeType")]
 HB.structure Definition FinMeetSemilattice d :=
   { T of Finite T & MeetSemilattice d T }.
 
-#[short(type="finBMeetSemilatticeType")]
+#[export, short(type="finBMeetSemilatticeType")]
 HB.structure Definition FinBMeetSemilattice d :=
   { T of Finite T & BMeetSemilattice d T }.
 
-#[short(type="finJoinSemilatticeType")]
+#[export, short(type="finJoinSemilatticeType")]
 HB.structure Definition FinJoinSemilattice d :=
   { T of Finite T & JoinSemilattice d T }.
 
-#[short(type="finTJoinSemilatticeType")]
+#[export, short(type="finTJoinSemilatticeType")]
 HB.structure Definition FinTJoinSemilattice d :=
   { T of Finite T & TJoinSemilattice d T }.
 
-#[short(type="finLatticeType")]
+#[export, short(type="finLatticeType")]
 HB.structure Definition FinLattice d := { T of Finite T & Lattice d T }.
 
-#[short(type="finTBLatticeType")]
+#[export, short(type="finTBLatticeType")]
 HB.structure Definition FinTBLattice d := { T of Finite T & TBLattice d T }.
 
-#[short(type="finDistrLatticeType")]
+#[export, short(type="finDistrLatticeType")]
 HB.structure Definition FinDistrLattice d :=
   { T of Finite T & DistrLattice d T }.
 
-#[short(type="finTBDistrLatticeType")]
+#[export, short(type="finTBDistrLatticeType")]
 HB.structure Definition FinTBDistrLattice d :=
   { T of Finite T & TBDistrLattice d T }.
 
-#[short(type="finOrderType")]
+#[export, short(type="finOrderType")]
 HB.structure Definition FinTotal d := { T of Finite T & Total d T }.
 
-#[short(type="finTBOrderType")]
+#[export, short(type="finTBOrderType")]
 HB.structure Definition FinTBTotal d := { T of Finite T & TBTotal d T }.
 
-#[short(type="finCDistrLatticeType")]
+#[export, short(type="finCDistrLatticeType")]
 HB.structure Definition FinCDistrLattice d :=
   { T of Finite T & CDistrLattice d T }.
 
-#[short(type="finCTBDistrLatticeType")]
+#[export, short(type="finCTBDistrLatticeType")]
 HB.structure Definition FinCTBDistrLattice d :=
   { T of Finite T & CTBDistrLattice d T }.
 
@@ -4772,14 +4772,17 @@ HB.mixin Record isJoinLatticeMorphism d (T : latticeType d)
   omorphU_subproof : join_morphism apply;
 }.
 
+#[export]
 HB.structure Definition MeetLatticeMorphism d (T : latticeType d)
     d' (T' : latticeType d') :=
   {f of isMeetLatticeMorphism d T d' T' f & @OrderMorphism d T d' T' f}.
 
+#[export]
 HB.structure Definition JoinLatticeMorphism d (T : latticeType d)
     d' (T' : latticeType d') :=
   {f of isJoinLatticeMorphism d T d' T' f & @OrderMorphism d T d' T' f}.
 
+#[export]
 HB.structure Definition LatticeMorphism d (T : latticeType d)
     d' (T' : latticeType d') :=
   {f of @MeetLatticeMorphism d T d' T' f & @JoinLatticeMorphism d T d' T' f}.
@@ -4896,12 +4899,15 @@ HB.mixin Record isTLatticeMorphism d (T : tLatticeType d)
   omorph1_subproof : apply \top = \top;
 }.
 
+#[export]
 HB.structure Definition BLatticeMorphism d (T : bLatticeType d)
     d' (T' : bLatticeType d') := {f of isBLatticeMorphism d T d' T' f}.
 
+#[export]
 HB.structure Definition TLatticeMorphism d (T : tLatticeType d)
     d' (T' : tLatticeType d') := {f of isTLatticeMorphism d T d' T' f}.
 
+#[export]
 HB.structure Definition TBLatticeMorphism d (T : tbLatticeType d)
     d' (T' : tbLatticeType d') :=
   {f of @BLatticeMorphism d T d' T' f & @TLatticeMorphism d T d' T' f}.
@@ -5023,33 +5029,33 @@ HB.mixin Record isTLatticeClosed d (T : tLatticeType d) (S : {pred T}) := {
 
 (* Structures for stability properties *)
 
-#[short(type="meetLatticeClosed")]
+#[export, short(type="meetLatticeClosed")]
 HB.structure Definition MeetLatticeClosed d T :=
   {S of isMeetLatticeClosed d T S}.
 
-#[short(type="joinLatticeClosed")]
+#[export, short(type="joinLatticeClosed")]
 HB.structure Definition JoinLatticeClosed d T :=
   {S of isJoinLatticeClosed d T S}.
 
-#[short(type="latticeClosed")]
+#[export, short(type="latticeClosed")]
 HB.structure Definition LatticeClosed d T :=
   {S of @MeetLatticeClosed d T S & @JoinLatticeClosed d T S}.
 
-#[short(type="bLatticeClosed")]
+#[export, short(type="bLatticeClosed")]
 HB.structure Definition BLatticeClosed d T := {S of isBLatticeClosed d T S}.
 
-#[short(type="bJoinLatticeClosed")]
+#[export, short(type="bJoinLatticeClosed")]
 HB.structure Definition BJoinLatticeClosed d T :=
   {S of isBLatticeClosed d T S & @JoinLatticeClosed d T S}.
 
-#[short(type="tLatticeClosed")]
+#[export, short(type="tLatticeClosed")]
 HB.structure Definition TLatticeClosed d T := {S of isTLatticeClosed d T S}.
 
-#[short(type="tMeetLatticeClosed")]
+#[export, short(type="tMeetLatticeClosed")]
 HB.structure Definition TMeetLatticeClosed d T :=
   {S of isTLatticeClosed d T S & @MeetLatticeClosed d T S}.
 
-#[short(type="tbLatticeClosed")]
+#[export, short(type="tbLatticeClosed")]
 HB.structure Definition TBLatticeClosed d (T : tbLatticeType d) :=
   {S of @BLatticeClosed d T S & @TLatticeClosed d T S}.
 
@@ -5116,7 +5122,7 @@ Proof. by move=> FS; elim/big_ind: _; [exact: opred1 | exact: opredI |]. Qed.
 End TLatticePred.
 End LatticePred.
 
-#[short(type="subPOrder")]
+#[export, short(type="subPOrder")]
 HB.structure Definition SubPOrder d (T : porderType d) S d' :=
   { U of SubEquality T S U & POrder d' U & isSubPreorder d T S d' U }.
 
@@ -5145,67 +5151,67 @@ HB.mixin Record isJoinSubLattice d (T : latticeType d) (S : pred T) d' U2
   valU_subproof : {morph (val : U2 -> T) : x y / x `|` y};
 }.
 
-#[short(type="subPOrderLattice")]
+#[export, short(type="subPOrderLattice")]
 HB.structure Definition SubPOrderLattice d (T : latticeType d) S d' :=
   { U of @SubPOrder d T S d' U & Lattice d' U }.
 
-#[short(type="subPOrderBLattice")]
+#[export, short(type="subPOrderBLattice")]
 HB.structure Definition SubPOrderBLattice d (T : latticeType d) S d' :=
   { U of @SubPOrderLattice d T S d' U & BLattice d' U }.
 
-#[short(type="subPOrderTLattice")]
+#[export, short(type="subPOrderTLattice")]
 HB.structure Definition SubPOrderTLattice d (T : latticeType d) S d' :=
   { U of @SubPOrderLattice d T S d' U & TLattice d' U }.
 
-#[short(type="subPOrderTBLattice")]
+#[export, short(type="subPOrderTBLattice")]
 HB.structure Definition SubPOrderTBLattice d (T : latticeType d) S d' :=
   { U of @SubPOrderLattice d T S d' U & TBLattice d' U }.
 
-#[short(type="meetSubLattice")]
+#[export, short(type="meetSubLattice")]
 HB.structure Definition MeetSubLattice d (T : latticeType d) S d' :=
   { U of @SubPOrderLattice d T S d' U & isMeetSubLattice d T S d' U }.
 
-#[short(type="meetSubBLattice")]
+#[export, short(type="meetSubBLattice")]
 HB.structure Definition MeetSubBLattice d (T : latticeType d) S d' :=
   { U of @MeetSubLattice d T S d' U & BLattice d' U }.
 
-#[short(type="meetSubTLattice")]
+#[export, short(type="meetSubTLattice")]
 HB.structure Definition MeetSubTLattice d (T : latticeType d) S d' :=
   { U of @MeetSubLattice d T S d' U & TLattice d' U }.
 
-#[short(type="meetSubTBLattice")]
+#[export, short(type="meetSubTBLattice")]
 HB.structure Definition MeetSubTBLattice d (T : latticeType d) S d' :=
   { U of @MeetSubLattice d T S d' U & TBLattice d' U }.
 
-#[short(type="joinSubLattice")]
+#[export, short(type="joinSubLattice")]
 HB.structure Definition JoinSubLattice d (T : latticeType d) S d' :=
   { U of @SubPOrderLattice d T S d' U & isJoinSubLattice d T S d' U }.
 
-#[short(type="joinSubBLattice")]
+#[export, short(type="joinSubBLattice")]
 HB.structure Definition JoinSubBLattice d (T : latticeType d) S d' :=
   { U of @JoinSubLattice d T S d' U & BLattice d' U }.
 
-#[short(type="joinSubTLattice")]
+#[export, short(type="joinSubTLattice")]
 HB.structure Definition JoinSubTLattice d (T : latticeType d) S d' :=
   { U of @JoinSubLattice d T S d' U & TLattice d' U }.
 
-#[short(type="joinSubTBLattice")]
+#[export, short(type="joinSubTBLattice")]
 HB.structure Definition JoinSubTBLattice d (T : latticeType d) S d' :=
   { U of @JoinSubLattice d T S d' U & TBLattice d' U }.
 
-#[short(type="subLattice")]
+#[export, short(type="subLattice")]
 HB.structure Definition SubLattice d (T : latticeType d) S d' :=
   { U of @MeetSubLattice d T S d' U & @JoinSubLattice d T S d' U }.
 
-#[short(type="subBLattice")]
+#[export, short(type="subBLattice")]
 HB.structure Definition SubBLattice d (T : latticeType d) S d' :=
   { U of @SubLattice d T S d' U & BLattice d' U }.
 
-#[short(type="subTLattice")]
+#[export, short(type="subTLattice")]
 HB.structure Definition SubTLattice d (T : latticeType d) S d' :=
   { U of @SubLattice d T S d' U & TLattice d' U }.
 
-#[short(type="subTBLattice")]
+#[export, short(type="subTBLattice")]
 HB.structure Definition SubTBLattice d (T : latticeType d) S d' :=
   { U of @SubLattice d T S d' U & TBLattice d' U }.
 
@@ -5278,19 +5284,19 @@ HB.mixin Record isBSubLattice d (T : bLatticeType d) (S : pred T) d' U4
   val0_subproof : (val : U4 -> T) \bot = \bot;
 }.
 
-#[short(type="bJoinSubLattice")]
+#[export, short(type="bJoinSubLattice")]
 HB.structure Definition BJoinSubLattice d (T : bLatticeType d) S d' :=
   { U of @JoinSubLattice d T S d' U & BLattice d' U & isBSubLattice d T S d' U }.
 
-#[short(type="bJoinSubTLattice")]
+#[export, short(type="bJoinSubTLattice")]
 HB.structure Definition BJoinSubTLattice d (T : bLatticeType d) S d' :=
   { U of @BJoinSubLattice d T S d' U & TBLattice d' U }.
 
-#[short(type="bSubLattice")]
+#[export, short(type="bSubLattice")]
 HB.structure Definition BSubLattice d (T : bLatticeType d) S d' :=
   { U of @SubLattice d T S d' U & @BJoinSubLattice d T S d' U }.
 
-#[short(type="bSubTLattice")]
+#[export, short(type="bSubTLattice")]
 HB.structure Definition BSubTLattice d (T : bLatticeType d) S d' :=
   { U of @BSubLattice d T S d' U & TBLattice d' U }.
 
@@ -5338,19 +5344,19 @@ HB.mixin Record isTSubLattice d (T : tLatticeType d) (S : pred T) d' U5
   val1_subproof : (val : U5 -> T) \top = \top;
 }.
 
-#[short(type="tMeetSubLattice")]
+#[export, short(type="tMeetSubLattice")]
 HB.structure Definition TMeetSubLattice d (T : tLatticeType d) S d' :=
   { U of @MeetSubLattice d T S d' U & TLattice d' U & isTSubLattice d T S d' U }.
 
-#[short(type="tMeetSubBLattice")]
+#[export, short(type="tMeetSubBLattice")]
 HB.structure Definition TMeetSubBLattice d (T : tLatticeType d) S d' :=
   { U of @TMeetSubLattice d T S d' U & TBLattice d' U }.
 
-#[short(type="tSubLattice")]
+#[export, short(type="tSubLattice")]
 HB.structure Definition TSubLattice d (T : tLatticeType d) S d' :=
   { U of @SubLattice d T S d' U & @TMeetSubLattice d T S d' U }.
 
-#[short(type="tSubBLattice")]
+#[export, short(type="tSubBLattice")]
 HB.structure Definition TSubBLattice d (T : tLatticeType d) S d' :=
   { U of @TSubLattice d T S d' U & TBLattice d' U }.
 
@@ -5393,7 +5399,7 @@ HB.instance Definition _ := SubPOrder_isTSubLattice.Build d T S d' U0
   opred1_subproof.
 HB.end.
 
-#[short(type="tbSubLattice")]
+#[export, short(type="tbSubLattice")]
 HB.structure Definition TBSubLattice d (T : tbLatticeType d) S d' :=
   { U of @BSubLattice d T S d' U & @TSubLattice d T S d' U}.
 
@@ -5433,7 +5439,7 @@ HB.instance Definition _ := SubPOrder_isTBSubLattice.Build d T S d' U0
   opred0_subproof opred1_subproof.
 HB.end.
 
-#[short(type="subOrder")]
+#[export, short(type="subOrder")]
 HB.structure Definition SubOrder d (T : orderType d) S d' :=
   { U of @SubLattice d T S d' U & Total d' U }.
 

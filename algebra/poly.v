@@ -552,7 +552,7 @@ have [-> | nz_q] := eqVneq q 0; first by rewrite lead_coef0 !mulr0 coef0.
 have ->: (size p + size q).-2 = (dp + dq)%N.
   by do 2!rewrite polySpred // addSn addnC.
 have lt_p_pq: dp < (dp + dq).+1 by rewrite ltnS leq_addr.
-rewrite coefM (bigD1 (Ordinal lt_p_pq)) ?big1 ?simp ?addKn //= => i.
+rewrite coefM (bigD1 (Ordinal lt_p_pq))//= ?big1 ?addr0 ?addKn //= => i.
 rewrite -val_eqE neq_ltn /= => /orP[lt_i_p | gt_i_p]; last first.
   by rewrite nth_default ?mul0r //; rewrite -polySpred in gt_i_p.
 rewrite [q`__]nth_default ?mulr0 //= -subSS -{1}addnS -polySpred //.
@@ -2280,6 +2280,8 @@ Fact comp_poly_is_semilinear p : semilinear (comp_poly p).
 Proof.
 split=> [a q|q r]; last by rewrite /comp_poly linearD /= hornerD.
 by rewrite /comp_poly linearZ /= hornerZ mul_polyC.
+(*move=> a q r.
+   by rewrite /comp_poly rmorphD /= map_polyZ 2!hornerE_comm mul_polyC.*)
 Qed.
 HB.instance Definition _ p :=
   GRing.isSemilinear.Build R {poly R} {poly R} _ (comp_poly p)
@@ -2342,8 +2344,10 @@ Notation "p \Po q" := (comp_poly q p) : ring_scope.
 Lemma map_comp_poly (aR rR : nzRingType) (f : {rmorphism aR -> rR}) p q :
   map_poly f (p \Po q) = map_poly f p \Po map_poly f q.
 Proof.
-elim/poly_ind: p => [|p a IHp]; first by rewrite !raddf0.
-rewrite comp_poly_MXaddC !rmorphD !rmorphM /= !map_polyC map_polyX.
+elim/poly_ind: p => [|p a IHp].
+  (* FIXME: Bug? I should be able to write `rewrite !raddf0`. *)
+  by rewrite [0 \Po _]raddf0 raddf0 [0 \Po _]raddf0.
+rewrite comp_poly_MXaddC !rmorphD !rmorphM /= map_polyC map_polyX.
 by rewrite comp_poly_MXaddC -IHp.
 Qed.
 
@@ -2959,7 +2963,8 @@ Lemma size_prod_seq_eq1 (I : eqType) (s : seq I) (P : pred I) (F : I -> {poly R}
   reflect (forall i, P i && (i \in s) -> size (F i) = 1)
           (size (\prod_(i <- s | P i) F i) == 1%N).
 Proof.
-rewrite (big_morph _ (id1:=true) size_mul_eq1) ?size_polyC ?oner_neq0//.
+(* FIXME: I need more annotations (op1) than before. *)
+rewrite (big_morph (fun p => size p == 1) (id1:=true) (op1:=andb) size_mul_eq1) ?size_polyC ?oner_neq0//.
 rewrite big_all_cond; apply/(iffP allP).
   by move=> h i /andP[Pi ins]; apply/eqP/(implyP (h i ins) Pi).
 by move=> h i ins; apply/implyP => Pi; rewrite h ?Pi.
@@ -3354,7 +3359,8 @@ Proof. by rewrite -mulr2n -[RHS]mulr_natr divfK. Qed.
 
 Let pE : p = a *: 'X^2 + b *: 'X + c%:P.
 Proof.
-apply/polyP => + /[!coefE] => -[|[|[|i]]] /=; rewrite !Monoid.simpm//.
+apply/polyP => x.
+rewrite 7!coefE; case: x => [|[|[|i]]] /=; rewrite !mulr0 ?mulr1 ?add0r ?addr0//.
 by rewrite nth_default// degp.
 Qed.
 

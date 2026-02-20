@@ -161,7 +161,7 @@ HB.mixin Record hasAdd V := {
   add : V -> V -> V
 }.
 
-#[primitive, short(type="baseAddMagmaType")]
+#[export, primitive, short(type="baseAddMagmaType")]
 HB.structure Definition BaseAddMagma := {V of hasAdd V}.
 
 Module BaseAddMagmaExports.
@@ -169,7 +169,7 @@ Bind Scope ring_scope with BaseAddMagma.sort.
 End BaseAddMagmaExports.
 HB.export BaseAddMagmaExports. 
 
-#[primitive]
+#[export, primitive]
 HB.structure Definition ChoiceBaseAddMagma := {V of BaseAddMagma V & Choice V}.
 
 Module ChoiceBaseAddMagmaExports.
@@ -208,7 +208,7 @@ HB.mixin Record BaseAddMagma_isAddMagma V & BaseAddMagma V := {
   addrC : commutative (@add V)
 }.
 
-#[primitive, short(type="addMagmaType")]
+#[export, primitive, short(type="addMagmaType")]
 HB.structure Definition AddMagma :=
   {V of BaseAddMagma_isAddMagma V & ChoiceBaseAddMagma V}.
 
@@ -239,7 +239,7 @@ HB.mixin Record AddMagma_isAddSemigroup V0 & AddMagma V0 := {
   addrA : associative (@add V0)
 }.
 
-#[primitive, short(type="addSemigroupType")]
+#[export, primitive, short(type="addSemigroupType")]
 HB.structure Definition AddSemigroup :=
   {V of AddMagma_isAddSemigroup V & AddMagma V}.
 
@@ -279,7 +279,7 @@ HB.mixin Record hasZero V := {
   zero : V
 }.
 
-#[primitive, short(type="baseAddUMagmaType")]
+#[export, primitive, short(type="baseAddUMagmaType")]
 HB.structure Definition BaseAddUMagma :=
   {V of hasZero V & BaseAddMagma V}.
 
@@ -288,7 +288,7 @@ Bind Scope ring_scope with BaseAddUMagma.sort.
 End BaseAddUMagmaExports.
 HB.export BaseAddUMagmaExports.
 
-#[primitive]
+#[export, primitive]
 HB.structure Definition ChoiceBaseAddUMagma :=
   {V of BaseAddUMagma V & Choice V}.
 
@@ -352,7 +352,7 @@ HB.builders Context V3 & isAddUMagma V3.
 HB.instance Definition _ := BaseAddUMagma_isAddUMagma.Build V3 add0r.
 HB.end.
 
-#[primitive, short(type="addUMagmaType")]
+#[export, primitive, short(type="addUMagmaType")]
 HB.structure Definition AddUMagma := {V of isAddUMagma V & Choice V}.
 
 Lemma addr0 (V : addUMagmaType) : right_id (@zero V) add.
@@ -385,7 +385,7 @@ Bind Scope ring_scope with AddUMagma.sort.
 End AddUMagmaExports.
 HB.export AddUMagmaExports.
 
-#[primitive, short(type="nmodType")]
+#[export, primitive, short(type="nmodType")]
 HB.structure Definition Nmodule := {V of isNmodule V & Choice V}.
 
 Module NmoduleExports.
@@ -459,7 +459,7 @@ HB.mixin Record hasOpp V := {
   opp : V -> V
 }.
 
-#[primitive, short(type="baseZmodType")]
+#[export, primitive, short(type="baseZmodType")]
 HB.structure Definition BaseZmodule := {V of hasOpp V & BaseAddUMagma V}.
 
 Module BaseZmodExports.
@@ -485,7 +485,7 @@ HB.mixin Record BaseZmoduleNmodule_isZmodule V4 & BaseZmodule V4 := {
   addNr : left_inverse zero opp (@add V4)
 }.
 
-#[primitive, short(type="zmodType")]
+#[export, primitive, short(type="zmodType")]
 HB.structure Definition Zmodule :=
   {V of BaseZmoduleNmodule_isZmodule V & BaseZmodule V & Nmodule V}.
 
@@ -678,7 +678,7 @@ Module isSemiAdditive.
 Notation Build U V apply := (isNmodMorphism.Build U V apply) (only parsing).
 End isSemiAdditive.
 
-#[primitive, mathcomp(axiom="nmod_morphism")]
+#[export, primitive, mathcomp(axiom="nmod_morphism")]
 HB.structure Definition Additive (U V : baseAddUMagmaType) :=
   {f of isNmodMorphism U V f}.
 
@@ -886,13 +886,13 @@ HB.mixin Record isOppClosed (V : baseZmodType) (S : {pred V}) := {
 
 (* Structures for stability properties *)
 
-#[primitive, short(type="addrClosed")]
+#[export, primitive, short(type="addrClosed")]
 HB.structure Definition AddClosed V := {S of isAddClosed V S}.
 
-#[primitive, primitive, short(type="opprClosed")]
+#[export, primitive, primitive, short(type="opprClosed")]
 HB.structure Definition OppClosed V := {S of isOppClosed V S}.
 
-#[primitive, short(type="zmodClosed")]
+#[export, primitive, short(type="zmodClosed")]
 HB.structure Definition ZmodClosed V := {S of OppClosed V S & AddClosed V S}.
 
 (* Factories for stability properties *)
@@ -1002,15 +1002,15 @@ HB.mixin Record isSubBaseAddUMagma (V : baseAddUMagmaType) (S : pred V) U
   valD0_subproof : nmod_morphism (val : U -> V)
 }.
 
-#[primitive, short(type="subBaseAddUMagma")]
+#[export, primitive, short(type="subBaseAddUMagma")]
 HB.structure Definition SubBaseAddUMagma (V : baseAddUMagmaType) S :=
   { U of SubChoice V S U & BaseAddUMagma U & isSubBaseAddUMagma V S U }.
 
-#[primitive, short(type="subAddUMagma")]
+#[export, primitive, short(type="subAddUMagma")]
 HB.structure Definition SubAddUMagma (V : addUMagmaType) S :=
   { U of SubChoice V S U & AddUMagma U & isSubBaseAddUMagma V S U }.
 
-#[primitive, short(type="subNmodType")]
+#[export, primitive, short(type="subNmodType")]
 HB.structure Definition SubNmodule (V : nmodType) S :=
   { U of SubChoice V S U & Nmodule U & isSubBaseAddUMagma V S U}.
 
@@ -1069,7 +1069,7 @@ Proof. by move=> x y z; apply/val_inj; rewrite !SubK addrA. Qed.
 
 HB.end.
 
-#[primitive, short(type="subZmodType")]
+#[export, primitive, short(type="subZmodType")]
 HB.structure Definition SubZmodule (V : zmodType) S :=
   { U of SubChoice V S U & Zmodule U & isSubBaseAddUMagma V S U}.
 

@@ -63,16 +63,16 @@ HB.mixin Record Zmodule_isSemiNormed (R : POrderZmodule.type) M
   normrN : forall x, norm (- x) = norm x;
 }.
 
-#[short(type="semiNormedZmodType")]
+#[export, primitive, short(type="semiNormedZmodType")]
 HB.structure Definition SemiNormedZmodule (R : porderZmodType) :=
   { M of Zmodule_isSemiNormed R M & GRing.Zmodule M }.
 
 HB.mixin Record SemiNormedZmodule_isPositiveDefinite
-    (R : POrderZmodule.type) M & @SemiNormedZmodule R M := {
-  normr0_eq0 : forall x : M, norm x = 0 -> x = 0;
+    (R : POrderedZmodule.type) M0 & @SemiNormedZmodule R M0 := {
+  normr0_eq0 : forall x : M0, norm x = 0 -> x = 0;
 }.
 
-#[short(type="normedZmodType")]
+#[export, primitive, short(type="normedZmodType")]
 HB.structure Definition NormedZmodule (R : porderZmodType) :=
   { M of SemiNormedZmodule_isPositiveDefinite R M & SemiNormedZmodule R M }.
 Arguments norm {R M} x : rename.
@@ -82,7 +82,7 @@ HB.mixin Record Zmodule_isSubNormed (R : porderZmodType) (M : normedZmodType R)
   norm_valE : forall x : U, norm ((val : U -> M) x) = norm x
 }.
 
-#[short(type="subNormedZmodType")]
+#[export, primitive, short(type="subNormedZmodType")]
 HB.structure Definition SubNormedZmodule (R : porderZmodType)
     (M : normedZmodType R) (S : pred M) :=
   { U of SubChoice M S U & Num.NormedZmodule R U & GRing.SubZmodule M S U
@@ -96,11 +96,11 @@ HB.factory Record Zmodule_isNormed (R : porderZmodType) M
   normrMn : forall x n, norm (x *+ n) = norm x *+ n;
   normrN : forall x, norm (- x) = norm x;
 }.
-HB.builders Context (R : POrderZmodule.type) M & Zmodule_isNormed R M.
+HB.builders Context (R : POrderedZmodule.type) M2 & Zmodule_isNormed R M2.
   HB.instance Definition _ :=
-    Zmodule_isSemiNormed.Build R M ler_normD normrMn normrN.
+    Zmodule_isSemiNormed.Build R M2 ler_normD normrMn normrN.
   HB.instance Definition _ :=
-    SemiNormedZmodule_isPositiveDefinite.Build R M normr0_eq0.
+    SemiNormedZmodule_isPositiveDefinite.Build R M2 normr0_eq0.
 HB.end.
 
 Module NormedZmoduleExports.
@@ -134,7 +134,7 @@ HB.mixin Record NumZmod_isNumRing R & GRing.NzRing R & POrderZmodule R
  ler_def : forall x y : R, (x <= y) = (norm (y - x) == (y - x));
 }.
 
-#[short(type="numDomainType")]
+#[export, primitive, short(type="numDomainType")]
 HB.structure Definition NumDomain := { R of
      GRing.IntegralDomain R &
      NumZmodule R &
@@ -293,10 +293,10 @@ HB.instance Definition _ := GRing.isDivClosed.Build R nneg_num_pred
 Fact real_divr_closed : divr_closed (@real R).
 Proof.
 split=> [|x y Rx Ry]; first by rewrite realE ler01.
-without loss{Rx} x_ge0: x / 0 <= x.
+without loss{Rx} x_ge0: x / (0 : R) <= x.
   case/orP: Rx => [? | x_le0]; first exact.
   by rewrite -rpredN -mulNr; apply; rewrite ?oppr_ge0.
-without loss{Ry} y_ge0: y / 0 <= y; last by rewrite realE -nnegrE rpred_div.
+without loss{Ry} y_ge0: y / (0 : R) <= y; last by rewrite realE -nnegrE rpred_div.
 case/orP: Ry => [? | y_le0]; first exact.
 by rewrite -rpredN -mulrN -invrN; apply; rewrite ?oppr_ge0.
 Qed.
@@ -592,7 +592,10 @@ Lemma real_ge0P x : x \is real -> ger0_xor_lt0 x
    (min 0 x) (min x 0) (max 0 x) (max x 0)
   `|x| (x < 0) (0 <= x).
 Proof.
-move=> hx; rewrite -[X in `|X|]subr0; case: real_leP;
+move=> hx.
+(* FIXME: Wat? Bug either in ssrmatching or evarconv, I should not have to cast X. *)
+rewrite -[X in `|X : R|]subr0.
+case: real_leP;
 by rewrite ?subr0 ?sub0r //; constructor.
 Qed.
 
@@ -600,7 +603,8 @@ Lemma real_le0P x : x \is real -> ler0_xor_gt0 x
   (min 0 x) (min x 0) (max 0 x) (max x 0)
   `|x| (0 < x) (x <= 0).
 Proof.
-move=> hx; rewrite -[X in `|X|]subr0; case: real_ltP;
+  (* FIXME: Spurious type annotation. *)
+move=> hx; rewrite -[X in `|X : R|]subr0; case: real_ltP;
 by rewrite ?subr0 ?sub0r //; constructor.
 Qed.
 
@@ -608,7 +612,8 @@ Lemma real_ltgt0P x : x \is real ->
   comparer0 x (min 0 x) (min x 0) (max 0 x) (max x 0)
             `|x| (0 == x) (x == 0) (x <= 0) (0 <= x) (x < 0) (x > 0).
 Proof.
-move=> hx; rewrite -[X in `|X|]subr0; case: (@real_ltgtP 0 x);
+  (* FIXME: Spurious type annotation. *)
+move=> hx; rewrite -[X in `|X : R|]subr0; case: (@real_ltgtP 0 x);
 by rewrite ?subr0 ?sub0r //; constructor.
 Qed.
 
@@ -1485,6 +1490,8 @@ Lemma real_ler_norml x y : x \is real -> (`|x| <= y) = (- y <= x <= y).
 Proof.
 move=> xR; wlog x_ge0 : x xR / 0 <= x => [hwlog|].
   move: (xR) => /(@real_leVge _ 0) /orP [|/hwlog->|hx] //.
+  (*move=> xR; wlog x_ge0 : x xR / (0 : R) <= x => [hwlog|].
+     move: (xR) => /(@real_leVge 0) /orP [|/hwlog->|hx] //.*)
   by rewrite -[x]opprK normrN lerN2 andbC lerNl hwlog ?realN ?oppr_ge0.
 rewrite ger0_norm //; have [le_xy|] := boolP (x <= y); last by rewrite andbF.
 by rewrite (le_trans _ x_ge0) // oppr_le0 (le_trans x_ge0).
@@ -1518,6 +1525,8 @@ Lemma real_ltr_norml x y : x \is real -> (`|x| < y) = (- y < x < y).
 Proof.
 move=> Rx; wlog x_ge0 : x Rx / 0 <= x => [hwlog|].
   move: (Rx) => /(@real_leVge _ 0) /orP [|/hwlog->|hx] //.
+  (*move=> Rx; wlog x_ge0 : x Rx / (0 : R) <= x => [hwlog|].
+     move: (Rx) => /(@real_leVge 0) /orP [|/hwlog->|hx] //.*)
   by rewrite -[x]opprK normrN ltrN2 andbC ltrNl hwlog ?realN ?oppr_ge0.
 rewrite ger0_norm //; have [le_xy|] := boolP (x < y); last by rewrite andbF.
 by rewrite (lt_le_trans _ x_ge0) // oppr_lt0 (le_lt_trans x_ge0).
@@ -1700,7 +1709,9 @@ Proof. by move=> x_lt0; rewrite /sg x_lt0 lt_eqF. Qed.
 
 Lemma sgr0 : sg 0 = 0 :> R. Proof. by rewrite /sgr eqxx. Qed.
 Lemma sgr1 : sg 1 = 1 :> R. Proof. by rewrite gtr0_sg // ltr01. Qed.
-Lemma sgrN1 : sg (-1) = -1 :> R. Proof. by rewrite ltr0_sg // ltrN10. Qed.
+Lemma sgrN1 : sg (-1) = -1 :> R.
+(* FIXME: Wat? Why do I need a pattern? *)
+Proof. by rewrite [LHS]ltr0_sg // ltrN10. Qed.
 Definition sgrE := (sgr0, sgr1, sgrN1).
 
 Lemma sqr_sg x : sg x ^+ 2 = (x != 0)%:R.
@@ -1732,9 +1743,10 @@ by rewrite !sgr_def mulrn_eq0 mul1r pmulrn_llt0.
 Qed.
 
 Lemma sgr_nat n : sg n%:R = (n != 0)%:R :> R.
-Proof. by rewrite sgrMn sgr1 mulr1. Qed.
+Proof. by rewrite [LHS]sgrMn sgr1 mulr1. Qed.
 
 Lemma sgr_id x : sg (sg x) = sg x.
+(* FIXME: Wat? What is this last rewrite? *)
 Proof. by rewrite !(fun_if sg) !sgrE. Qed.
 
 Lemma sgr_lt0 x : (sg x < 0) = (x < 0).
@@ -2429,10 +2441,10 @@ End PolyBounds.
 End RealDomainOperations.
 End Theory.
 
-HB.factory Record IntegralDomain_isNumRing R & GRing.IntegralDomain R := {
-  Rle : rel R;
-  Rlt : rel R;
-  norm : R -> R;
+HB.factory Record IntegralDomain_isNumRing R0 & GRing.IntegralDomain R0 := {
+  Rle : rel R0;
+  Rlt : rel R0;
+  norm : R0 -> R0;
   normD     : forall x y, Rle (norm (x + y)) (norm x + norm y);
   addr_gt0  : forall x y, Rlt 0 x -> Rlt 0 y -> Rlt 0 (x + y);
   norm_eq0  : forall x, norm x = 0 -> x = 0;
@@ -2442,7 +2454,7 @@ HB.factory Record IntegralDomain_isNumRing R & GRing.IntegralDomain R := {
   lt_def    : forall x y, (Rlt x y) = (y != x) && (Rle x y)
 }.
 
-HB.builders Context R & IntegralDomain_isNumRing R.
+HB.builders Context R1 & IntegralDomain_isNumRing R1.
   Local Notation "x <= y" := (Rle x y) : ring_scope.
   Local Notation "x < y" := (Rlt x y) : ring_scope.
   Local Notation "`| x |" := (norm x) : ring_scope.
@@ -2466,7 +2478,7 @@ HB.builders Context R & IntegralDomain_isNumRing R.
 
   Lemma le01 : 0 <= 1.
   Proof.
-  have n1_nz: `|1| != 0 :> R by apply: contraNneq (@oner_neq0 R) => /norm_eq0->.
+  have n1_nz: `|1| != 0 :> R1 by apply: contraNneq (@oner_neq0 R1) => /norm_eq0->.
   by rewrite ge0_def -(inj_eq (mulfI n1_nz)) -normM !mulr1.
   Qed.
 
@@ -2477,7 +2489,7 @@ HB.builders Context R & IntegralDomain_isNumRing R.
 
   Lemma lerr x : x <= x.
   Proof.
-  have n2: `|2| == 2 :> R by rewrite -ge0_def ltW ?addr_gt0 ?lt01.
+  have n2: `|2| == 2 :> R1 by rewrite -ge0_def ltW ?addr_gt0 ?lt01.
   rewrite le_def subrr -(inj_eq (addrI `|0|)) addr0 -mulr2n -mulr_natr.
   by rewrite -(eqP n2) -normM mul0r.
   Qed.
@@ -2498,12 +2510,12 @@ HB.builders Context R & IntegralDomain_isNumRing R.
   by rewrite le_def -natrB // subSnn -[_%:R]subr0 -le_def mulr1n le01.
   Qed.
 
-  Lemma normrN1 : `|-1| = 1 :> R.
+  Lemma normrN1 : `|-1| = 1 :> R1.
   Proof.
-  have: `|-1| ^+ 2 == 1 :> R
+  have: `|-1| ^+ 2 == 1 :> R1
     by rewrite expr2 /= -normM mulrNN mul1r -[1]subr0 -le_def le01.
   rewrite sqrf_eq1 => /predU1P [] //; rewrite -[-1]subr0 -le_def.
-  have ->: (0 <= -1) = (-1 == 0 :> R) || (0 < -1)
+  have ->: (0 <= -1) = (-1 == 0 :> R1) || (0 < -1)
     by rewrite lt_def; case: eqP => // ->; rewrite lerr.
   by rewrite oppr_eq0 oner_eq0 => /(addr_gt0 lt01); rewrite subrr ltrr.
   Qed.
@@ -2512,21 +2524,21 @@ HB.builders Context R & IntegralDomain_isNumRing R.
   Proof. by rewrite -mulN1r normM -[RHS]mul1r normrN1. Qed.
 
   HB.instance Definition _ :=
-    Order.LtLe_isPOrder.Build ring_display R le_def' ltrr lt_trans.
+    Order.LtLe_isPOrder.Build ring_display R1 le_def' ltrr lt_trans.
 
   HB.instance Definition _ :=
-    @Zmodule_isNormed.Build _ R norm normD norm_eq0 normrMn normrN.
+    @Zmodule_isNormed.Build _ R1 norm normD norm_eq0 normrMn normrN.
 
   HB.instance Definition _ :=
-    isNumRing.Build R addr_gt0 ger_total normM le_def.
+    isNumRing.Build R1 addr_gt0 ger_total normM le_def.
 HB.end.
 
 HB.factory Record NumDomain_isReal R & NumDomain R := {
   real : real_axiom R
 }.
 
-HB.builders Context R & NumDomain_isReal R.
-  Lemma le_total : Order.POrder_isTotal ring_display R.
+HB.builders Context R1 & NumDomain_isReal R1.
+  Lemma le_total : Order.POrder_isTotal ring_display R1.
   Proof.
   constructor=> x y; move: (real (x - y)).
   by rewrite unfold_in /= !ler_def subr0 add0r opprB orbC.
@@ -2535,10 +2547,10 @@ HB.builders Context R & NumDomain_isReal R.
   HB.instance Definition _ := le_total.
 HB.end.
 
-HB.factory Record IntegralDomain_isLeReal R & GRing.IntegralDomain R := {
-  Rle : rel R;
-  Rlt : rel R;
-  norm : R -> R;
+HB.factory Record IntegralDomain_isLeReal R1 & GRing.IntegralDomain R1 := {
+  Rle : rel R1;
+  Rlt : rel R1;
+  norm : R1 -> R1;
   le0_add   : forall x y, Rle 0 x -> Rle 0 y -> Rle 0 (x + y);
   le0_mul   : forall x y, Rle 0 x -> Rle 0 y -> Rle 0 (x * y);
   le0_anti  : forall x, Rle 0 x -> Rle x 0 -> x = 0;
@@ -2549,7 +2561,7 @@ HB.factory Record IntegralDomain_isLeReal R & GRing.IntegralDomain R := {
   lt_def    : forall x y, Rlt x y = (y != x) && Rle x y;
 }.
 
-HB.builders Context R & IntegralDomain_isLeReal R.
+HB.builders Context R2 & IntegralDomain_isLeReal R2.
   Local Notation le := Rle.
   Local Notation lt := Rlt.
 
@@ -2605,17 +2617,17 @@ HB.builders Context R & IntegralDomain_isLeReal R.
   Fact le_total : total le.
   Proof. by move=> x y; rewrite -sub_ge0 -opprB le0N orbC -sub_ge0 le0_total. Qed.
 
-  HB.instance Definition _ := IntegralDomain_isNumRing.Build R
+  HB.instance Definition _ := IntegralDomain_isNumRing.Build R2
     le_normD lt0_add eq0_norm (in2W le_total) normM le_def lt_def.
 
-  HB.instance Definition _ := Order.POrder_isTotal.Build ring_display R
+  HB.instance Definition _ := Order.POrder_isTotal.Build ring_display R2
     le_total.
 HB.end.
 
-HB.factory Record IntegralDomain_isLtReal R & GRing.IntegralDomain R := {
-  Rlt : rel R;
-  Rle : rel R;
-  norm : R -> R;
+HB.factory Record IntegralDomain_isLtReal R2 & GRing.IntegralDomain R2 := {
+  Rlt : rel R2;
+  Rle : rel R2;
+  norm : R2 -> R2;
   lt0_add   : forall x y, Rlt 0 x -> Rlt 0 y -> Rlt 0 (x + y);
   lt0_mul   : forall x y, Rlt 0 x -> Rlt 0 y -> Rlt 0 (x * y);
   lt0_ngt0  : forall x,  Rlt 0 x -> ~~ (Rlt x 0);
@@ -2626,7 +2638,7 @@ HB.factory Record IntegralDomain_isLtReal R & GRing.IntegralDomain R := {
   le_def    : forall x y, Rle x y = (x == y) || Rlt x y;
 }.
 
-HB.builders Context R & IntegralDomain_isLtReal R.
+HB.builders Context R3 & IntegralDomain_isLtReal R3.
   Local Notation le := Rle.
   Local Notation lt := Rlt.
 
@@ -2703,10 +2715,10 @@ HB.builders Context R & IntegralDomain_isLtReal R.
   by move/lt0_total; rewrite -(sub_gt0 (x - y)) sub0r opprB !sub_gt0 orbC.
   Qed.
 
-  HB.instance Definition _ := IntegralDomain_isNumRing.Build R
+  HB.instance Definition _ := IntegralDomain_isNumRing.Build R3
     le_normD lt0_add eq0_norm (in2W le_total) normM le_def' lt_def.
 
-  HB.instance Definition _ := Order.POrder_isTotal.Build ring_display R
+  HB.instance Definition _ := Order.POrder_isTotal.Build ring_display R3
     le_total.
 HB.end.
 
