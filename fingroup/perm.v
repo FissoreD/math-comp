@@ -219,7 +219,7 @@ move=> z /=; case: (z =P x) => [-> | ne_zx]; first by rewrite eqxx; case: eqP.
 by case: (z =P y) => [->| ne_zy]; [rewrite eqxx | do 2?case: eqP].
 Qed.
 
-Definition tperm x y := perm (can_inj (tperm_proof x y)).
+Definition tperm x y := perm (@can_inj _ _ _ [fun z => z with x |-> y, y |-> x] (tperm_proof x y)).
 
 Variant tperm_spec x y z : T -> Type :=
   | TpermFirst of z = x          : tperm_spec x y z y
@@ -283,26 +283,10 @@ apply: eq_bigl => p; rewrite andbC; apply/idP/and3P=> [onA | []]; first split.
   by case: insubP => [u _ <- | /out_perm->] //=; rewrite ffunE.
 - by apply/forallP=> [[x Ax]]; rewrite ffunE /= perm_closed.
 - by apply/injectiveP=> u v; rewrite !ffunE => /perm_inj; apply: val_inj.
-move/eqP=> <- _ _; apply/subsetP=> x; rewrite !inE -pvalE val_insubd fun_if.
-by rewrite if_arg ffunE; case: insubP; rewrite // pvalE perm1 if_same eqxx.
-(*rewrite -!sum1dep_card -sum1_card (reindex_onto fA pfT) => [|f].
-  apply: eq_bigl => p; rewrite andbC; apply/idP/and3P=> [onA | []]; first split.
-  - apply/eqP; suffices fTAp: fT (fA p) = pval p.
-      by apply/permP=> x; rewrite -!pvalE insubdK fTAp //; apply: (valP p).
-    apply/ffunP=> x; rewrite ffunE pvalE.
-    by case: insubP => [u _ <- | /out_perm->] //=; rewrite ffunE.
-  - by apply/forallP=> [[x Ax]]; rewrite ffunE /= perm_closed.
-  - by apply/injectiveP=> u v; rewrite !ffunE => /perm_inj; apply: val_inj.
-  move/eqP=> <- _ _; apply/subsetP=> x; rewrite !inE -pvalE val_insubd.
+move/eqP=> <- _ _; apply/subsetP=> x; rewrite !inE -pvalE val_insubd.
   (* FIXME: Bug in ssrmatching, it finds the correct pattern but raises NoMatch because the metas in the pattern and the subterm are not exactly the same. *)
-  rewrite [in eqbLHS]fun_if if_arg ffunE.
-  by case: insubP; rewrite // pvalE perm1 if_same eqxx.
-case/andP=> /forallP-onA /injectiveP-f_inj.
-apply/ffunP=> u; rewrite ffunE -pvalE insubdK; first by rewrite ffunE valK.
-apply/injectiveP=> {u} x y; rewrite !ffunE.
-case: insubP => [u _ <-|]; case: insubP => [v _ <-|] //=; first by move/f_inj->.
-  by move=> Ay' def_y; rewrite -def_y [_ \in A]onA in Ay'.
-   by move=> Ax' def_x; rewrite def_x [_ \in A]onA in Ax'.*)
+rewrite [in eqbLHS]fun_if if_arg ffunE.
+by case: insubP; rewrite // pvalE perm1 if_same eqxx.
 Qed.
 
 End Theory.

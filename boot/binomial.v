@@ -103,23 +103,15 @@ rewrite dFact //; rewrite ((big_morph toFp) Fp1 mFpM) //.
 - by move=> i j; apply: val_inj; rewrite /= modnMm.
 - by apply: val_inj; rewrite /= modn_small.
 rewrite big_mkord (eq_bigr id) => [i _|]; first by apply: val_inj => /=.
-pose ltv i := vFp i < i; rewrite (bigID ltv) -/mFpM [mFpM _ _]mFpC.
-rewrite (bigD1 Fp1) -/mFpM; first by rewrite [ltv _]ltn_neqAle vFpId.
-rewrite [mFpM _ _]mFp1 (bigD1 Fpn1) -?mFpA -/mFpM.
-  rewrite -lt0n -ltnS prednK // lt1p.
-  by rewrite [ltv _]ltn_neqAle vFpId eqxx orbT eq_sym eqF1n1.
-rewrite (reindex_onto vFp vFp) -/mFpM => [i|]; first by do 3!case/andP; auto.
-rewrite (eq_bigl (xpredD1 ltv Fp0)) => [i|].
-(*rewrite big_mkord (eq_bigr id) => [|i _]; last by apply: val_inj => /=.
 pose ltv i := vFp i < i.
 (* FIXME: The tc solver should unfold elpi constants (e.g. `c0`), so that mFpM gets unfolded to mFpCL *)
 rewrite (@bigID _ _ mFpCL _ _ ltv) -/mFpM [mFpM _ _]mFpC.
-rewrite (@bigD1 _ mFpCL _ _ Fp1) -/mFpM; last by rewrite [ltv _]ltn_neqAle vFpId.
-rewrite [mFpCL _ _]mFp1 (@bigD1 _ mFpCL _ _ Fpn1) -?mFpA -/mFpM; last first.
+rewrite (@bigD1 _ mFpCL _ _ Fp1) -/mFpM; first by rewrite [ltv _]ltn_neqAle vFpId.
+rewrite [mFpCL _ _]mFp1 (@bigD1 _ mFpCL _ _ Fpn1) -?mFpA -/mFpM.
   rewrite -lt0n -ltnS prednK // lt1p.
   by rewrite [ltv _]ltn_neqAle vFpId eqxx orbT eq_sym eqF1n1.
-rewrite (@reindex_onto _ mFpCL _ _ _ vFp vFp) -/mFpM => [|i]; last by do 3!case/andP; auto.
-   rewrite (eq_bigl (xpredD1 ltv Fp0)) => [|i]; last first.*)
+rewrite (@reindex_onto _ mFpCL _ _ _ vFp vFp) -/mFpM => [i|]; first by do 3!case/andP; auto.
+   rewrite (eq_bigl (xpredD1 ltv Fp0)) => [i|].
   rewrite andbC -!andbA -2!negb_or -vFpId orbC -leq_eqVlt -ltnNge.
   have [->|ni0] := eqVneq i; last by rewrite vFpK // eqxx vFp0.
   by case: eqP => // ->; rewrite !andbF.

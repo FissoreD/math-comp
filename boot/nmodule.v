@@ -1114,7 +1114,7 @@ Let oppU (u : U1) := inU (rpredNr (valP u)).
 #[local] HB.instance Definition _ := hasOpp.Build U1 oppU.
 
 Lemma addNr : left_inverse 0 oppU (@add U1).
-Proof. by move=> x; apply/val_inj; rewrite !SubK addNr. Qed.
+Proof. by move=> x; apply/val_inj; rewrite valD val0 !SubK addNr. Qed.
 
 #[local] HB.instance Definition _ := Nmodule_isZmodule.Build U1 addNr.
 

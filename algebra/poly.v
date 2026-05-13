@@ -1040,8 +1040,11 @@ Variable S : semiringClosed R.
 
 Fact polyOver_mul1_closed : 1 \in polyOver S.
 Proof. by rewrite polyOverC rpred1. Qed.
+Elpi Trace.
+#[verbose]
 HB.instance Definition _ := GRing.isMul1Closed.Build {poly R} (polyOver_pred S)
   polyOver_mul1_closed.
+STOP.
 
 Lemma polyOverZ : {in S & polyOver S, forall c p, c *: p \is a polyOver S}.
 Proof.

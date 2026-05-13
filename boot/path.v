@@ -1338,8 +1338,7 @@ Qed.
 Lemma sorted_mask_sort_in s m :
   all P s -> sorted leT (mask m s) -> {m_s | mask m_s (sort leT s) = mask m s}.
 Proof.
-move=> ? /(sorted_sort_in leT_tr _) <-; [exact: all_mask | exact: mask_sort_in].
-(*move=> ? /(sorted_sort_in (@leT_tr) _) <-; [exact: mask_sort_in | exact: all_mask].*)
+move=> ? /(sorted_sort_in (@leT_tr) _) <-; [exact: all_mask | exact: mask_sort_in].
 Qed.
 
 End Stability_mask_in.

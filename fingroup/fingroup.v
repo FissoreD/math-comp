@@ -423,7 +423,7 @@ Proof. by move=> A; apply/setP=> x; rewrite !inE invgK. Qed.
 Lemma set_invgM : {morph set_invg : A B / set_mulg A B >-> set_mulg B A}.
 Proof.
 move=> A B; apply/setP=> z; rewrite inE.
-apply/imset2P/imset2P=> [[x y Ax By /(canRL invgK)->] | [y x]].
+apply/imset2P/imset2P=> [[x y Ax By /(@canRL _ _ inv inv _ _ invgK)->] | [y x]].
   by exists y^-1 x^-1; rewrite ?invMg // inE invgK.
 by rewrite !inE => By1 Ax1 ->; exists x^-1 y^-1; rewrite ?invMg.
 Qed.
@@ -1900,10 +1900,8 @@ Lemma gen_prodgP A x :
 Proof.
 apply: (iffP idP) => [|[n [c Ac ->]]]; last first.
   by apply: group_prod => i _; rewrite mem_gen ?Ac.
-have [n ->] := gen_expgs A; rewrite /natexp Monoid.iteropE /=.
-rewrite -[n]card_ord -big_const => /prodsgP[/= c Ac def_x]. 
-(*have [n ->] := gen_expgs A; rewrite /expgn Monoid.iteropE /=.
-   rewrite -[n]card_ord -(big_const _ mulg) => /prodsgP[/= c Ac def_x]. *)
+have [n ->] := gen_expgs A; rewrite /expgn Monoid.iteropE /=.
+rewrite -[n]card_ord -(big_const _ mulg) => /prodsgP[/= c Ac def_x].
 have{Ac def_x} ->: x = \prod_(i | c i \in A) c i.
   rewrite big_mkcond {x}def_x; apply: eq_bigr => i _.
   by case/setU1P: (Ac i isT) => -> //; rewrite if_same.

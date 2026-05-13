@@ -341,7 +341,7 @@ HB.mixin Record isLaw T (op : T -> T -> T) := {
   opA : associative op;
 }.
 
-#[export]
+#[export, primitive]
 HB.structure Definition Law T := {op of isLaw T op}.
 Notation law := Law.type.
 
@@ -349,7 +349,7 @@ HB.mixin Record isCommutativeLaw T (op : T -> T -> T) := {
   opC : commutative op;
 }.
 
-#[export]
+#[export, primitive]
 HB.structure Definition ComLaw T := {op of Law T op & isCommutativeLaw T op}.
 Notation com_law := ComLaw.type.
 
@@ -410,7 +410,7 @@ HB.mixin Record isMonoidLaw T (idm : T) (op : T -> T -> T) := {
   opm1 : right_id idm op;
 }.
 
-#[export]
+#[export, primitive]
 HB.structure Definition Law T idm :=
   {op of SemiGroup.Law T op & isMonoidLaw T idm op}.
 Notation law := Law.type.
@@ -430,7 +430,7 @@ HB.instance Definition _ := isMonoidLaw.Build T idm op op1m opm1.
 
 HB.end.
 
-#[export]
+#[export, primitive]
 HB.structure Definition ComLaw T idm :=
   {op of Law T idm op & isCommutativeLaw T op}.
 Notation com_law := ComLaw.type.
@@ -457,7 +457,7 @@ HB.mixin Record isMulLaw T (zero : T) (mul : T -> T -> T) := {
   mul_zeror : right_zero zero mul;
 }.
 
-#[export]
+#[export, primitive]
 HB.structure Definition MulLaw T zero := {mul & isMulLaw T zero mul}.
 Notation mul_law := MulLaw.type.
 
@@ -466,7 +466,7 @@ HB.mixin Record isAddLaw T (mul : T -> T -> T) (op : T -> T -> T) := {
   mul_op_Dr : right_distributive mul op;
 }.
 
-#[export]
+#[export, primitive]
 HB.structure Definition AddLaw T zero mul :=
   {add of ComLaw T zero add & isAddLaw T mul add}.
 Notation add_law := AddLaw.type.
@@ -2384,10 +2384,7 @@ Proof.
 move=> prs; rewrite !(bigID [pred i | F i == idx] P F)/=.
 rewrite big1 ?Monoid.mul1m; first by move=> i /andP[_ /eqP->].
 rewrite [in RHS]big1 ?Monoid.mul1m; first by move=> i /andP[_ /eqP->].
-by rewrite -[in LHS]big_filter -[in RHS]big_filter; apply perm_big.
-(*rewrite big1 ?Monoid.mul1m; last by move=> i /andP[_ /eqP->].
-rewrite [in RHS]big1 ?Monoid.mul1m; last by move=> i /andP[_ /eqP->].
-   by rewrite -[in LHS]big_filter -[in RHS]big_filter; apply: perm_big.*)
+by rewrite -[in LHS]big_filter -[in RHS]big_filter; apply: perm_big.
 Qed.
 
 Lemma perm_big_supp [r s : seq I] [P : pred I] (F : I -> R) :
@@ -2459,8 +2456,7 @@ rewrite big_distrr; apply: eq_big => [f | f eq_f]; last first.
 rewrite !ffunE !eqxx andbT; apply/andP/familyP=> /= [[Pjf fij0] k | Pff].
   have /[!(@ffunE I, inE)] := familyP Pjf k; case: eqP => // -> _.
   by rewrite nri -(eqP fij0) !ffunE !inE !eqxx.
-(split; [apply/familyP | apply/eqP/ffunP]) => k; have /[!(ffunE, inE)]:= Pff k.
-(*split; [apply/familyP | apply/eqP/ffunP] => k; have /[!(@ffunE I, inE)]:= Pff k.*)
+(split; [apply/familyP | apply/eqP/ffunP]) => k; have /[!(@ffunE I, inE)]:= Pff k.
   by case: eqP => // ->.
 by case: eqP => // ->; rewrite nri /= => /eqP.
 Qed.

@@ -147,6 +147,7 @@ HB.mixin Record hasDecEq T := { eq_op : rel T; eqP : eq_axiom eq_op }.
 HB.structure Definition Equality := { T of hasDecEq T }.
 
 
+
 (* eqE is a generic lemma that can be used to fold back recursive comparisons *)
 (* after using partial evaluation to simplify comparisons on concrete         *)
 (* instances. The eqE lemma can be used e.g. like so: rewrite !eqE /= -!eqE.  *)
@@ -563,6 +564,7 @@ HB.mixin Record isSub (T : Type) (P : pred T) (sub_sort : Type) := {
 
 #[primitive, short(type="subType")]
 HB.structure Definition SubType (T : Type) (P : pred T) := { S of isSub T P S }.
+
 
 Notation val := (isSub.val_subdef (SubType.on _)).
 Notation "\val" := (isSub.val_subdef (SubType.on _)) (only parsing).

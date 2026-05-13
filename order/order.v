@@ -3157,7 +3157,7 @@ Proof. exact: (sub_le_big ge_refl). Qed.
 Lemma sub_bigmax [x0] I r (P P' : {pred I}) (F : I -> T) :
     (forall i, P i -> P' i) ->
   \big[max/x0]_(i <- r | P i) F i <= \big[max/x0]_(i <- r | P' i) F i.
-Proof. exact: sub_le_big. Qed.
+Proof. exact: (sub_le_big le_refl). Qed.
 
 (* FIXME: Remove that. *)
 Local Notation "'{subset' x '<=' y '}'" :=
@@ -3189,7 +3189,7 @@ Proof. exact: (sub_in_le_big ge_refl). Qed.
 Lemma sub_in_bigmax [x0] [I : eqType] (r : seq I) (P P' : {pred I}) F :
     {in r, forall i, P i -> P' i} ->
   \big[max/x0]_(i <- r | P i) F i <= \big[max/x0]_(i <- r | P' i) F i.
-Proof. exact: sub_in_le_big. Qed.
+Proof. exact: (sub_in_le_big le_refl). Qed.
 
 Lemma le_bigmin_nat [x0] n m n' m' P (F : nat -> T) :
     (n <= n')%N -> (m' <= m)%N ->
@@ -3199,7 +3199,7 @@ Proof. exact: (le_big_nat ge_refl). Qed.
 Lemma le_bigmax_nat [x0] n m n' m' P (F : nat -> T) :
     (n' <= n)%N -> (m <= m')%N ->
   \big[max/x0]_(n <= i < m | P i) F i <= \big[max/x0]_(n' <= i < m' | P i) F i.
-Proof. exact: le_big_nat. Qed.
+Proof. exact: (le_big_nat le_refl). Qed.
 
 Lemma le_bigmin_nat_cond [x0] n m n' m' (P P' : pred nat) (F : nat -> T) :
     (n <= n')%N -> (m' <= m)%N -> (forall i, (n' <= i < m')%N -> P' i -> P i) ->
@@ -3209,7 +3209,7 @@ Proof. exact: (le_big_nat_cond ge_refl). Qed.
 Lemma le_bigmax_nat_cond [x0] n m n' m' (P P' : {pred nat}) (F : nat -> T) :
     (n' <= n)%N -> (m <= m')%N -> (forall i, (n <= i < m)%N -> P i -> P' i) ->
   \big[max/x0]_(n <= i < m | P i) F i <= \big[max/x0]_(n' <= i < m' | P' i) F i.
-Proof. exact: le_big_nat_cond. Qed.
+Proof. exact: (le_big_nat_cond le_refl). Qed.
 
 Lemma le_bigmin_ord [x0] n m (P : pred nat) (F : nat -> T) : (m <= n)%N ->
   \big[min/x0]_(i < n | P i) F i <= \big[min/x0]_(i < m | P i) F i.
@@ -3950,7 +3950,7 @@ HB.factory Record Preorder_isPOrder (d : disp_t) T8 & Preorder d T8 := {
   le_anti  : antisymmetric (@le d T8);
 }.
 
-HB.builders Context (d : disp_t) T9 of Preorder_isPOrder d T9.
+HB.builders Context (d : disp_t) T9 & Preorder_isPOrder d T9.
 
 Let ge_anti : antisymmetric (fun x y => @le d T9 y x).
 Proof. by move=> x y; rewrite andbC; apply: le_anti. Qed.
@@ -4180,8 +4180,6 @@ HB.instance Definition _ :=
 
 HB.end.
 
-  lt_def : forall x y : T, lt x y = (y != x) && le x y;
-=======
 HB.factory Record isMeetJoinDistrLattice (d : disp_t) T30 & Choice T30 := {
   le : rel T30;
   lt : rel T30;
@@ -5280,7 +5278,7 @@ HB.instance Definition _ := SubPOrder_isSubLattice.Build d T S d' U0
 HB.end.
 
 HB.mixin Record isBSubLattice d (T : bLatticeType d) (S : pred T) d' U4
-    of SubType T S U4 & BLattice d' U4 := {
+    & SubType T S U4 & BLattice d' U4 := {
   val0_subproof : (val : U4 -> T) \bot = \bot;
 }.
 

@@ -2942,7 +2942,7 @@ Qed.
 Lemma uniq_map_inj_in s : uniq (map f s) -> {in s &, injective f}.
 Proof.
 move=> f_uniq x y /(nthP x)[i ilt <-] /(nthP x)[j jlt <-].
-by rewrite -!(nth_map _ (f x))// => /uniqP /[!(inE, size_map)] ->.
+by rewrite -!(nth_map _ (f x))// => /uniqP /[!(inE, @size_map T1)] ->.
 Qed.
 
 Lemma nth_index_map s x0 x :

@@ -499,8 +499,7 @@ HB.factory Record isStarMonoid G & Choice G := {
   invgM : {morph inv : x y / mul x y >-> mul y x}
 }.
 
-HB.builders Context G & isStarMonoid G.
-
+HB.builders Context G3 & isStarMonoid G3.
 Lemma invg1 : inv one = one.
 Proof.
 by apply: (can_inj invgK); rewrite -[inv one in LHS]mul1g invgM invgK mul1g.
@@ -509,9 +508,9 @@ Qed.
 Lemma mulg1 : right_id one mul.
 Proof. by move=> x; apply: (can_inj invgK); rewrite invgM invg1 mul1g. Qed.
 
-HB.instance Definition _ := isMonoid.Build G mulgA mul1g mulg1.
-HB.instance Definition _ := hasInv.Build G inv.
-HB.instance Definition _ := Monoid_isStarMonoid.Build G invgK invgM.
+HB.instance Definition _ := isMonoid.Build G3 mulgA mul1g mulg1.
+HB.instance Definition _ := hasInv.Build G3 inv.
+HB.instance Definition _ := Monoid_isStarMonoid.Build G3 invgK invgM.
 
 HB.end.
 
@@ -519,7 +518,9 @@ Section StarMonoidTheory.
 Variable G : starMonoidType.
 Implicit Types x y z : G.
 
-Lemma invg_inj : injective (@inv G). Proof. exact: can_inj invgK. Qed.
+Lemma invg_inj : injective (@inv G).
+(* TOTHINK: Failure at Qed time with `exact: can_inj invgK` *)
+Proof. by apply: can_inj; apply: invgK. Qed.
 
 Lemma invg1 : 1^-1 = 1 :> G.
 Proof. by apply: invg_inj; rewrite -[1^-1 in LHS]mul1g invgM invgK mul1g. Qed.
@@ -536,7 +537,7 @@ by case: ifP => _; rewrite ?mulg1// invgM.
 Qed.
 
 Lemma eqg_inv x y : (x^-1 == y^-1) = (x == y).
-Proof. exact: can_eq invgK x y. Qed.
+Proof. by apply: can_eq; apply: invgK. Qed.
 
 Lemma eqg_invLR x y : (x^-1 == y) = (x == y^-1).
 Proof. exact: inv_eq invgK x y. Qed.
@@ -558,8 +559,8 @@ End StarMonoidTheory.
 
 Arguments invg_inj {G} [x1 x2].
 
-HB.mixin Record StarMonoid_isGroup G & BaseGroup G := {
-  mulVg : left_inverse one inv (@mul G);
+HB.mixin Record StarMonoid_isGroup G6 & BaseGroup G6 := {
+  mulVg : left_inverse one inv (@mul G6);
 }.
 
 #[primitive, short(type="groupType")]

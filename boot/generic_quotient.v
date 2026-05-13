@@ -583,10 +583,10 @@ Proof. by apply: (iffP (pi_DC _ _)); rewrite !unlock. Qed.
 HB.instance Definition _ p := Choice.copy (type_of p) (can_type ereprK).
 
 Lemma eqmodE x y : (x == y %[mod qT]) = eD x y.
-Proof. exact: sameP eqP (@eqmodP _ _). Qed.
+Proof. exact: (@sameP _ _ _) eqP (@eqmodP _ _ _). Qed.
 
 #[export]
-HB.instance Definition _ p := isEqQuotient.Build _ eD (type_of p) (eqmodE p).
+HB.instance Definition _ p := isEqQuotient.Build _ eD (type_of p) eqmodE.
 
 End EquivQuot.
 Module Exports. HB.reexport. End Exports.

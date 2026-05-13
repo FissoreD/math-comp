@@ -123,7 +123,7 @@ HB.mixin Record NzRing_hasMulInverse R & NzRing R := {
   invr_out_subproof : {in [predC unit_subdef], inv =1 id}
 }.
 
-#[short(type="unitRingType")]
+#[primitive, short(type="unitRingType")]
 HB.structure Definition UnitRing := {R of NzRing_hasMulInverse R & NzRing R}.
 
 Module UnitRingExports.

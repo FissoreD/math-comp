@@ -1283,12 +1283,12 @@ apply/andP; split.
   case: dfwithP => {j} [|? ?]; last by rewrite mulg1 mul1g.
   (* FIXME: unification bug? *)
   rewrite (@big1 _ _ (@mulg ({|
-               BaseFinGroup.sort := gT i;
-               BaseFinGroup.class := BaseFinGroup.class (gT i)
+               FinStarMonoid.sort := gT i;
+               FinStarMonoid.class := FinStarMonoid.class (gT i)
              |}) : @Monoid.Law.type (FinGroup.sort (gT i)) 1)).
-    by rewrite mulg1 mul1g.
-  move=> j neq_ji.
-  by have /set1gXnP[? _ ->] := h_P j neq_ji; rewrite ffunE dfwith_out.
+    move=> j neq_ji.
+    by have /set1gXnP[? _ ->] := h_P j neq_ji; rewrite ffunE dfwith_out.
+  by rewrite mulg1 mul1g.
 rewrite -setI_eq0 -subset0; apply/subsetP => /= x; rewrite !inE.
 rewrite comm_prodG; first by apply: in2W; apply: set1gXn_commute.
 move=> /and3P[+ + /set1gXnP [h _ x_h]]; rewrite {x}x_h.
@@ -1296,8 +1296,8 @@ move=> /prodsgP[x_ x_P /ffunP/(_ i)]; rewrite ffunE dfwith_in => {h}->.
 apply: contra_neqT => _; apply/ffunP => j; rewrite !ffunE/=.
 case: dfwithP => // {j}; rewrite (big_morph _ (@dffunM i) (_ : _ = 1)) ?ffunE//.
 rewrite (@big1 _ _ (@mulg ({|
-             BaseFinGroup.sort := gT i;
-             BaseFinGroup.class := BaseFinGroup.class (gT i)
+             FinStarMonoid.sort := gT i;
+             FinStarMonoid.class := FinStarMonoid.class (gT i)
            |}) : @Monoid.Law.type (FinGroup.sort (gT i)) 1))// => j neq_ji.
 by have /set1gXnP[g gH /ffunP->] := x_P _ neq_ji; rewrite ffunE dfwith_out.
 Qed.
