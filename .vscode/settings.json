@@ -23,5 +23,6 @@
         "htmldoc/depend": true,
         "htmldoc/depend.js": true,
         "htmldoc/*.css": true
-    }
+    },
+    "vsrocq.path": "/home/dfissore/Documents/github/ELPI_DEV/QUENTIN/_opam/cstc1/bin/vsrocqtop",
 }

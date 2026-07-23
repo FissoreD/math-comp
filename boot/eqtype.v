@@ -146,6 +146,12 @@ HB.mixin Record hasDecEq T := { eq_op : rel T; eqP : eq_axiom eq_op }.
 #[primitive, mathcomp(axiom="eq_axiom"), short(type="eqType")]
 HB.structure Definition Equality := { T of hasDecEq T }.
 
+Elpi CS cs.
+Elpi cs cs (@Equality.Pack).
+(* Elpi CS cs. *)
+
+(* Note: without Elpi cs cs (@Equality.Pack) it does not works (as expected) *)
+Check (fun (T : Type) (H : Equality.axioms_ T) (x : T) => eq_op x x).
 
 
 (* eqE is a generic lemma that can be used to fold back recursive comparisons *)
@@ -564,6 +570,7 @@ HB.mixin Record isSub (T : Type) (P : pred T) (sub_sort : Type) := {
 
 #[primitive, short(type="subType")]
 HB.structure Definition SubType (T : Type) (P : pred T) := { S of isSub T P S }.
+Elpi cs cs (@SubType.Pack).
 
 
 Notation val := (isSub.val_subdef (SubType.on _)).
@@ -573,6 +580,7 @@ Notation "\val" := (isSub.val_subdef _) (only printing).
 #[primitive, short(type="subEqType")]
 HB.structure Definition SubEquality T (P : pred T) :=
   { sT of Equality sT & isSub T P sT}.
+Elpi cs cs (@SubEquality.Pack).
 
 Section SubType.
 
@@ -789,6 +797,7 @@ Lemma val_eqP : ev_ax sT val. Proof. exact: inj_eqAxiom val_inj. Qed.
 
 End SubEqType.
 
+(* NOTE: qui uso il mio solver *)
 Lemma val_eqE (T : eqType) (P : pred T) (sT : subEqType P)
    (u v : sT) : (val u == val v) = (u == v).
 Proof. exact/val_eqP/eqP. Qed.

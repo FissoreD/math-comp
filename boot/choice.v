@@ -269,6 +269,7 @@ HB.mixin Record hasChoice T := Mixin {
 
 #[primitive, short(type="choiceType")]
 HB.structure Definition Choice := { T of hasChoice T & hasDecEq T}.
+Elpi cs cs (@Choice.Pack).
 
 Module Export ChoiceNamespace.
   Module Choice.
@@ -495,6 +496,7 @@ End ChoiceTheory.
 #[primitive, short(type="subChoiceType")]
 HB.structure Definition SubChoice T (P : pred T) :=
   { sT of Choice sT & isSub T P sT }.
+Elpi cs cs (@SubChoice.Pack).
 
 Prenex Implicits xchoose choose.
 Notation "[ 'Choice' 'of' T 'by' <: ]" := (Choice.copy T%type (sub_type T%type))
@@ -512,6 +514,7 @@ Arguments Choice_isCountable.axioms_ T%_type_scope.
 
 #[primitive, short(type="countType")]
 HB.structure Definition Countable := { T of Choice T & Choice_isCountable T }.
+Elpi cs cs (@Countable.Pack).
 
 HB.factory Record isCountable (T : Type) : Type := {
   pickle : T -> nat;
@@ -581,6 +584,7 @@ Arguments pickle_invK {T} n : rename.
 #[primitive, short(type="subCountType")]
 HB.structure Definition SubCountable T (P : pred T) :=
   { sT of Countable sT & isSub T P sT}.
+Elpi cs cs (@SubCountable.Pack).
 
 Section TagCountType.
 
