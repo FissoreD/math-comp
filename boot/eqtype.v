@@ -148,11 +148,11 @@ HB.structure Definition Equality := { T of hasDecEq T }.
 
 Elpi CS cs.
 Elpi cs cs (@Equality.Pack).
-(* Elpi CS cs. *)
+Elpi cs join (Equality.class).
 
 (* Note: without Elpi cs cs (@Equality.Pack) it does not works (as expected) *)
 Check (fun (T : Type) (H : Equality.axioms_ T) (x : T) => eq_op x x).
-
+Check (fun (T : eqType) => @Equality.Pack (Equality.sort T) _).
 
 (* eqE is a generic lemma that can be used to fold back recursive comparisons *)
 (* after using partial evaluation to simplify comparisons on concrete         *)
@@ -571,6 +571,7 @@ HB.mixin Record isSub (T : Type) (P : pred T) (sub_sort : Type) := {
 #[primitive, short(type="subType")]
 HB.structure Definition SubType (T : Type) (P : pred T) := { S of isSub T P S }.
 Elpi cs cs (@SubType.Pack).
+Elpi cs join (@SubType.class).
 
 
 Notation val := (isSub.val_subdef (SubType.on _)).
@@ -581,6 +582,7 @@ Notation "\val" := (isSub.val_subdef _) (only printing).
 HB.structure Definition SubEquality T (P : pred T) :=
   { sT of Equality sT & isSub T P sT}.
 Elpi cs cs (@SubEquality.Pack).
+Elpi cs join (@SubEquality.class).
 
 Section SubType.
 
@@ -796,6 +798,12 @@ Lemma val_eqP : ev_ax sT val. Proof. exact: inj_eqAxiom val_inj. Qed.
 #[hnf] HB.instance Definition _ := Equality.copy (sub_type sT) (pcan_type valK).
 
 End SubEqType.
+
+Timeout 1 Check (fun K (K' := K) (T: pred K) (S : subEqType T) (y: S) => @eq_op _ y y).
+Check (erefl : SubType.sort _ = SubEquality.sort _).
+Check (erefl : SubType.sort _ = Equality.sort _).
+
+Elpi Print cs "mathcomp/xx".
 
 (* NOTE: qui uso il mio solver *)
 Lemma val_eqE (T : eqType) (P : pred T) (sT : subEqType P)

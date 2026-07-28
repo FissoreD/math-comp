@@ -270,6 +270,7 @@ HB.mixin Record hasChoice T := Mixin {
 #[primitive, short(type="choiceType")]
 HB.structure Definition Choice := { T of hasChoice T & hasDecEq T}.
 Elpi cs cs (@Choice.Pack).
+Elpi cs join (@Choice.class).
 
 Module Export ChoiceNamespace.
   Module Choice.

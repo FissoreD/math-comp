@@ -185,6 +185,7 @@ HB.structure Definition Finite := {T of isFinite T & Countable T }.
 (* Equality, Choice and Countable superclasses to ensure the forgetful        *)
 (* inheritance criterion is met.                                              *)
 Elpi cs cs (@Finite.Pack).
+Elpi cs join (@Finite.class).
 
 Module Export FiniteNES.
 Module Finite.
@@ -1454,6 +1455,7 @@ End TransferFinType.
 HB.structure Definition SubFinite (T : Type) (P : pred T) :=
   { sT of Finite sT & isSub T P sT }.
 Elpi cs cs (@SubFinite.Pack).
+Elpi cs cs (@SubFinite.Class).
 
 Section SubFinType.
 
